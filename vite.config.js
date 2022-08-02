@@ -8,6 +8,7 @@ export default defineConfig({
         outDir: "wwwroot"
     },
     server: {
+        
         proxy: {
           '/api': {
                 target : 'https://localhost:7207', 
