@@ -4,10 +4,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
-
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -30,6 +29,12 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();                
     endpoints.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
     endpoints.MapFallbackToFile("index.html").AllowAnonymous();
+});
+
+
+app.UseEndpoints(endpoints =>
+{
+      endpoints.MapHub<GameHub>("/hubs/game");
 });
 
 app.Run();
