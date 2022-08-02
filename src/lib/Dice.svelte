@@ -1,74 +1,27 @@
+<script context="module">
+    import { dice, roll2 } from "./dice";
+
+    export function runRoll(e)
+    {
+        const d = dice.find(d => d.name === e.dice);
+        if (d)
+        {
+            d.number = 1;
+            d.modifier = parseInt(e.modifier) || 0;
+            const result = roll2([d]);
+            console.log(result[0].total + d.modifier);
+        }
+    }
+</script>
+
 <script>
-let dice = [
-  {
-    name: 'W4',
-    sides: 4,
-    values: [],
-    number: 0,
-    modifier: 0,
-    image: 'https://i.imgur.com/XyqQZQs.png'
-  },
-  {
-    number: 0,
-    name: 'W6',
-    sides: 6,
-    values: [],
-    modifier: 0,
-    image: 'https://i.imgur.com/XyqQZQs.png'
-  },
-  {
-    number: 0,
-    name: 'W8',
-    sides: 8,
-    values: [],
-    modifier: 0,
-    image: 'https://i.imgur.com/XyqQZQs.png'
-  },
-  {
-    number: 0,
-    name: 'W10',
-    sides: 10,
-    values: [],
-    modifier: 0,
-    image: 'https://i.imgur.com/XyqQZQs.png'
-  },
-  {
-    number: 0,
-    name: 'W12',
-    sides: 12,
-    values: [],
-    modifier: 0,
-    image: 'https://i.imgur.com/XyqQZQs.png'
-  },
-  {
-    number: 0,
-    name: 'W20',
-    sides: 20,
-    values: [],
-    modifier: 0,
-    image: 'https://i.imgur.com/XyqQZQs.png'
-  },
-  {
-    number: 0,
-    name: 'W100',
-    sides: 100,
-    values: [],
-    modifier: 0,
-    image: 'https://i.imgur.com/XyqQZQs.png'
-  }
-];
 
 let selectedDice = [];
 let rolled = false;
 
 function roll()
 {
-    selectedDice.forEach(d => 
-    {
-        for (var i = 0; i < d.number; i++)             
-            d.values.push(Math.floor(Math.random() * d.sides) + 1);
-    });
-    selectedDice =  selectedDice;
+    selectedDice = roll2(selectedDice);
     rolled = true;
 }
 
@@ -77,7 +30,7 @@ function reset()
     rolled = false;
     selectedDice = [];
     dice.forEach(d => { d.values = []; d.modifier = 0; });
-    open=false;
+    isOpen=false;
 }
 
 function addDice(d)
@@ -89,20 +42,15 @@ function addDice(d)
     } else {
         selectedDice = [...selectedDice, {...d, number: 1}];
     }
-    selectedDice =  selectedDice;
-    
+    selectedDice =  selectedDice;    
 }
 
-function sum(d)
-{
-    return d.values.reduce((a, b) => a + b) + d.modifier;
-}
 
-let open = false;
+let isOpen = false;
 </script>
 
-{#if open}
-<div class="absolute left-0 top-0 bg-black opacity-50 z-30 h-screen w-screen" on:click={() => open = false}></div>
+{#if isOpen}
+<div class="absolute left-0 top-0 bg-black opacity-50 z-30 h-screen w-screen" on:click={() => isOpen = false}></div>
 <div class="m-0 absolute bottom-4 right-4 flex items-center z-50 portrait:flex-col">
     {#if !rolled}
         <div class="border-2 rounded-xl p-2 m-2 flex bg-black portrait:flex-col">
@@ -141,7 +89,7 @@ let open = false;
                             {d.modifier}
                         {/if}
                     </div>
-                    <div class="text-4xl"> = {sum(d)}</div>
+                    <div class="text-4xl"> = {d.total+d.modifier}</div>
                 </div>
             {/each}
             <button class="border-2 rounded-full p-1 text-center bg-slate-200" on:click={reset}>X</button>
@@ -150,6 +98,6 @@ let open = false;
 </div>
 {:else}
     <div class="m-0 absolute bottom-4 right-4 flex items-center">
-        <button on:click={() => open=true} class="border-2 rounded-xl p-2 m-2 bg-black text-white">Würfel</button>
+        <button on:click={() => isOpen=true} class="border-2 rounded-xl p-2 m-2 bg-black text-white">Würfel</button>
     </div>
 {/if}

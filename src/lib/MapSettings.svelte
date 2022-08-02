@@ -20,8 +20,6 @@
     </div>
 </Modal>
 
-{#if !isOpen}
 <div class="m-0 absolute bottom-4 left-4 flex items-center">
-<button class="border-2 rounded-xl p-2 m-2 bg-black text-white" on:click={() => isOpen = true}>Einstellungen</button>
+    <button class="border-2 rounded-xl p-2 m-2 bg-black text-white" on:click={() => isOpen = true}>Einstellungen</button>
 </div>
-{/if}

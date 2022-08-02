@@ -11,6 +11,6 @@
     }
 </script>
 
-<div class="absolute p-2 top-0 right-4 z-10">
-    <button on:click={toggleZoom} class="p-2 rounded-lg bg-slate-200 border-4">+/-</button>
+<div class="absolute p-2 top-0 right-0 z-10">
+    <button on:click={toggleZoom} class="p-2 rounded-lg bg-slate-200 border-4">{zoom*100}%</button>
 </div>

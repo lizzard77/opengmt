@@ -17,19 +17,12 @@
     let height = 15;
     let oneFoot = 1;
     
-    let squareSizeInPx = 0;
-    //$: { squareSizeInPx = svg?.clientWidth||1 / width; console.log("square Size in Px", squareSizeInPx); }
-            
+    export let squareSizeInPx = 0;
+
     $: {
         if (svg) { 
-            /*if (!imageHeightBase || !imageWidthBase)
-            {
-                imageHeightBase = svg.clientWidth;
-                imageWidthBase = svg.clientHeight;
-            }*/
             imageWidth = imageWidthBase * zoom; 
             imageHeight = imageHeightBase * zoom;
-            //height = Math.floor(svg.clientHeight / squareSizeInPx); 
             squareSizeInPx = imageWidth / width;
         }
         oneFoot = 1/footPerSquare;
@@ -61,34 +54,30 @@
 
     function handleMouse(e)
     {
-        //console.log(e)
-        players[player].x = e.offsetX / squareSizeInPx; // Math.max((e.offsetX)/squareSizeInPx, 0);
-        players[player].y = e.offsetY /squareSizeInPx; // Math.max((e.offsetX)/squareSizeInPx, 0);
-        //console.log(players[player]);
-        
+        players[player].x = e.offsetX / squareSizeInPx;
+        players[player].y = e.offsetY /squareSizeInPx;
     }
 </script>
 
 <svelte:window on:keydown={handleKey}/>
 
-<div class="absolute left-0 -top-0 m-0">
-    <svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {width} {height}" 
-        on:click={handleMouse}
-        style="width: {imageWidth}px; height: {imageHeight}px;">
-        <image href="{imageUrl}" x="0" y="0" width="{width}" height="{height}" />
-        {#each Array(width) as _, i}
-        <line x1="{i}" y1="0" x2="{i}" y2="{height}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: 0.3;" />
-        {/each}
-        {#each Array(height) as _, i}
-        <line x1="0" y1="{i}" x2="{width}" y2="{i}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: 0.3;" />
-        {/each}
+<svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {width} {height}" 
+    on:click={handleMouse}
+    style="width: {imageWidth}px; height: {imageHeight}px;">
+    <image href="{imageUrl}" x="0" y="0" width="{width}" height="{height}" />
+    {#each Array(width) as _, i}
+    <line x1="{i}" y1="0" x2="{i}" y2="{height}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: 0.3;" />
+    {/each}
+    {#each Array(height) as _, i}
+    <line x1="0" y1="{i}" x2="{width}" y2="{i}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: 0.3;" />
+    {/each}
 
-        {#if showReach}
-        <circle cx="{players[player].x}" cy="{players[player].y}" r="{oneFoot*players[player].reach}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
-        <circle cx="{players[player].x}" cy="{players[player].y}" r="{oneFoot*5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
-        {/if}
-        {#each players as p}
-        <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size}" style="fill:{p.color}" />
-        {/each}
-    </svg>
-</div>
+    {#if showReach}
+    <circle cx="{players[player].x}" cy="{players[player].y}" r="{oneFoot*players[player].reach}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
+    <circle cx="{players[player].x}" cy="{players[player].y}" r="{oneFoot*5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
+    {/if}
+    
+    {#each players as p}
+    <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size}" style="fill:{p.color}" />
+    {/each}
+</svg>
