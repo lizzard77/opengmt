@@ -1,4 +1,5 @@
 using Microsoft.Extensions.FileProviders;
+using OpenGMT.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors();
@@ -27,14 +28,10 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     endpoints.MapRazorPages();                
+    endpoints.MapHub<GameHub>("/hubs/game");
     endpoints.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
     endpoints.MapFallbackToFile("index.html").AllowAnonymous();
 });
 
-
-app.UseEndpoints(endpoints =>
-{
-      endpoints.MapHub<GameHub>("/hubs/game");
-});
 
 app.Run();

@@ -1,3 +1,23 @@
+<script context="module">
+
+import * as signalR from "@microsoft/signalr";
+
+const connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5294/hubs/game").build();
+connection.on("send", data => {
+    console.log(data);
+});
+
+connection
+    .start()
+    .then(() => {
+        console.log("senz msg");
+        connection.invoke("SendMessage", "Hello");
+    }).catch(err => {
+        console.log(err);
+    });
+
+</script>
+
 <script>
     import Draggable from "./lib/Draggable.svelte";
     import Dice, { runRoll } from "./lib/Dice.svelte";
@@ -7,12 +27,10 @@
     import MapTools from "./lib/MapTools.svelte";
     import { onMount, setContext, getContext } from "svelte";
 
-    
-
     let footPerSquare = 15;
     let showReach = true;
 
-    const players= [
+    let players= [
         {
             ini: 12,
             color: "green",
@@ -58,6 +76,7 @@
         });
         players.sort((a, b) => b.ini - a.ini);
         players = players;
+        connection.send("SendMessage", players)
     });
     
 

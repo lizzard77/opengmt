@@ -4,9 +4,10 @@ namespace OpenGMT.SignalR
 {
     public class GameHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            Console.WriteLine("111");
+            await Clients.All.SendAsync("send", message);
         }
     }
 }

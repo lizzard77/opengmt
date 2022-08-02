@@ -10,9 +10,14 @@ export default defineConfig({
     server: {
         
         proxy: {
-          '/api': {
-                target : 'https://localhost:7207', 
+            '/api': {
+                target : 'https://localhost:7207/api', 
                 secure: false
+            },
+            '/hubs/game': {
+                target : 'https://localhost:7207/hubs/game', 
+                secure: false,
+                ws: true
             }
         }
     }
