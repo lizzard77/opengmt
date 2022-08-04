@@ -11,11 +11,11 @@ export default defineConfig({
         
         proxy: {
             '/api': {
-                target : 'https://localhost:7207/api', 
+                target : 'https://localhost:7207', 
                 secure: false
             },
             '/hubs/game': {
-                target : 'https://localhost:7207/hubs/game', 
+                target : 'https://localhost:7207', 
                 secure: false,
                 ws: true
             }

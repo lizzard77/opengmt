@@ -1,0 +1,31 @@
+[
+    {
+        "id" : "1",
+        "color": "green",
+        "name": "Galandrion",
+        "type": "pc",
+        "reach" : 10,
+        "size": 2,
+        "attacks" : [
+            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+        ]
+    },
+    {
+        "id" : "2",
+        "color": "red",
+        "name": "Junger grüner Drache",
+        "type": "npc",
+        "reach" : 30,
+        "size": 5
+    },
+    {
+        "id" : "3",
+        "color": "blue",
+        "name": "Ork",
+        "type": "npc",
+        "reach" : 10,
+        "size": 5
+    }
+]

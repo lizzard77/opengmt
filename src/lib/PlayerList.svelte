@@ -4,11 +4,13 @@
     const dispatch = createEventDispatcher();
     
     export let players = [];
-    export let player = 0;
+    export let player = -1;
+
+    $: if (players.length) setPlayer(player)
 
     let isOpen = false;
-    let playerName = players[player].name;
-    let attacks = players[player].attacks || [];
+    let playerName = players[player]?.name || "";
+    let attacks = players[player]?.attacks || [];
 
     function setPlayer(index)
     {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace sveltedotnetappvite.Controllers
+namespace OpenGMT.Controllers
 {
     [ApiController]
     [Route("[controller]")]

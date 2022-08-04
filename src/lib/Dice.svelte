@@ -1,23 +1,7 @@
-<script context="module">
-    import { dice, roll2 } from "./dice";
-
-    export function runRoll(e)
-    {
-        const d = dice.find(d => d.name === e.dice);
-        if (d)
-        {
-            d.number = 1;
-            d.modifier = parseInt(e.modifier) || 0;
-            const result = roll2([d]);
-            console.log(result[0].total + d.modifier);
-        }
-    }
-</script>
-
 <script>
-
-let selectedDice = [];
-let rolled = false;
+    import { dice, roll2 } from "./dice";
+    let selectedDice = [];
+    let rolled = false;
 
 function roll()
 {

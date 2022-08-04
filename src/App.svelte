@@ -1,118 +1,86 @@
-<script context="module">
-
-import * as signalR from "@microsoft/signalr";
-
-const connection = new signalR.HubConnectionBuilder().withUrl("http://localhost:5294/hubs/game").build();
-connection.on("send", data => {
-    console.log(data);
-});
-
-connection
-    .start()
-    .then(() => {
-        console.log("senz msg");
-        connection.invoke("SendMessage", "Hello");
-    }).catch(err => {
-        console.log(err);
-    });
-
-</script>
-
 <script>
+    import * as signalR from "@microsoft/signalr";
+
     import Draggable from "./lib/Draggable.svelte";
-    import Dice, { runRoll } from "./lib/Dice.svelte";
+    import Dice  from "./lib/Dice.svelte";
     import Map from "./lib/Map.svelte";
     import MapSettings from "./lib/MapSettings.svelte";
     import PlayerList from "./lib/PlayerList.svelte";
     import MapTools from "./lib/MapTools.svelte";
-    import { onMount, setContext, getContext } from "svelte";
+    import { onMount } from "svelte";
 
     let footPerSquare = 15;
     let showReach = true;
+    let players= [];
+    let maps = [];
 
-    let players= [
-        {
-            ini: 12,
-            color: "green",
-            name: "Galandrion",
-            x: 10,
-            y: 10,
-            type: "pc",
-            reach : 10,
-            size: 2,
-            attacks : [
-                { name : "Dolch (Nahkampf)", range: "20", mod : "+5", dmg : "1W4+3" },
-                { name : "Dolch (Wurf)", range: "60", mod : "+5", dmg : "1W4+3" },
-                { name : "Guiding Bolt", range: "120ft", mod : "+3", dmg : "4W6", lvl : 1, slots : 1, components : "V, S", src : "PHB 248", url : "" }
-            ]
-        },
-        {
-            ini: 5,
-            color: "red",
-            name: "Junger grüner Drache",
-            x: 5,
-            y: 5,
-            type: "npc",
-            reach : 30,
-            size: 5
-        },
-        {
-            ini: 8,
-            color: "blue",
-            name: "Ork",
-            x: 8,
-            y: 8,
-            type: "npc",
-            reach : 10,
-            size: 5
-        }
-    ]
+    let player = -1;
+    let map = -1;
 
-    onMount(() => {
-        players.forEach(p => {
-            p.x = Math.floor(Math.random() * 20);
-            p.y = Math.floor(Math.random() * 15);
-            p.ini = Math.floor(Math.random() * 20);
-        });
-        players.sort((a, b) => b.ini - a.ini);
-        players = players;
-        connection.send("SendMessage", players)
-    });
-    
-
-    let player = 0;
     let w;
     let h;
     let zoom;
     let left;
     let top;
     let squareSizeInPx;
-    let diceRoller;
 
+    const hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
+        hubConnection.on("players", data => {
+            console.log("Got players data: ", data);
+        });
+    
+    let loader = Promise.all([
+        (async () => {
+            await hubConnection.start();
+            await hubConnection.invoke("SendPlayers", JSON.stringify(players));
+        })(),
+
+        (async () => {
+            players = await fetch("/api/creatures").then(r => r.json());
+            players.forEach(p => {
+                p.x = Math.floor(Math.random() * 20);
+                p.y = Math.floor(Math.random() * 15);
+                p.ini = Math.floor(Math.random() * 20);
+            });
+            players.sort((a, b) => b.ini - a.ini);
+
+            players = players;
+            player = 0;
+        })(),
+
+        (async () => {
+            maps = await fetch("/api/maps").then(r => r.json());
+            maps = maps;
+            map = 0;
+        })()
+    ])    
+    
+    onMount(async () => {
+
+        
+    });
+    
     function setMapCenter(e)
     {
         left = -((e.detail.x * squareSizeInPx) - w / 2);
         top = -((e.detail.y* squareSizeInPx) - h / 2);
-        console.log(squareSizeInPx, left,top)
-        
-    }
-
-    function roll(e)
-    {
-        console.log(e.detail);
-        runRoll(e.detail);
+        console.log(squareSizeInPx, left,top)    
     }
 </script>
 
 <svelte:window bind:innerWidth={w} bind:innerHeight={h}/>
 
+{#await loader}
+Lade
+{:then}
 <main class="overflow-hidden relative p-0" style="height: {h}px; width: {w}px;">
     <Draggable bind:left bind:top>
-        <Map {player} {players} {footPerSquare} {showReach} {zoom} bind:squareSizeInPx imageUrl="/src/assets/Galandrions Dorf.jpg" />
+        <Map {players} {player} {showReach} {zoom} bind:squareSizeInPx map={maps[map]} />
     </Draggable>
     
     <MapSettings bind:showReach bind:footPerSquare />
     <Dice />
-    <PlayerList {players} bind:player on:centerMap={setMapCenter} on:roll={roll} />
+    <PlayerList {players} bind:player on:centerMap={setMapCenter} />
     <MapTools bind:zoom />
 </main>
+{/await}
