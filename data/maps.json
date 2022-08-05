@@ -1,6 +1,6 @@
 [
     {
-        "id": "3",
+        "id": 3,
         "name": "Phandalin",
         "imageUrl": "/src/assets/map-phandalin.jpg",
         "widthInSquares" : 51,
@@ -10,7 +10,7 @@
         "footPerSquare" : 25
     },
     {
-        "id": "1",
+        "id": 1,
         "name": "Dungeon",
         "imageUrl": "/src/assets/dungeon.png",
         "widthInSquares" : 20,
@@ -20,7 +20,7 @@
         "footPerSquare" : 5
     },
     {
-        "id": "2",
+        "id": 2,
         "name": "Galandrions Dorf",
         "imageUrl": "/src/assets/Galandrions Dorf.jpg",
         "widthInSquares" : 20,
