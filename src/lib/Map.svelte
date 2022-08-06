@@ -1,5 +1,5 @@
 <script>
-    import { scenes, currentScene, currentPlayer } from "../stores";
+    import { hubConnection, currentScene, currentPlayer } from "../stores";
 
     export let showReach = true;
     export let zoom = 1;
@@ -22,7 +22,7 @@
         }
     }
 
-    function handleKey(e)
+    async function handleKey(e)
     {
         if (e.code === "ArrowLeft")
         {
@@ -44,15 +44,18 @@
             $currentPlayer.y = Math.max($currentPlayer.y + 0.25,0);
             e.preventDefault();
         };
+        // don't await
+        const { id, x, y } = $currentPlayer;
+        $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
         $currentScene.creatures = $currentScene.creatures;
-        
-
     }
 
     function handleMouse(e)
     {
         $currentPlayer.x = e.offsetX / squareSizeInPx;
         $currentPlayer.y = e.offsetY /squareSizeInPx;
+        const { id, x, y } = $currentPlayer;
+        $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
         $currentScene.creatures = $currentScene.creatures;
 
     }

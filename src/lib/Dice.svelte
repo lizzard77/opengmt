@@ -81,7 +81,7 @@ let isOpen = false;
     {/if}
 </div>
 {:else}
-    <div class="m-0 absolute bottom-4 right-4 flex items-center">
+    <div class="m-0 fixed bottom-4 right-4 flex items-center">
         <button on:click={() => isOpen=true} class="border-2 rounded-xl p-2 m-2 bg-black text-white">Würfel</button>
     </div>
 {/if}

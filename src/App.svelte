@@ -1,24 +1,44 @@
 <script>
     import * as signalR from "@microsoft/signalr";
-import AudioBoard from "./AudioBoard.svelte";
-import CharacterSheet from "./CharacterSheet.svelte";
-import Documents from "./Documents.svelte";
+    import { Router, Link, Route } from "svelte-routing";
+    import { hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
 
+    import AudioBoard from "./AudioBoard.svelte";
+    import CharacterSheet from "./CharacterSheet.svelte";
+    import Documents from "./Documents.svelte";
     import Dice  from "./lib/Dice.svelte";
     import SceneChooser from "./lib/SceneChooser.svelte";
     import Stage from "./Stage.svelte";
-
-    import { creatures, scenes, maps, stage } from "./stores";
-
-    const hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
-        hubConnection.on("players", data => {
-            console.log("Got players data: ", data);
-        });
     
-    let loader = Promise.all([
+    let isMaster = false;
+
+    $hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
+    $hubConnection.on("players", data => {
+        console.log("players", data);
+    });
+    $hubConnection.on("move", data => {
+        const { id, x, y } = JSON.parse(data);
+        const creature = $currentScene.creatures.find(c => c.id === id);
+        if (creature && (creature.x !== x || creature.y !== y)) {
+            console.log("move creature", creature.name, "to", x, y);
+            creature.x = x;
+            creature.y = y;
+            
+            $currentScene = $currentScene
+            $currentPlayer = $currentPlayer
+        }
+    });
+    $hubConnection.on("loadScene", data => {
+        console.log("loadScene", data);
+        loadScene(data);
+    });
+
+    
+    
+    let baseData = Promise.all([
         (async () => {
-            await hubConnection.start();
-            await hubConnection.invoke("SendPlayers", JSON.stringify($creatures));
+            await $hubConnection.start();
+            //await hubConnection.invoke("SendPlayers", JSON.stringify($creatures));
         })(),
 
         (async () => {
@@ -39,16 +59,64 @@ import Documents from "./Documents.svelte";
         (async () => {
             $scenes = await fetch("/api/scenes").then(r => r.json());
         })()
-    ])    
+    ]);
+    
+    let loader = (async () => {
+            await baseData;
+            $session = await fetch("/api/session").then(r => r.json());
+            if ($session.SceneId)
+                loadScene($session.SceneId);
+        })();
+
+    let showSceneChooser = false;
+
+    function loadScene(id)
+    {
+        const s = $scenes.find(s => s.id === id);
+        s.map = $maps.find(m => m.id === s.mapId);
+        s.creatures = s.creatureIds.map(c => {
+            return $creatures.find(cc => cc.id === c);
+        });
+        $currentScene = s;
+        $currentPlayer = $currentScene.creatures[0];
+    }
 </script>
 
 {#await loader}
-Lade
+    <div class="text-center">
+        <progress /><br />
+        Lade Daten...
+    </div>
 {:then}
-    <SceneChooser />
-    <Stage />
-    <CharacterSheet />
-    <Documents />
-    <AudioBoard />
-    <Dice />
+    
+    <input type="checkbox" bind:value={isMaster} /> Master
+    <button on:click={() => showSceneChooser = true}>Szene auswählen</button>
+
+    {#if $currentScene.id}
+        <Router>
+            {#if isMaster}
+            <nav>
+                <Link to="/">Stage</Link>
+                <a href="/" target="_new">Stage (neues Fenster)</a>
+                <Link to="sheets">Sheets</Link>
+                <Link to="docs">Dokumente</Link>
+                <Link to="audio">Audio</Link>
+                
+            </nav>
+            {/if}
+            <div>
+                <Route path="sheets" component="{CharacterSheet}" />
+                <Route path="docs" component="{Documents}" />
+                <Route path="audio" component="{AudioBoard}" />
+                <Route path="/"><Stage /></Route>
+            </div>
+        </Router>
+        <Dice />
+    {:else}
+        <div class="text-center">
+            <progress /><br />
+            Warte auf Spielstart...
+        </div>
+    {/if}
+    <SceneChooser bind:isOpen={showSceneChooser} />    
 {/await}

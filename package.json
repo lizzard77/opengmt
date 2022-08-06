@@ -20,6 +20,7 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
-    "@microsoft/signalr": "^6.0.7"
+    "@microsoft/signalr": "^6.0.7",
+    "svelte-routing": "^1.6.0"
   }
 }

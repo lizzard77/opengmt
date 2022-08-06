@@ -9,5 +9,17 @@ namespace OpenGMT.SignalR
             Console.WriteLine("Got players");
             await Clients.All.SendAsync("players", message);
         }
+
+        public async Task MovePlayer(string data)
+        {
+            Console.WriteLine("Move Player");
+            await Clients.All.SendAsync("move", data);
+        }
+
+        public async Task LoadScene(long id)
+        {
+            Console.WriteLine("Load Scene");
+            await Clients.All.SendAsync("loadScene", id);
+        }
     }
 }
