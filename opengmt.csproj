@@ -14,8 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-    <Content Remove="wwwroot\**" />
-    <Content Include="wwwroot\**" Watch="false" />
-</ItemGroup>
-
+        <Content Remove="wwwroot\**" />
+        <Content Include="wwwroot\**" Watch="false" />
+    </ItemGroup>
 </Project>
