@@ -1,8 +1,7 @@
 <script>
-    import { hubConnection, currentScene, currentPlayer } from "../stores";
+    import { hubConnection, currentScene, currentPlayer, zoom } from "../stores";
 
     export let showReach = true;
-    export let zoom = 1;
     export let squareSizeInPx = 0;
 
     let svg;
@@ -14,8 +13,8 @@
     $: {
         map = $currentScene.map;
         if (map && svg) { 
-            imageWidth = map.imageWidth * zoom; 
-            imageHeight = map.imageHeight * zoom;
+            imageWidth = map.imageWidth * $zoom; 
+            imageHeight = map.imageHeight * $zoom;
             squareSizeInPx = imageWidth / map.widthInSquares;
             console.log("square size in Map", squareSizeInPx);
             oneFoot = 1/map.footPerSquare;
@@ -24,30 +23,37 @@
 
     async function handleKey(e)
     {
+        let handled = false;
+
         if (e.code === "ArrowLeft")
         {
             $currentPlayer.x = Math.max($currentPlayer.x - 0.25,0);
-            e.preventDefault();
+            handled = true;
         };
         if (e.code === "ArrowRight")
         {
             $currentPlayer.x = Math.max($currentPlayer.x + 0.25,0);
-            e.preventDefault();
+            handled = true;
         };
         if (e.code === "ArrowUp")
         {
             $currentPlayer.y = Math.max($currentPlayer.y - 0.25,0);
-            e.preventDefault();
+            handled = true;
         };
         if (e.code === "ArrowDown")
         {
             $currentPlayer.y = Math.max($currentPlayer.y + 0.25,0);
-            e.preventDefault();
+            handled = true;
         };
-        // don't await
-        const { id, x, y } = $currentPlayer;
-        $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
-        $currentScene.creatures = $currentScene.creatures;
+
+        if (handled)
+        {
+            e.preventDefault();
+            const { id, x, y } = $currentPlayer;
+            // don't await
+            $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
+            $currentScene.creatures = $currentScene.creatures;
+        }
     }
 
     function handleMouse(e)
@@ -57,11 +63,11 @@
         const { id, x, y } = $currentPlayer;
         $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
         $currentScene.creatures = $currentScene.creatures;
-
     }
 </script>
 
 <svelte:window on:keydown={handleKey}/>
+
 {#if map}
 <svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {map.widthInSquares} {map.heightInSquares}" 
     on:click={handleMouse}

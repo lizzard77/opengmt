@@ -7,8 +7,8 @@
 	let moving = false;
     let pos = { x: 0, y: 0 };
 
-    let screenHeight = 0;
-    let screenWidth = 0;
+    export let screenHeight = 0;
+    export let screenWidth = 0;
     let contentHeight;
     let contentWidth;
 	let maxX = 0; 
@@ -31,14 +31,13 @@
 	
 	function onMouseMove(e) {
 		if (moving) {
-            //console.log("move");
             left += e.movementX;
 			top += e.movementY;
 		}
 	}
 	
-	function onMouseUp(e) {
-        //console.log("up");
+	function onMouseUp(e) 
+    {
 		moving = false;
 	}
 
@@ -59,21 +58,24 @@
 
     function onTouchEnd()
     {
-        //console.log("touch end");
         moving = false;
     }
+
+    function center()
+        { console.log("center")}
 </script>
 
-<section on:mousedown={onMouseDown} on:touchstart={onTouchStart} style="left: {left}px; top: {top}px;" class="draggable" bind:clientWidth={contentWidth} bind:clientHeight={contentHeight}>
+<section on:mousedown={onMouseDown} on:touchstart={onTouchStart} style="left: {left}px; top: {top}px;" class="draggable" bind:clientWidth={contentWidth} bind:clientHeight={contentHeight} on:centerMapToPlayer>
     <slot></slot>
 </section>
 
-<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} on:touchmove={onTouchMove} on:touchend={onTouchEnd} bind:innerHeight={screenHeight} bind:innerWidth={screenWidth} />
+<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} on:touchmove={onTouchMove} on:touchend={onTouchEnd} />
 
 <style>
 	.draggable {
 		user-select: none;
 		position: absolute;
+        touch-action: none;
 	}
 </style>
 

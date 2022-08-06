@@ -9,6 +9,7 @@
     import Dice  from "./lib/Dice.svelte";
     import SceneChooser from "./lib/SceneChooser.svelte";
     import Stage from "./Stage.svelte";
+    import Scenes from "./Scenes.svelte";
     
     let isMaster = false;
 
@@ -32,8 +33,6 @@
         console.log("loadScene", data);
         loadScene(data);
     });
-
-    
     
     let baseData = Promise.all([
         (async () => {
@@ -80,35 +79,43 @@
         $currentScene = s;
         $currentPlayer = $currentScene.creatures[0];
     }
+
+    async function handleKey(e)
+    {
+        if (e.key === "m" && e.ctrlKey) {
+            isMaster = !isMaster;        
+            e.preventDefault();
+            console.log("set master");
+        }
+    }
 </script>
+
+<svelte:window on:keydown={handleKey}/>
 
 {#await loader}
     <div class="text-center">
         <progress /><br />
         Lade Daten...
     </div>
-{:then}
-    
-    <input type="checkbox" bind:value={isMaster} /> Master
-    <button on:click={() => showSceneChooser = true}>Szene auswählen</button>
-
+{:then}    
     {#if $currentScene.id}
         <Router>
             {#if isMaster}
-            <nav>
-                <Link to="/">Stage</Link>
-                <a href="/" target="_new">Stage (neues Fenster)</a>
-                <Link to="sheets">Sheets</Link>
-                <Link to="docs">Dokumente</Link>
-                <Link to="audio">Audio</Link>
-                
-            </nav>
+                <!--nav class="z-50 fixed w-1/3 left-1/3 bg-gray-50 p-4">
+                    <Link to="/">Stage</Link> |
+                    <Link to="scenes">Szenen</Link> |
+                    <Link to="sheets">Sheets</Link> | 
+                    <Link to="docs">Dokumente</Link> |
+                    <Link to="audio">Audio</Link> | 
+                    dgvsöovj  sdöovlsjmvvsdv asvolösdvmsö
+                </nav-->
             {/if}
             <div>
                 <Route path="sheets" component="{CharacterSheet}" />
                 <Route path="docs" component="{Documents}" />
                 <Route path="audio" component="{AudioBoard}" />
-                <Route path="/"><Stage /></Route>
+                <Route path="scenes" component="{Scenes}" />
+                <Route path="/" component="{Stage}" {isMaster} />
             </div>
         </Router>
         <Dice />
