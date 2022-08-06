@@ -2,8 +2,8 @@
     {
         "id" : 1,
         "name" : "Ghule bei der Hochzeit",
-        "map" : 3,
-        "creatures" : [ 1 , 3 ],
+        "mapId" : 3,
+        "creatureIds" : [ 1 , 3 ],
         "description" : "Text **bold** test",
         "initiative" : [ 18, 8 ]
     }

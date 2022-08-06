@@ -18,13 +18,13 @@ namespace OpenGMT.Controllers
         public IActionResult Get()
         {
             string dataDir = env.ContentRootPath + "data";
-            string dataFile = Path.Combine(dataDir, "maps.json");
+            string dataFile = Path.Combine(dataDir, "scenes.json");
             if (Directory.Exists(dataDir) && System.IO.File.Exists(dataFile))
             {
                 string data = System.IO.File.ReadAllText(dataFile);
-                Console.WriteLine("maps: " + dataFile);
+                Console.WriteLine("scenes: " + dataFile);
                 return Ok(data);
-            } else Console.WriteLine("maps: not found" +dataFile);
+            } else Console.WriteLine("scenes: not found" +dataFile);
             return NotFound();
         }
     }

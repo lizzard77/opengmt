@@ -1,6 +1,8 @@
 <script>
+    import { createEventDispatcher } from "svelte";
     export let zoom = 1;
-
+    const dispatch = createEventDispatcher();
+    
     function toggleZoom()
     {
         const levels = [0.5,1,1.5];
@@ -8,6 +10,7 @@
         index++;
         if (index > levels.length-1) index = 0;
         zoom = levels[index];
+        dispatch("centerMapToPlayer");
     }
 </script>
 

@@ -1,9 +1,8 @@
 <script>
+    import { scenes, currentScene, creatures, currentPlayer } from "../stores";
     import { dice, roll2 } from "./dice";
     import Modal from "./Modal.svelte";
     
-    export let attacks = [];
-
     let attackRollResult = "";
     let damageResult = "";
     let currentAttack = null;
@@ -68,7 +67,7 @@
     <div class="h-full w-full bg-white rounded-xl p-8">
         {#if !currentAttack}
         <ul>
-        {#each attacks as a,i}
+        {#each $currentPlayer.attacks as a}
         <button class="block p-2" on:click={() => run(a)}>
             <li>{a.name} ({a.mod} / Schaden: {a.dmg})</li>
         </button>

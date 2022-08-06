@@ -3,11 +3,12 @@
         "id": 3,
         "name": "Phandalin",
         "imageUrl": "/src/assets/map-phandalin.jpg",
-        "widthInSquares" : 51,
+        "widthInSquares" : 50,
         "heightInSquares" : 36,
         "imageWidth" : 2550,
-        "imageHeight" : 1830,
-        "footPerSquare" : 25
+        "imageHeight" : 1836,
+        "footPerSquare" : 25,
+        "gridOpacity" : 0.8
     },
     {
         "id": 1,
@@ -17,7 +18,8 @@
         "heightInSquares" : 20,
         "imageWidth" : 1240,
         "imageHeight" : 1240,
-        "footPerSquare" : 5
+        "footPerSquare" : 5,
+        "gridOpacity" : 1
     },
     {
         "id": 2,
@@ -27,6 +29,7 @@
         "heightInSquares" : 15,
         "imageWidth" : 2048,
         "imageHeight" : 1536,
-        "footPerSquare" : 15
+        "footPerSquare" : 15,
+        "gridOpacity" : 0.5
     }
 ]
