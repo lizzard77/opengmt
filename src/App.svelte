@@ -12,6 +12,8 @@
     import Scenes from "./Scenes.svelte";
     
     let isMaster = false;
+    let left = 0;
+    let top = 0;
 
     $hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
     $hubConnection.on("players", data => {
@@ -32,6 +34,11 @@
     $hubConnection.on("loadScene", data => {
         console.log("loadScene", data);
         loadScene(data);
+    });
+    $hubConnection.on("moveMap", (t,l) => {
+        console.log("moveMap", top, left);
+        //top = t;
+        //left = l;
     });
     
     let baseData = Promise.all([
@@ -101,21 +108,20 @@
     {#if $currentScene.id}
         <Router>
             {#if isMaster}
-                <!--nav class="z-50 fixed w-1/3 left-1/3 bg-gray-50 p-4">
+                <nav class="z-50 fixed w-1/3 left-1/3 bg-gray-50 p-4">
                     <Link to="/">Stage</Link> |
                     <Link to="scenes">Szenen</Link> |
                     <Link to="sheets">Sheets</Link> | 
                     <Link to="docs">Dokumente</Link> |
-                    <Link to="audio">Audio</Link> | 
-                    dgvsöovj  sdöovlsjmvvsdv asvolösdvmsö
-                </nav-->
+                    <Link to="audio">Audio</Link>
+                </nav>
             {/if}
             <div>
                 <Route path="sheets" component="{CharacterSheet}" />
                 <Route path="docs" component="{Documents}" />
                 <Route path="audio" component="{AudioBoard}" />
                 <Route path="scenes" component="{Scenes}" />
-                <Route path="/" component="{Stage}" {isMaster} />
+                <Route path="/" component="{Stage}" {isMaster} {left} {top} />
             </div>
         </Router>
         <Dice />

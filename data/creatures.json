@@ -27,5 +27,52 @@
         "type": "npc",
         "reach" : 10,
         "size": 5
+    },
+    {
+        "id" : 4,
+        "color": "pink",
+        "name": "Anra",
+        "type": "pc",
+        "reach" : 10,
+        "size": 2,
+        "attacks" : [
+            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+        ]
+    },
+    {
+        "id" : 5,
+        "color": "orange",
+        "name": "Luciana",
+        "type": "pc",
+        "reach" : 10,
+        "size": 2,
+        "attacks" : [
+            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+        ]
+    },
+    {
+        "id" : 6,
+        "color": "red",
+        "name": "Mantikor",
+        "type": "npc",
+        "reach" : 10,
+        "size": 2,
+        "attacks" : [
+            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+        ]
+    },
+    {
+        "id" : 7,
+        "color": "silver",
+        "name": "Adriana",
+        "type": "npc",
+        "reach" : 10,
+        "size": 2
     }
 ]

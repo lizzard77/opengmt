@@ -31,5 +31,17 @@
         "imageHeight" : 1536,
         "footPerSquare" : 15,
         "gridOpacity" : 0.5
+    },
+    {
+        "id": 4,
+        "name": "DoIP1",
+        "imageUrl": "/assets/map-uh-pc.jpg",
+        "imageUrlDM": "/assets/map-uh-dm.jpg",
+        "widthInSquares" : 66,
+        "heightInSquares" : 42,
+        "imageWidth" : 2888,
+        "imageHeight" : 1838,
+        "footPerSquare" : 5,
+        "gridOpacity" : 0.5
     }
 ]

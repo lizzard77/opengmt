@@ -1,5 +1,6 @@
 <script>
     import { afterUpdate } from "svelte";
+    import { hubConnection } from '../stores';
     
 	export let left = 0;
 	export let top = 0;
@@ -25,12 +26,13 @@
     });
         
 	function onMouseDown(e) {
-        console.log("down");
+        //console.log("down");
         moving = true;
 	}
 	
 	function onMouseMove(e) {
 		if (moving) {
+            //console.log("move", left, top)
             left += e.movementX;
 			top += e.movementY;
 		}
@@ -39,6 +41,9 @@
 	function onMouseUp(e) 
     {
 		moving = false;
+        let xx = contentWidth / 2 - left;
+        let yy = contentHeight / 2 - left;
+        $hubConnection.invoke('moveMap', xx, yy);
 	}
 
     function onTouchStart(e)
@@ -59,13 +64,16 @@
     function onTouchEnd()
     {
         moving = false;
+        let xx = contentWidth / 2 - left;
+        let yy = contentHeight / 2 - left;
+        $hubConnection.invoke('moveMap', xx, yy);
     }
 
     function center()
         { console.log("center")}
 </script>
 
-<section on:mousedown={onMouseDown} on:touchstart={onTouchStart} style="left: {left}px; top: {top}px;" class="draggable" bind:clientWidth={contentWidth} bind:clientHeight={contentHeight} on:centerMapToPlayer>
+<section on:mousedown={onMouseDown} on:touchstart={onTouchStart} style="left: {left}px; top: {top}px;" class="draggable" bind:clientWidth={contentWidth} bind:clientHeight={contentHeight}>
     <slot></slot>
 </section>
 

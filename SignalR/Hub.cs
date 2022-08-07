@@ -21,5 +21,11 @@ namespace OpenGMT.SignalR
             Console.WriteLine("Load Scene");
             await Clients.All.SendAsync("loadScene", id);
         }
+
+        public async Task MoveMap(long left, long top)
+        {
+            Console.WriteLine("Move Map");
+            await Clients.All.SendAsync("moveMap", left, top);
+        }
     }
 }

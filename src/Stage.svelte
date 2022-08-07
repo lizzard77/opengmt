@@ -11,25 +11,24 @@
     let showReach = true;
     let w;
     let h;
-    let left;
-    let top;
+    export let left = 0;
+    export let top = 0;
     let squareSizeInPx;
     export let isMaster;
     
     function setMapCenter(e)
     {
-        console.log("square size in setMapCenter", squareSizeInPx);
-        if (!$currentPlayer)
+        if (!!$currentPlayer)
             return;
         left = -(($currentPlayer.x * squareSizeInPx) - w / 2);
         top = -(($currentPlayer.y* squareSizeInPx) - h / 2);
     }
 
     // Reihenfolge - zu früh!!!
-    const currentPlayerChanged = zoom.subscribe(v => {
+    /*const currentPlayerChanged = zoom.subscribe(v => {
         console.log('zoom subscription')
         setMapCenter();
-    });
+    });*/
 </script>
 
 <div class="flex h-screen w-screen overflow-hidden">
@@ -40,7 +39,7 @@
         
         <MapSettings bind:showReach />
         {#if !isMaster}
-        <PlayerList on:centerMapToPlayer={setMapCenter} />
+        <!--PlayerList on:centerMapToPlayer={setMapCenter} /-->
         {/if}
         <MapTools on:centerMapToPlayer={setMapCenter} />
     </main>

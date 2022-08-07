@@ -24,7 +24,7 @@
     <div class="fixed left-0 top-0 bg-black opacity-50 z-30 h-screen w-screen" on:click={() => isOpen = false}></div>
     <div class="fixed p-2 top-0 z-50 flex portrait:flex-col">
         {#each $currentScene.creatures as p}
-        <button on:click={() => setPlayer(p)} class="m-2 p-2 rounded-lg bg-slate-200">{p.name} ({p.ini})</button>
+        <button on:click={() => setPlayer(p)} class="m-2 p-2 rounded-lg bg-slate-200" style="border-left: 8px solid {p.color}">{p.name} ({p.ini})</button>
         {/each}
     </div>
 {:else}
