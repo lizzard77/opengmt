@@ -1,5 +1,5 @@
 <script>
-    import { currentPlayer, zoom } from "./stores";
+    import { hubConnection, currentPlayer, isMaster } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -14,14 +14,25 @@
     export let left = 0;
     export let top = 0;
     let squareSizeInPx;
-    export let isMaster;
     
+    $hubConnection.on("centerMap", (l,t) => {
+        if ($isMaster)
+            return;
+        console.log("centerMap", t, l);
+        left = -((l * squareSizeInPx) - w / 2);
+        top = -((t * squareSizeInPx) - h / 2);
+    });
+    
+
     function setMapCenter(e)
     {
-        if (!!$currentPlayer)
+        const creature = e.detail || $currentPlayer;
+        if (!creature)
             return;
-        left = -(($currentPlayer.x * squareSizeInPx) - w / 2);
-        top = -(($currentPlayer.y* squareSizeInPx) - h / 2);
+
+        left = -((creature.x * squareSizeInPx) - w / 2);
+        top = -((creature.y* squareSizeInPx) - h / 2);
+        $hubConnection.invoke('CenterMap', creature.x, creature.y);
     }
 
     // Reihenfolge - zu früh!!!
@@ -39,12 +50,12 @@
         
         <MapSettings bind:showReach />
         {#if !isMaster}
-        <!--PlayerList on:centerMapToPlayer={setMapCenter} /-->
+        <PlayerList on:centerMapToPlayer={setMapCenter} />
         {/if}
         <MapTools on:centerMapToPlayer={setMapCenter} />
     </main>
-    {#if isMaster}
-    <div class="w-1/5">
+    {#if $isMaster}
+    <div class="">
         <PlayerPanel on:centerMapToPlayer={setMapCenter} />
     </div>
     {/if}

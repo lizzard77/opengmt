@@ -22,10 +22,10 @@ namespace OpenGMT.SignalR
             await Clients.All.SendAsync("loadScene", id);
         }
 
-        public async Task MoveMap(long left, long top)
+        public async Task CenterMap(float x, float y)
         {
-            Console.WriteLine("Move Map");
-            await Clients.All.SendAsync("moveMap", left, top);
+            Console.WriteLine("Center Map", x, y);
+            await Clients.All.SendAsync("centerMap", x, y);
         }
     }
 }

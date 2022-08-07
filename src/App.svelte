@@ -1,7 +1,7 @@
 <script>
     import * as signalR from "@microsoft/signalr";
     import { Router, Link, Route } from "svelte-routing";
-    import { hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
+    import { isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
 
     import AudioBoard from "./AudioBoard.svelte";
     import CharacterSheet from "./CharacterSheet.svelte";
@@ -11,15 +11,30 @@
     import Stage from "./Stage.svelte";
     import Scenes from "./Scenes.svelte";
     
-    let isMaster = false;
     let left = 0;
     let top = 0;
 
     $hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
     $hubConnection.on("players", data => {
-        console.log("players", data);
+        if ($isMaster)
+            return;
+        const incomingPlayerData = JSON.parse(data);
+        incomingPlayerData.forEach(d => 
+        {
+            const player = $currentScene.creatures.find(c => c.id == d.id);
+            if (player)
+            {
+                player.x = d.x;
+                player.y = d.y;
+                player.visible = d.visible;
+            }
+        });
+        $currentScene = $currentScene;
     });
     $hubConnection.on("move", data => {
+        if ($isMaster)
+            return;
+        
         const { id, x, y } = JSON.parse(data);
         const creature = $currentScene.creatures.find(c => c.id === id);
         if (creature && (creature.x !== x || creature.y !== y)) {
@@ -32,19 +47,16 @@
         }
     });
     $hubConnection.on("loadScene", data => {
+        if ($isMaster)
+            return;
+        
         console.log("loadScene", data);
         loadScene(data);
-    });
-    $hubConnection.on("moveMap", (t,l) => {
-        console.log("moveMap", top, left);
-        //top = t;
-        //left = l;
     });
     
     let baseData = Promise.all([
         (async () => {
             await $hubConnection.start();
-            //await hubConnection.invoke("SendPlayers", JSON.stringify($creatures));
         })(),
 
         (async () => {
@@ -53,6 +65,7 @@
                 p.x = Math.floor(Math.random() * 20);
                 p.y = Math.floor(Math.random() * 15);
                 p.ini = Math.floor(Math.random() * 20);
+                p.visible = false;
             });
             loadedCreatures.sort((a, b) => b.ini - a.ini);
             $creatures = loadedCreatures;
@@ -90,9 +103,11 @@
     async function handleKey(e)
     {
         if (e.key === "m" && e.ctrlKey) {
-            isMaster = !isMaster;        
             e.preventDefault();
-            console.log("set master");
+            $isMaster = !$isMaster;        
+            console.log("set master=", $isMaster);
+            if ($isMaster)
+                $hubConnection.invoke("SendPlayers", JSON.stringify($currentScene.creatures));
         }
     }
 </script>
@@ -107,7 +122,7 @@
 {:then}    
     {#if $currentScene.id}
         <Router>
-            {#if isMaster}
+            {#if $isMaster}
                 <nav class="z-50 fixed w-1/3 left-1/3 bg-gray-50 p-4">
                     <Link to="/">Stage</Link> |
                     <Link to="scenes">Szenen</Link> |
@@ -121,7 +136,7 @@
                 <Route path="docs" component="{Documents}" />
                 <Route path="audio" component="{AudioBoard}" />
                 <Route path="scenes" component="{Scenes}" />
-                <Route path="/" component="{Stage}" {isMaster} {left} {top} />
+                <Route path="/" component="{Stage}" {left} {top} />
             </div>
         </Router>
         <Dice />

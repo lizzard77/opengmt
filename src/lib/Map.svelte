@@ -1,5 +1,5 @@
 <script>
-    import { hubConnection, currentScene, currentPlayer, zoom } from "../stores";
+    import { hubConnection, currentScene, currentPlayer, zoom, isMaster } from "../stores";
 
     export let showReach = true;
     export let squareSizeInPx = 0;
@@ -86,7 +86,7 @@
         <circle cx="{$currentPlayer.x}" cy="{$currentPlayer.y}" r="{oneFoot*5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
         {/if}
         
-        {#each $currentScene.creatures as p}
+        {#each $currentScene.creatures.filter(c => $isMaster || c.visible) as p}
         <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size}" style="fill:{p.color}" />
         {/each}
     {/if}

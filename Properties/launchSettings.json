@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "svelte_dotnet_app_vite": {
+    "opengmt": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

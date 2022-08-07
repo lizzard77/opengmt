@@ -41,9 +41,6 @@
 	function onMouseUp(e) 
     {
 		moving = false;
-        let xx = contentWidth / 2 - left;
-        let yy = contentHeight / 2 - left;
-        $hubConnection.invoke('moveMap', xx, yy);
 	}
 
     function onTouchStart(e)
@@ -64,9 +61,6 @@
     function onTouchEnd()
     {
         moving = false;
-        let xx = contentWidth / 2 - left;
-        let yy = contentHeight / 2 - left;
-        $hubConnection.invoke('moveMap', xx, yy);
     }
 
     function center()
