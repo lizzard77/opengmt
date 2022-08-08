@@ -34,9 +34,21 @@
     },
     {
         "id": 4,
-        "name": "DoIP1",
+        "name": "DoIP Haderhügel",
         "imageUrl": "/assets/map-uh-pc.jpg",
         "imageUrlDM": "/assets/map-uh-dm.jpg",
+        "widthInSquares" : 66,
+        "heightInSquares" : 42,
+        "imageWidth" : 2888,
+        "imageHeight" : 1838,
+        "footPerSquare" : 5,
+        "gridOpacity" : 0.5
+    },
+    {
+        "id": 5,
+        "name": "DoIP Zwergenausgrabung",
+        "imageUrl": "/assets/map-de-pc.jpg",
+        "imageUrlDM": "/assets/map-de-dm.jpg",
         "widthInSquares" : 66,
         "heightInSquares" : 42,
         "imageWidth" : 2888,

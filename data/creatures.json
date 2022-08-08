@@ -74,5 +74,45 @@
         "type": "npc",
         "reach" : 10,
         "size": 2
+    },
+    {
+        "id" : 8,
+        "color": "silver",
+        "name": "Zwerg 1",
+        "type": "npc",
+        "reach" : 10,
+        "size": 2
+    },
+    {
+        "id" : 9,
+        "color": "silver",
+        "name": "Zwerg 2",
+        "type": "npc",
+        "reach" : 10,
+        "size": 2
+    },
+    {
+        "id" : 10,
+        "color": "red",
+        "name": "Ockergallerte 1",
+        "type": "npc",
+        "reach" : 10,
+        "size": 2
+    },
+    {
+        "id" : 11,
+        "color": "red",
+        "name": "Ockergallerte 2",
+        "type": "npc",
+        "reach" : 10,
+        "size": 2
+    },
+    {
+        "id" : 12,
+        "color": "red",
+        "name": "Ockergallerte 3",
+        "type": "npc",
+        "reach" : 10,
+        "size": 2
     }
 ]
