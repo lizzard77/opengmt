@@ -16,6 +16,12 @@ namespace OpenGMT.SignalR
             await Clients.All.SendAsync("move", data);
         }
 
+        public async Task SetCurrentPlayer(string data)
+        {
+            Console.WriteLine("Set Current Player");
+            await Clients.All.SendAsync("setCurrentPlayer", data);
+        }
+
         public async Task LoadScene(long id)
         {
             Console.WriteLine("Load Scene");

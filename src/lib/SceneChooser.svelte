@@ -1,17 +1,18 @@
 <script>
     import Modal from "./Modal.svelte";
     import { hubConnection, session, scenes, currentScene, maps, creatures, currentPlayer } from "../stores";
-    export let isOpen = false;
+    export let isOpen = true;
 
-    async function loadScene(s)
+    async function loadScene(scene)
     {
-        $currentScene.map = $maps.find(m => m.id === s.mapId);
-        $currentScene.creatures = s.creatureIds.map(c => {
+        const s = $scenes.find(ss => ss.id === scene.id);
+        s.map = $maps.find(m => m.id === s.mapId);
+        s.creatures = s.creatureIds.map(c => {
             return $creatures.find(cc => cc.id === c);
         });
-        $currentPlayer = $currentScene.creatures[0];
         $currentScene = s;
-        
+        $currentPlayer = $currentScene.creatures[0];
+
         const sessionBody = { SceneId: s.id, Updated : "2000-01-01" };
         $session = await fetch("/api/session", 
             { 

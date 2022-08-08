@@ -1,5 +1,5 @@
 <script>
-    import { hubConnection, currentPlayer, isMaster } from "./stores";
+    import { hubConnection, currentPlayer, isMaster, squareSizeInPx } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -13,43 +13,37 @@
     let h;
     export let left = 0;
     export let top = 0;
-    let squareSizeInPx;
     
     $hubConnection.on("centerMap", (l,t) => {
         if ($isMaster)
             return;
         console.log("centerMap", t, l);
-        left = -((l * squareSizeInPx) - w / 2);
-        top = -((t * squareSizeInPx) - h / 2);
+        left = -((l * $squareSizeInPx) - w / 2);
+        top = -((t * $squareSizeInPx) - h / 2);
     });
     
 
     function setMapCenter(e)
     {
+        console.log("setMapCenter", e.detail);
         const creature = e.detail || $currentPlayer;
         if (!creature)
             return;
 
-        left = -((creature.x * squareSizeInPx) - w / 2);
-        top = -((creature.y* squareSizeInPx) - h / 2);
+        left = -((creature.x * $squareSizeInPx) - w / 2);
+        top = -((creature.y* $squareSizeInPx) - h / 2);
         $hubConnection.invoke('CenterMap', creature.x, creature.y);
     }
-
-    // Reihenfolge - zu früh!!!
-    /*const currentPlayerChanged = zoom.subscribe(v => {
-        console.log('zoom subscription')
-        setMapCenter();
-    });*/
 </script>
 
 <div class="flex h-screen w-screen overflow-hidden">
     <main class="flex-1 relative overflow-hidden" bind:clientWidth={w} bind:clientHeight={h}>
         <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
-            <Map {showReach} bind:squareSizeInPx />
+            <Map {showReach} />
         </Draggable>
         
         <MapSettings bind:showReach />
-        {#if !isMaster}
+        {#if !$isMaster}
         <PlayerList on:centerMapToPlayer={setMapCenter} />
         {/if}
         <MapTools on:centerMapToPlayer={setMapCenter} />

@@ -1,11 +1,12 @@
 <script>
     import { afterUpdate } from "svelte";
-    import { hubConnection } from '../stores';
+    import { isMaster, currentPlayer, hubConnection, squareSizeInPx, currentScene } from '../stores';
     
 	export let left = 0;
 	export let top = 0;
 	
 	let moving = false;
+    let wasmoving = false;
     let pos = { x: 0, y: 0 };
 
     export let screenHeight = 0;
@@ -32,6 +33,7 @@
 	
 	function onMouseMove(e) {
 		if (moving) {
+            wasmoving = true;
             //console.log("move", left, top)
             left += e.movementX;
 			top += e.movementY;
@@ -40,7 +42,11 @@
 	
 	function onMouseUp(e) 
     {
+        console.log("up");
+        if (wasmoving)
+            window.addEventListener('click', captureClick, true);  // <-- This registeres this listener for the capture phase instead of the bubbling phase!
 		moving = false;
+        
 	}
 
     function onTouchStart(e)
@@ -52,19 +58,31 @@
 
     function onTouchMove(e)
     {
-        left += e.touches[0].clientX - pos.x;
-        top += e.touches[0].clientY - pos.y;
-        pos.x = e.touches[0].clientX;
-        pos.y = e.touches[0].clientY;
+        if (moving)
+        {
+            wasmoving = true;
+            left += e.touches[0].clientX - pos.x;
+            top += e.touches[0].clientY - pos.y;
+            pos.x = e.touches[0].clientX;
+            pos.y = e.touches[0].clientY;
+        }
     }
 
-    function onTouchEnd()
+    function onTouchEnd(e)
     {
+        console.log("touch end");
+        if (wasmoving)
+            window.addEventListener('click', captureClick, true);  // <-- This registeres this listener for the capture phase instead of the bubbling phase!
+            
         moving = false;
     }
 
-    function center()
-        { console.log("center")}
+    function captureClick(e) {
+        wasmoving = false;
+        e.stopPropagation(); // Stop the click from being propagated.
+        console.log('click captured');
+        window.removeEventListener('click', captureClick, true); // cleanup
+    }
 </script>
 
 <section on:mousedown={onMouseDown} on:touchstart={onTouchStart} style="left: {left}px; top: {top}px;" class="draggable" bind:clientWidth={contentWidth} bind:clientHeight={contentHeight}>

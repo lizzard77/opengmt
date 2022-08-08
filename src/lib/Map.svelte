@@ -1,8 +1,7 @@
 <script>
-    import { hubConnection, currentScene, currentPlayer, zoom, isMaster } from "../stores";
+    import { hubConnection, currentScene, currentPlayer, zoom, isMaster, squareSizeInPx } from "../stores";
 
     export let showReach = true;
-    export let squareSizeInPx = 0;
 
     let svg;
     let map = $currentScene.map;
@@ -15,8 +14,7 @@
         if (map && svg) { 
             imageWidth = map.imageWidth * $zoom; 
             imageHeight = map.imageHeight * $zoom;
-            squareSizeInPx = imageWidth / map.widthInSquares;
-            console.log("square size in Map", squareSizeInPx);
+            $squareSizeInPx = imageWidth / map.widthInSquares;
             oneFoot = 1/map.footPerSquare;
         }
     }
@@ -56,10 +54,14 @@
         }
     }
 
-    function handleMouse(e)
+    function click(e)
     {
-        $currentPlayer.x = e.offsetX / squareSizeInPx;
-        $currentPlayer.y = e.offsetY /squareSizeInPx;
+        if (!$isMaster)
+            return;
+
+        
+        $currentPlayer.x = e.offsetX / $squareSizeInPx;
+        $currentPlayer.y = e.offsetY / $squareSizeInPx;
         const { id, x, y } = $currentPlayer;
         $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
         $currentScene.creatures = $currentScene.creatures;
@@ -70,9 +72,9 @@
 
 {#if map}
 <svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {map.widthInSquares} {map.heightInSquares}" 
-    on:click={handleMouse}
+    on:click={click}
     style="width: {imageWidth}px; height: {imageHeight}px;">
-    <image href="{map.imageUrl}" x="0" y="0" width={map.widthInSquares} height={map.heightInSquares} />
+    <image href="{$isMaster && map.imageUrlDM ? map.imageUrlDM : map.imageUrl}" x="0" y="0" width={map.widthInSquares} height={map.heightInSquares} />
     {#each Array(map.widthInSquares) as _, i}
     <line x1="{i}" y1="0" x2="{i}" y2="{map.heightInSquares}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: {map.gridOpacity||1};" />
     {/each}
@@ -81,7 +83,7 @@
     {/each}
 
     {#if $currentPlayer}
-        {#if showReach}
+        {#if showReach && $currentPlayer.visible}
         <circle cx="{$currentPlayer.x}" cy="{$currentPlayer.y}" r="{oneFoot*$currentPlayer.reach}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
         <circle cx="{$currentPlayer.x}" cy="{$currentPlayer.y}" r="{oneFoot*5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
         {/if}

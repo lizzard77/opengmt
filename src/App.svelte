@@ -10,6 +10,7 @@
     import SceneChooser from "./lib/SceneChooser.svelte";
     import Stage from "./Stage.svelte";
     import Scenes from "./Scenes.svelte";
+    import ProgressCircle from "./lib/ProgressCircle.svelte";
     
     let left = 0;
     let top = 0;
@@ -27,6 +28,7 @@
                 player.x = d.x;
                 player.y = d.y;
                 player.visible = d.visible;
+                player.ini = d.ini;
             }
         });
         $currentScene = $currentScene;
@@ -41,15 +43,26 @@
             console.log("move creature", creature.name, "to", x, y);
             creature.x = x;
             creature.y = y;
-            
-            $currentScene = $currentScene
-            $currentPlayer = $currentPlayer
+            $currentScene = $currentScene;
+            $currentPlayer = $currentPlayer;
         }
     });
-    $hubConnection.on("loadScene", data => {
+    $hubConnection.on("setCurrentPlayer", data =>
+    {
         if ($isMaster)
             return;
         
+        const { id } = JSON.parse(data);
+        const creature = $currentScene.creatures.find(c => c.id === id);
+        if (creature && creature.visible) {
+            console.log("set current player", creature.name);
+            $currentPlayer = creature;
+        }
+    });
+
+    $hubConnection.on("loadScene", data => {
+        if ($isMaster)
+            return;
         console.log("loadScene", data);
         loadScene(data);
     });
@@ -87,8 +100,6 @@
                 loadScene($session.SceneId);
         })();
 
-    let showSceneChooser = false;
-
     function loadScene(id)
     {
         const s = $scenes.find(s => s.id === id);
@@ -115,11 +126,11 @@
 <svelte:window on:keydown={handleKey}/>
 
 {#await loader}
-    <div class="text-center">
-        <progress /><br />
+    <div class="text-center mt-8">
+        <ProgressCircle />
         Lade Daten...
     </div>
-{:then}    
+{:then}
     {#if $currentScene.id}
         <Router>
             {#if $isMaster}
@@ -131,6 +142,7 @@
                     <Link to="audio">Audio</Link>
                 </nav>
             {/if}
+            
             <div>
                 <Route path="sheets" component="{CharacterSheet}" />
                 <Route path="docs" component="{Documents}" />
@@ -141,10 +153,13 @@
         </Router>
         <Dice />
     {:else}
-        <div class="text-center">
-            <progress /><br />
-            Warte auf Spielstart...
-        </div>
+        {#if !$isMaster}
+            <div class="text-center mt-8">
+                <ProgressCircle />
+                Warte auf Spielstart...
+            </div>
+        {:else}
+            <SceneChooser />
+        {/if}
     {/if}
-    <SceneChooser bind:isOpen={showSceneChooser} />    
 {/await}
