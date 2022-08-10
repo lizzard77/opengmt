@@ -1,5 +1,5 @@
 <script>
-    import { hubConnection, currentPlayer, isMaster, squareSizeInPx } from "./stores";
+    import { fog, hubConnection, currentPlayer, isMaster, squareSizeInPx } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -21,7 +21,13 @@
         left = -((l * $squareSizeInPx) - w / 2);
         top = -((t * $squareSizeInPx) - h / 2);
     });
-    
+
+    $hubConnection.on("setFog", (a) => {
+        if ($isMaster)
+            return;
+        console.log("setFog", a);
+        $fog = a;
+    });
 
     function setMapCenter(e)
     {
@@ -32,14 +38,16 @@
 
         left = -((creature.x * $squareSizeInPx) - w / 2);
         top = -((creature.y* $squareSizeInPx) - h / 2);
-        $hubConnection.invoke('CenterMap', creature.x, creature.y);
+        if (creature.visible)
+            $hubConnection.invoke('CenterMap', creature.x, creature.y);
     }
+
 </script>
 
 <div class="flex h-screen w-screen overflow-hidden">
     <main class="flex-1 relative overflow-hidden" bind:clientWidth={w} bind:clientHeight={h}>
         <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
-            <Map {showReach} />
+            <Map {showReach} on:centerMapToPlayer={setMapCenter} />
         </Draggable>
         
         <MapSettings bind:showReach />
@@ -53,4 +61,5 @@
         <PlayerPanel on:centerMapToPlayer={setMapCenter} />
     </div>
     {/if}
+    
 </div>  
