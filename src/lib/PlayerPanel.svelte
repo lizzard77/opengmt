@@ -2,7 +2,7 @@
 	import Icon from "./Icon.svelte"
 					
     import { createEventDispatcher } from "svelte";
-    import { isMaster, currentScene, currentPlayer, hubConnection } from "../stores";
+    import { combat, isMaster, currentScene, currentPlayer, hubConnection } from "../stores";
     import { mdiEyeOff, mdiEye, mdiTarget, mdiLampOutline, mdiLamp } from "@mdi/js";
     import { mdiSkull } from "@mdi/js";
 
@@ -54,14 +54,13 @@
         combatCreatures = combatCreatures;
     }
 
-    let combat = false;
     let combatCreatures = [];
 
     function startCombat()
     {
         updateCombattantList();
-        combat = !combat;
-        if (!combat)
+        $combat = !$combat;
+        if (!$combat)
         {
             let tempc = $currentScene.creatures.filter(c => c.visible);
             tempc.forEach(c => c.ini = -1);
@@ -99,7 +98,7 @@
         {/each}
 
         <button on:click={startCombat} class="p-2 rounded-lg bg-slate-200 mt-8 mb-1">
-            Kampf {combat ? "beenden" : "starten"}
+            Kampf {$combat ? "beenden" : "starten"}
         </button>
 
         {#if combat}

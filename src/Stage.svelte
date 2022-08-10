@@ -42,6 +42,8 @@
             $hubConnection.invoke('CenterMap', creature.x, creature.y);
     }
 
+    setMapCenter($currentPlayer);
+
 </script>
 
 <div class="flex h-screen w-screen overflow-hidden">
