@@ -22,6 +22,12 @@ namespace OpenGMT.SignalR
             await Clients.All.SendAsync("setCurrentPlayer", data);
         }
 
+        public async Task SetFog(bool fogActive)
+        {
+            Console.WriteLine("Set Fog");
+            await Clients.All.SendAsync("setFog", fogActive);
+        }
+
         public async Task LoadScene(long id)
         {
             Console.WriteLine("Load Scene");

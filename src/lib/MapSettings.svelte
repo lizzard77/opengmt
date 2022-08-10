@@ -1,4 +1,6 @@
 <script>
+    import { mdiCog } from "@mdi/js";
+    import Icon from './Icon.svelte';
     import Modal from "./Modal.svelte";
 
     export let showReach = true;
@@ -16,5 +18,5 @@
 </Modal>
 
 <div class="fixed bottom-2 left-2 flex items-center">
-    <button class="border-2 rounded-xl p-2 bg-black text-white" on:click={() => isOpen = true}>Einstellungen</button>
+    <button on:click={() => isOpen = true} class="ml-3 p-2 rounded-lg bg-slate-200 border-4 mr-2"><Icon path={mdiCog} size=24 /></button>
 </div>

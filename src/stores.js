@@ -7,6 +7,7 @@ export const stage = writable({});
 export const session = writable({});
 export const hubConnection = writable();
 export const zoom = writable(1.0);
+export const fog = writable(true);
 export const isMaster = writable(false);
 export const squareSizeInPx = writable(1.0);
 

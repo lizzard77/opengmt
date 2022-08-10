@@ -29,10 +29,14 @@
                 player.y = d.y;
                 player.visible = d.visible;
                 player.ini = d.ini;
+                player.light = d.light;
+                player.damage = d.damage;
+                player.hp = d.hp;
             }
         });
         $currentScene = $currentScene;
     });
+
     $hubConnection.on("move", data => {
         if ($isMaster)
             return;
@@ -47,6 +51,7 @@
             $currentPlayer = $currentPlayer;
         }
     });
+
     $hubConnection.on("setCurrentPlayer", data =>
     {
         if ($isMaster)
@@ -77,7 +82,7 @@
             loadedCreatures.forEach(p => {
                 p.x = Math.floor(Math.random() * 20);
                 p.y = Math.floor(Math.random() * 15);
-                p.ini = Math.floor(Math.random() * 20);
+                p.ini = -1;
                 p.visible = false;
             });
             loadedCreatures.sort((a, b) => b.ini - a.ini);
