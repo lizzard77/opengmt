@@ -1,7 +1,7 @@
 <script>
     import * as signalR from "@microsoft/signalr";
     import { Router, Route } from "svelte-routing";
-    import { isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
+    import { sounds, isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
 
     import AudioBoard from "./AudioBoard.svelte";
     import CharacterSheet from "./CharacterSheet.svelte";
@@ -96,7 +96,12 @@
 
         (async () => {
             $scenes = await fetch("/api/scenes").then(r => r.json());
+        })(),
+
+        (async () => {
+            $sounds = await fetch("/api/sounds").then(r => r.json());
         })()
+
     ]);
     
     let loader = (async () => {

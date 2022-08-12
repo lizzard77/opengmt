@@ -1,44 +1,37 @@
 <script>
-    import YouTube from 'svelte-youtube';
+    import { sounds } from "./stores";
 
-    export let videoId = "_4OfDN6X9oc";
-
-    let playerInstance = null;
     let playTime;
+    let audioUrl;
+    let audioFile;
+    let playTimeTimer;
 
-    const options = {
-        height: '390',
-        width: '640',
-        //  see https://developers.google.com/youtube/player_parameters
-        playerVars: {
-            autoplay: 1
-        }
-    };
+    function play(url)
+    { 
+        console.log(url)
+        audioUrl = url;
 
-    function ready(event)
-    {
-        console.log("ready");
-        playerInstance = event.detail.target;
-        //playerInstance.playVideo();
-        setInterval(() => {
-            playTime = Math.floor(playerInstance.getCurrentTime());
-            //console.log(playTime);
+        audioFile = new Audio(audioUrl);
+        //audioFile.currentTime= 60;
+        audioFile.play();
+
+        playTimeTimer = setInterval(() => {
+            playTime = Math.floor(audioFile.currentTime/60) + ":" + Math.floor(audioFile.currentTime%60);
         }, 1000);
-
-        
     }
 
-    
-    function play(){ playerInstance.playVideo(); }
-    function pause(){ playerInstance.pauseVideo(); }
+    function pause()
+    { 
+        audioFile.pause();
+        clearInterval(playTimeTimer);
+    }
 </script>
-
-<div class="relative overflow-hidden">
-    <div class="absolute -bottom-[300vh] overflow-hidden">
-        <YouTube {videoId} {options} on:ready={ready} />
-    </div>
-</div>
 
 <button on:click={play}>Play</button>
 <button on:click={pause}>Pause</button>
-{playTime}
+
+<ul>
+{#each $sounds as url}
+    <li><button on:click={() => play(url)}>{url}</button></li>
+{/each}
+</ul>

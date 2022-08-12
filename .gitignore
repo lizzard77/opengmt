@@ -26,4 +26,4 @@ dist-ssr
 bin
 obj
 wwwroot
-
+public/assets
