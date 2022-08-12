@@ -9,10 +9,10 @@
     import PlayerList from "./lib/PlayerList.svelte";
 
     let showReach = true;
-    let w;
-    let h;
-    export let left = 0;
-    export let top = 0;
+    let w = 0;
+    let h = 0;
+    let left = 0;
+    let top = 0;
     
     $hubConnection.on("centerMap", (l,t) => {
         if ($isMaster)
@@ -51,17 +51,16 @@
         <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
             <Map {showReach} on:centerMapToPlayer={setMapCenter} />
         </Draggable>
-        
         <MapSettings bind:showReach />
         {#if !$isMaster}
         <PlayerList on:centerMapToPlayer={setMapCenter} />
         {/if}
         <MapTools on:centerMapToPlayer={setMapCenter} />
     </main>
+
     {#if $isMaster}
     <div class="">
         <PlayerPanel on:centerMapToPlayer={setMapCenter} />
     </div>
-    {/if}
-    
+    {/if}    
 </div>  

@@ -1,6 +1,13 @@
 <script context="module">
     let iframeApiReady = false;
 
+    /*
+    window.onYouTubeIframeAPIReady = () =>
+    {
+        console.log("3")    
+        window.dispatchEvent(new Event("iframeApiReady"));
+    }*/
+    
     window.addEventListener("iframeApiReady", function (e) {
         console.log("4");
         iframeApiReady = true;
@@ -12,20 +19,26 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 </script>
 
+<svelte:window on:onYouTubeIframeAPIReady={() => console.log("ytfar")}/>
+
 <script>
     import { createEventDispatcher } from "svelte";
     import { afterUpdate } from "svelte";
     const dispatch = createEventDispatcher();
 
     export let videoId;
+    export let playTime;
+
     let player;
     let divId = "player_opengmt_1";
 
-    export function play() {
+    export function play() 
+    {
         player.playVideo();
     }
 
-    export function pause() {
+    export function pause() 
+    {
         player.pauseVideo();
     }
 
@@ -40,8 +53,8 @@
         if (iframeApiReady) {
             console.log("33");
             player = new YT.Player(divId, {
-                    height: "0",
-                    width: "0",
+                    height: "400",
+                    width: "300",
                     videoId,
                     events: {
                         onReady: playerIsReady,
@@ -64,6 +77,10 @@
         }
         if (data == 1) {
             strReturn = "(playing)";
+            //setInterval(() => {
+            //    playTime = player.getCurrentTime();
+            //playTime = !player?.getCurrentTime ? 0.0 : player.getCurrentTime();
+            //}, 1000);
         }
         if (data == 2) {
             strReturn = "(paused)";
@@ -80,10 +97,10 @@
     function playerIsReady() 
     {
         dispatch("Ready");
-        /*setInterval(() => {
-            dispatch("currentPlayTime", player.getCurrentTime());
-            //console.log(player.getCurrentTime())
-        }, 1000);*/
+        
+        
     }
 </script>
 
+
+<div id="player_opengmt_1" class="absolute right-2 top-2"></div>

@@ -1,6 +1,6 @@
 <script>
     import * as signalR from "@microsoft/signalr";
-    import { Router, Link, Route } from "svelte-routing";
+    import { Router, Route } from "svelte-routing";
     import { isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
 
     import AudioBoard from "./AudioBoard.svelte";
@@ -11,6 +11,7 @@
     import Stage from "./Stage.svelte";
     import Scenes from "./Scenes.svelte";
     import ProgressCircle from "./lib/ProgressCircle.svelte";
+    import GmMenu from "./lib/GMMenu.svelte";
     
     let left = 0;
     let top = 0;
@@ -130,41 +131,34 @@
 
 <svelte:window on:keydown={handleKey}/>
 
-{#await loader}
-    <div class="text-center mt-8">
-        <ProgressCircle />
-        Lade Daten...
-    </div>
-{:then}
-    {#if $currentScene.id}
-        <Router>
+<Router>
+    <Route path="sheets" component="{CharacterSheet}" />
+    <Route path="docs" component="{Documents}" />
+    <Route path="audio" component="{AudioBoard}" />
+    <Route path="scenes" component="{Scenes}" />
+    <Route path="/" component="{Stage}" />
+
+    {#await loader}
+        <div class="text-center mt-8">
+            <ProgressCircle />
+            Lade Daten...
+        </div>
+    {:then}
+        {#if $currentScene.id}
             {#if $isMaster}
-                <nav class="z-50 fixed w-1/3 left-1/3 bg-gray-50 p-4">
-                    <Link to="/">Stage</Link> |
-                    <Link to="scenes">Szenen</Link> |
-                    <Link to="sheets">Sheets</Link> | 
-                    <Link to="docs">Dokumente</Link> |
-                    <Link to="audio">Audio</Link>
-                </nav>
+            <GmMenu />
             {/if}
-            
-            <div>
-                <Route path="sheets" component="{CharacterSheet}" />
-                <Route path="docs" component="{Documents}" />
-                <Route path="audio" component="{AudioBoard}" />
-                <Route path="scenes" component="{Scenes}" />
-                <Route path="/" component="{Stage}" {left} {top} />
-            </div>
-        </Router>
-        <Dice />
-    {:else}
-        {#if !$isMaster}
-            <div class="text-center mt-8">
-                <ProgressCircle />
-                Warte auf Spielstart...
-            </div>
+            <Dice />
         {:else}
-            <SceneChooser />
+            {#if !$isMaster}
+                <div class="text-center mt-8">
+                    <ProgressCircle />
+                    Warte auf Spielstart...
+                </div>
+            {:else}
+                <SceneChooser />
+            {/if}
         {/if}
-    {/if}
-{/await}
+    {/await}
+</Router>
+

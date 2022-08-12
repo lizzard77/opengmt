@@ -1,16 +1,44 @@
 <script>
-    import YouTube from "./lib/YouTube.svelte";
-    export let videoId = "_4OfDN6X9oc";
-    let player;
+    import YouTube from 'svelte-youtube';
 
-    function ready()
+    export let videoId = "_4OfDN6X9oc";
+
+    let playerInstance = null;
+    let playTime;
+
+    const options = {
+        height: '390',
+        width: '640',
+        //  see https://developers.google.com/youtube/player_parameters
+        playerVars: {
+            autoplay: 1
+        }
+    };
+
+    function ready(event)
     {
         console.log("ready");
-        player.seek(60);
-        player.play();
+        playerInstance = event.detail.target;
+        //playerInstance.playVideo();
+        setInterval(() => {
+            playTime = Math.floor(playerInstance.getCurrentTime());
+            //console.log(playTime);
+        }, 1000);
+
+        
     }
+
+    
+    function play(){ playerInstance.playVideo(); }
+    function pause(){ playerInstance.pauseVideo(); }
 </script>
 
-<YouTube {videoId} bind:this={player} on:Ready={ready} />
-<button on:click={player.play}>Play</button>
-<button on:click={player.pause}>Pause</button>
+<div class="relative overflow-hidden">
+    <div class="absolute -bottom-[300vh] overflow-hidden">
+        <YouTube {videoId} {options} on:ready={ready} />
+    </div>
+</div>
+
+<button on:click={play}>Play</button>
+<button on:click={pause}>Pause</button>
+{playTime}
