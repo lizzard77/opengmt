@@ -1,5 +1,5 @@
 <script>
-    import { fog, hubConnection, currentPlayer, isMaster, squareSizeInPx } from "./stores";
+    import { fog, combat, hubConnection, currentPlayer, isMaster, squareSizeInPx, currentHandout } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -7,13 +7,19 @@
     import MapTools from "./lib/MapTools.svelte";
     import PlayerPanel from "./lib/PlayerPanel.svelte";
     import PlayerList from "./lib/PlayerList.svelte";
+    import Modal from "./lib/Modal.svelte";
 
     let showReach = true;
     let w = 0;
     let h = 0;
     let left = 0;
     let top = 0;
-    
+
+    let handout = "";
+    let showHandout = false;
+
+     $hubConnection.start();
+
     $hubConnection.on("centerMap", (l,t) => {
         if ($isMaster)
             return;
@@ -27,6 +33,20 @@
             return;
         console.log("setFog", a);
         $fog = a;
+    });
+
+    $hubConnection.on("setCombar", (a) => {
+        if ($isMaster)
+            return;
+        console.log("setCombat", a);
+        $combat = a;
+    });
+
+    $hubConnection.on("setHandout", (a) => {
+        if ($isMaster)
+            return;
+        console.log("setHandout", a);
+        $currentHandout = JSON.parse(a);
     });
 
     function setMapCenter(e)
@@ -44,6 +64,13 @@
 
     setMapCenter($currentPlayer);
 
+    $: if ($currentHandout !== handout)
+    {
+        handout = $currentHandout;
+        showHandout = handout !== "";
+    }
+
+    
 </script>
 
 <div class="flex h-screen w-screen overflow-hidden">
@@ -63,4 +90,12 @@
         <PlayerPanel on:centerMapToPlayer={setMapCenter} />
     </div>
     {/if}    
+
+    <Modal bind:isOpen={showHandout}>
+        <div class="w-full p-4 bg-white">
+            <img class="w-full" src={handout} /><br />
+            {handout}
+        </div>
+
+    </Modal>
 </div>  

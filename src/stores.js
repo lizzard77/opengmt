@@ -10,11 +10,15 @@ export const hubConnection = writable();
 export const zoom = writable(1.0);
 export const fog = writable(true);
 export const isMaster = writable(false);
+
 export const squareSizeInPx = writable(1.0);
 export const combat = writable(false);
 
 export const currentPlayer = writable({ id: 0, name: "", x:0, y:0 });
 export const currentScene = writable({ map: null, creatures : null });
+
+export const currentHandout = writable("");
+export const audioFile = writable();
 
 /*
 

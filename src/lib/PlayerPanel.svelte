@@ -67,6 +67,7 @@
             combatCreatures = tempc;
             $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
         }
+        $hubConnection.invoke('SetCombat', $combat);
     }
 
     function updateCombattantList()
@@ -101,7 +102,7 @@
             Kampf {$combat ? "beenden" : "starten"}
         </button>
 
-        {#if combat}
+        {#if $combat}
         <table>
             <tr>
                 <th class="text-left p-1">INI</th>

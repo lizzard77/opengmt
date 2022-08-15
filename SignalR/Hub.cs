@@ -22,10 +22,22 @@ namespace OpenGMT.SignalR
             await Clients.All.SendAsync("setCurrentPlayer", data);
         }
 
+        public async Task SetHandout(string data)
+        {
+            Console.WriteLine("Set Handout");
+            await Clients.All.SendAsync("setHandout", data);
+        }
+
         public async Task SetFog(bool fogActive)
         {
             Console.WriteLine("Set Fog");
             await Clients.All.SendAsync("setFog", fogActive);
+        }
+
+        public async Task SetCombat(bool active)
+        {
+            Console.WriteLine("Set Combat");
+            await Clients.All.SendAsync("setCombar", active);
         }
 
         public async Task LoadScene(long id)
