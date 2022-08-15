@@ -7,9 +7,9 @@
         "reach" : 10,
         "size": 2,
         "attacks" : [
-            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+            { "id": 1, "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 2, "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 3, "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
         ],
         "hp" : 10,
         "damage" : 0
@@ -42,9 +42,9 @@
         "reach" : 10,
         "size": 2,
         "attacks" : [
-            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+            { "id": 4, "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 5, "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 6, "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
         ],
         "hp" : 16,
         "damage" : 0
@@ -57,9 +57,9 @@
         "reach" : 10,
         "size": 2,
         "attacks" : [
-            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+            { "id": 7, "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 8, "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 9, "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
         ],
         "hp" : 7,
         "damage" : 0
@@ -72,9 +72,9 @@
         "reach" : 10,
         "size": 2,
         "attacks" : [
-            { "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
-            { "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
+            { "id": 10, "name" : "Dolch (Nahkampf)", "range": "20", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 11, "name" : "Dolch (Wurf)", "range": "60", "mod" : "+5", "dmg" : "1W4+3" },
+            { "id": 12, "name" : "Guiding Bolt", "range": "120ft", "mod" : "+3", "dmg" : "4W6", "lvl" : 1, "slots" : 1, "components" : "V, S", "src" : "PHB 248", "srcurl" : "" }
         ],
         "hp" : 70,
         "damage" : 0
