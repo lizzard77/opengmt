@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
-using OpenGMT;
 using OpenGMT.DB;
 using OpenGMT.SignalR;
 
