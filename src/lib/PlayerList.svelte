@@ -12,7 +12,7 @@
     {
         if (sc)
         {
-            sc.sort((a, b) => b.ini - a.ini);
+            sc.sort((a, b) => b.initiative - a.initiative);
             players = sc.filter(c => c.visible);
         }
     }
@@ -39,8 +39,8 @@
                 {#each players as p}
                 <tr>
                     <td class="p-1 text-right">
-                        {#if p.ini >= 0} 
-                        {p.ini}
+                        {#if p.initiative >= 0} 
+                        {p.initiative}
                         {/if}
                     </td>
                     <td class="p-1">

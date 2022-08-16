@@ -11,7 +11,7 @@
     function setPlayer(p)
     {
         $currentPlayer = p;
-        centerPlayer(p);
+        //centerPlayer(p);
         if ($isMaster)
             $hubConnection.invoke("SetCurrentPlayer", JSON.stringify(p));
     }
@@ -43,7 +43,7 @@
     function updateInitiative()
     {
         console.log("updateInitiative");
-        combatCreatures.sort((a, b) => b.ini - a.ini);
+        combatCreatures.sort((a, b) => b.initiative - a.initiative);
         $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
         combatCreatures = combatCreatures;
     }
@@ -63,7 +63,7 @@
         if (!$combat)
         {
             let tempc = $currentScene.creatures.filter(c => c.visible);
-            tempc.forEach(c => c.ini = -1);
+            tempc.forEach(c => c.initiative = -1);
             combatCreatures = tempc;
             $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
         }
@@ -72,9 +72,11 @@
 
     function updateCombattantList()
     {
+        if (!$currentScene?.creatures?.length)
+            return;
         let tempc = $currentScene.creatures.filter(c => c.visible);
-        tempc.forEach(c => c.ini = Math.floor(Math.random() * 20));
-        tempc.sort((a, b) => b.ini - a.ini);
+        tempc.forEach(c => c.initiative = Math.floor(Math.random() * 20));
+        tempc.sort((a, b) => b.initiative - a.initiative);
         combatCreatures = tempc;
         $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
     }
@@ -82,6 +84,7 @@
     $: updateCombattantList();
 </script>
 
+{#if $currentScene?.creatures?.length > 0}
     <div class="flex flex-col p-2">
         {#each $currentScene.creatures as p}
         <div class="m-0 p-1" class:bg-blue-300={p.id === $currentPlayer.id} on:click={() => setPlayer(p)}>
@@ -113,7 +116,7 @@
         {#each combatCreatures as p}
         <tr class="m-0 p-1" class:bg-blue-300={p.id === $currentPlayer.id}>
             <td>
-                <input class="w-12 text-center border-2" type="number" bind:value={p.ini} on:change={updateInitiative} />
+                <input class="w-12 text-center border-2" type="number" bind:value={p.initiative} on:change={updateInitiative} />
             </td>
             <td>
                 <button on:click={() => setPlayer(p)} class="m-1 p-1" style="border-left: 8px solid {p.color}">
@@ -138,10 +141,10 @@
         </table>
         {/if}
     </div>
+{/if}
 
-
-    <style>
-        button > * {
-            vertical-align:middle;
-        }
-    </style>
+<style>
+    button > * {
+        vertical-align:middle;
+    }
+</style>

@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
+using OpenGMT.DB;
 
 namespace OpenGMT.Controllers
 {
@@ -7,25 +8,24 @@ namespace OpenGMT.Controllers
     [Route("[controller]")]
     public class MapController : Controller
     {        
-        private readonly IWebHostEnvironment env;
+        private readonly FileDB db;
 
-        public MapController(IWebHostEnvironment env)
+        public MapController(FileDB db)
         {
-            this.env = env;
+            this.db = db;
         }
 
         [HttpGet("/api/maps")]
         public IActionResult Get()
         {
-            string dataDir = env.ContentRootPath + "data";
-            string dataFile = Path.Combine(dataDir, "maps.json");
-            if (Directory.Exists(dataDir) && System.IO.File.Exists(dataFile))
-            {
-                string data = System.IO.File.ReadAllText(dataFile);
-                Console.WriteLine("maps: " + dataFile);
-                return Ok(data);
-            } else Console.WriteLine("maps: not found" +dataFile);
-            return NotFound();
+            return Json(db.Maps);
+        }
+
+        [HttpPut("/api/maps")]
+        public IActionResult Put(Map info)
+        {
+            db.Upsert(info);
+            return Ok();
         }
     }
 }

@@ -1,5 +1,6 @@
 <script>
-    import { fog, combat, hubConnection, currentPlayer, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
+    import { currentScene, fog, combat, hubConnection, currentPlayer, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
+    import { Router, Route, navigate } from "svelte-routing";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -18,7 +19,7 @@
     let handout = "";
     let showHandout = false;
 
-     $hubConnection.start();
+    //$hubConnection.start();
 
     $hubConnection.on("centerMap", (l,t) => {
         if ($isMaster)
@@ -74,6 +75,9 @@
     const pip = url.searchParams.get("pip") === "true";
     if (pip)
         $zoom = 0.5;
+
+    $: if (!$currentScene?.id) navigate("/");
+
 </script>
 
 <div class="flex h-screen w-screen overflow-hidden">

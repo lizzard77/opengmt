@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
+using OpenGMT.DB;
 
 namespace OpenGMT.Controllers
 {
@@ -7,25 +8,24 @@ namespace OpenGMT.Controllers
     [Route("[controller]")]
     public class CreatureController : Controller
     {        
-        private readonly IWebHostEnvironment env;
+        private readonly FileDB db;
 
-        public CreatureController(IWebHostEnvironment env)
+        public CreatureController(FileDB db)
         {
-            this.env = env;
+            this.db = db;
         }
 
         [HttpGet("/api/creatures")]
         public IActionResult Get()
         {
-            string dataDir = env.ContentRootPath + "data";
-            Console.WriteLine("dataDir: " + dataDir);
-            string dataFile = Path.Combine(dataDir, "creatures.json");
-            if (Directory.Exists(dataDir) && System.IO.File.Exists(dataFile))
-            {
-                string data = System.IO.File.ReadAllText(dataFile);
-                return Ok(data);
-            }
-            return NotFound();
+            return Json(db.Creatures);
+        }
+
+        [HttpPut("/api/creatures")]
+        public IActionResult Put(Creature info)
+        {
+            db.Upsert(info);
+            return Ok();
         }
     }
 }

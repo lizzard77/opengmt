@@ -1,12 +1,55 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
 
 namespace OpenGMT.SignalR
 {
     public class GameHub : Hub
     {
+        private readonly IWebHostEnvironment env;
+
+        public GameHub(IWebHostEnvironment env)
+        {
+            this.env = env;
+        }
+
+
         public async Task SendPlayers(string message)
         {
             Console.WriteLine("Got players");
+
+            string dataDir = env.ContentRootPath + "data";
+            string dataFile = Path.Combine(dataDir, "session.json");
+            if (Directory.Exists(dataDir) && System.IO.File.Exists(dataFile))
+            {
+                string data = System.IO.File.ReadAllText(dataFile);
+
+                var session = JsonSerializer.Deserialize<Session>(data);
+                if (session.CreatureStates == null)
+                    session.CreatureStates = new List<CreatureState>();
+                var newState = JsonSerializer.Deserialize<IList<CreatureState>>(message);
+
+                if (newState != null)
+                {
+                    foreach (var n in newState)
+                    {
+                        var creature = session.CreatureStates.FirstOrDefault(c => c.CreatureId == n.CreatureId);
+                        if (creature != null)
+                        {
+                            creature.X = n.X;
+                            creature.Y = n.Y;
+                            creature.Initiative = n.Initiative;
+                            creature.Visible = n.Visible;
+                            creature.VisionNormal = n.VisionNormal;
+                            creature.VisionDim = n.VisionDim;
+                        } else {
+                            session.CreatureStates.Add(n);
+                        }
+                    }
+                    File.WriteAllText(dataFile, JsonSerializer.Serialize(session));
+                }
+            }
+
+
             await Clients.All.SendAsync("players", message);
         }
 

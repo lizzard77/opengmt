@@ -1,17 +1,17 @@
 <script>
     import * as signalR from "@microsoft/signalr";
-    import { Router, Route } from "svelte-routing";
+    import { Router, Route, navigate } from "svelte-routing";
     import { showPIP, sounds, isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
 
     import AudioBoard from "./AudioBoard.svelte";
     import CharacterSheet from "./CharacterSheet.svelte";
     import Documents from "./Documents.svelte";
     import Dice  from "./lib/Dice.svelte";
-    import SceneChooser from "./lib/SceneChooser.svelte";
     import Stage from "./Stage.svelte";
     import Scenes from "./Scenes.svelte";
     import ProgressCircle from "./lib/ProgressCircle.svelte";
     import GmMenu from "./lib/GMMenu.svelte";
+    import Start from "./Start.svelte";
     
     let left = 0;
     let top = 0;
@@ -29,7 +29,7 @@
                 player.x = d.x;
                 player.y = d.y;
                 player.visible = d.visible;
-                player.ini = d.ini;
+                player.initiative = d.initiative;
                 player.light = d.light;
                 player.damage = d.damage;
                 player.hp = d.hp;
@@ -83,19 +83,21 @@
             loadedCreatures.forEach(p => {
                 p.x = Math.floor(Math.random() * 20);
                 p.y = Math.floor(Math.random() * 15);
-                p.ini = -1;
+                p.initiative = -1;
                 p.visible = false;
             });
-            loadedCreatures.sort((a, b) => b.ini - a.ini);
             $creatures = loadedCreatures;
+            console.log("creatures", $creatures);
         })(),
 
         (async () => {
             $maps = await fetch("/api/maps").then(r => r.json());
+            console.log("maps", $maps);
         })(),
 
         (async () => {
             $scenes = await fetch("/api/scenes").then(r => r.json());
+            console.log("scenes", $scenes);
         })(),
 
         (async () => {
@@ -107,6 +109,7 @@
     let loader = (async () => {
             await baseData;
             $session = await fetch("/api/session").then(r => r.json());
+            console.log("session", $session);
             if ($session.SceneId)
                 loadScene($session.SceneId);
         })();
@@ -143,16 +146,11 @@
 
     const url = new URL(window.location.href);
     const pip = url.searchParams.get("pip") === "true";
+
+    $: if ($currentScene?.id) navigate("/game");
 </script>
 
 <svelte:window on:keydown={handleKey}/>
-
-<Router>
-    <Route path="sheets" component="{CharacterSheet}" />
-    <Route path="docs" component="{Documents}" />
-    <Route path="audio" component="{AudioBoard}" />
-    <Route path="scenes" component="{Scenes}" />
-    <Route path="/" component="{Stage}" />
 
     {#await loader}
         <div class="text-center mt-8">
@@ -160,26 +158,27 @@
             Lade Daten...
         </div>
     {:then}
-        {#if $currentScene.id}
-            {#if $isMaster}
-            <GmMenu />
+        <Router>
+            <div>
+            <Route path="sheets" component="{CharacterSheet}" />
+            <Route path="docs" component="{Documents}" />
+            <Route path="audio" component="{AudioBoard}" />
+            <Route path="scenes" component="{Scenes}" />
+            <Route path="game" component="{Stage}" />
+            <Route path="/" component="{Start}" />
+            </div>
+            
+            {#if $currentScene && $currentScene.id}
+                {#if $isMaster}
+                <GmMenu />
+                {/if}
+                {#if !pip}
+                <Dice />
+                {/if}
+                {#if $showPIP}
+                <iframe src={getPIPUrl()} style="zoom: 0.4;"  class="fixed right-2 bottom-2 z-50 h-screen w-screen border-2" title="PIP" />
+                {/if}
             {/if}
-            {#if !pip}
-            <Dice />
-            {/if}
-            {#if $showPIP}
-            <iframe src={getPIPUrl()} style="zoom: 0.4;"  class="fixed right-2 bottom-2 z-50 h-screen w-screen border-2" title="PIP" />
-            {/if}
-        {:else}
-            {#if !$isMaster}
-                <div class="text-center mt-8">
-                    <ProgressCircle />
-                    Warte auf Spielstart...
-                </div>
-            {:else}
-                <SceneChooser />
-            {/if}
-        {/if}
+        </Router>
     {/await}
-</Router>
 

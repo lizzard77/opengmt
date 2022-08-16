@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "start dotnet watch && vite --force --host",
+    "dev": "vite --force --host",
     "dev-dotnet": "dotnet watch",
     "build": "vite build && dotnet build",
     "preview": "vite preview"

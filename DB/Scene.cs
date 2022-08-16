@@ -7,17 +7,17 @@ namespace OpenGMT
         public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public IList<Creature> Creatures { get; set; }
-        public IList<CreatureState> CreatureStates { get; set; }
-        public Map Map { get; set; }
+        [NotMapped]
+        public long[] CreatureIds { get; set; }
+        public long MapId { get; set; }
     }
 
     public class CreatureState
     {
         public long CreatureStateId { get; set; }
 
+        public long CreatureId { get; set; }
         public Creature Creature  { get; set; }
-        public Map Map { get; set; }
 
         public long X { get; set; }
         public long Y { get; set; }

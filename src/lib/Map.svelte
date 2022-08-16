@@ -80,7 +80,7 @@
         $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
         $currentScene.creatures = $currentScene.creatures;
 
-        dispatch("centerMapToPlayer");
+        //dispatch("centerMapToPlayer");
     }
 </script>
 

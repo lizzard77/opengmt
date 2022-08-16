@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using OpenGMT;
+using OpenGMT.DB;
 using OpenGMT.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,28 +9,16 @@ builder.Services.AddCors();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
-builder.Services.AddDbContext<OpenGMTContext>();
+builder.Services.AddTransient<FileDB>();
 
 var app = builder.Build();
+
+FileDB.DataDir = Path.Combine(app.Environment.ContentRootPath, "data");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<OpenGMTContext>();
-    context.Database.Migrate();
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<OpenGMTContext>();
-    context.ImportJson();
-}
-
 
 app.UseCors(options =>
 {
@@ -50,6 +39,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
     endpoints.MapFallbackToFile("index.html").AllowAnonymous();
 });
+
 
 
 app.Run();
