@@ -20,6 +20,8 @@ export const currentScene = writable({ map: null, creatures : null });
 export const currentHandout = writable("");
 export const audioFile = writable();
 
+export const showPIP = writable(false);
+
 /*
 
 import { writable } from "svelte/store";

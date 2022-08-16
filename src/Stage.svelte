@@ -1,5 +1,5 @@
 <script>
-    import { fog, combat, hubConnection, currentPlayer, isMaster, squareSizeInPx, currentHandout } from "./stores";
+    import { fog, combat, hubConnection, currentPlayer, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -70,7 +70,10 @@
         showHandout = handout !== "";
     }
 
-    
+    const url = new URL(window.location.href);
+    const pip = url.searchParams.get("pip") === "true";
+    if (pip)
+        $zoom = 0.5;
 </script>
 
 <div class="flex h-screen w-screen overflow-hidden">
@@ -78,11 +81,13 @@
         <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
             <Map {showReach} on:centerMapToPlayer={setMapCenter} />
         </Draggable>
-        <MapSettings bind:showReach />
-        {#if !$isMaster}
-        <PlayerList on:centerMapToPlayer={setMapCenter} />
+        {#if !pip}
+            <MapSettings bind:showReach />
+            {#if !$isMaster}
+            <PlayerList on:centerMapToPlayer={setMapCenter} />
+            {/if}
+            <MapTools on:centerMapToPlayer={setMapCenter} />
         {/if}
-        <MapTools on:centerMapToPlayer={setMapCenter} />
     </main>
 
     {#if $isMaster}
@@ -93,9 +98,7 @@
 
     <Modal bind:isOpen={showHandout}>
         <div class="w-full p-4 bg-white">
-            <img class="w-full" src={handout} /><br />
-            {handout}
+            <img class="w-full" src={handout} />
         </div>
-
     </Modal>
 </div>  

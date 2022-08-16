@@ -1,7 +1,7 @@
 <script>
     import * as signalR from "@microsoft/signalr";
     import { Router, Route } from "svelte-routing";
-    import { sounds, isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
+    import { showPIP, sounds, isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
 
     import AudioBoard from "./AudioBoard.svelte";
     import CharacterSheet from "./CharacterSheet.svelte";
@@ -132,6 +132,17 @@
                 $hubConnection.invoke("SendPlayers", JSON.stringify($currentScene.creatures));
         }
     }
+
+    function getPIPUrl()
+    {
+        const url = new URL(window.location.href);
+        url.pathname = "";
+        url.searchParams.set("pip", "true");
+        return url.toString();
+    }
+
+    const url = new URL(window.location.href);
+    const pip = url.searchParams.get("pip") === "true";
 </script>
 
 <svelte:window on:keydown={handleKey}/>
@@ -153,7 +164,12 @@
             {#if $isMaster}
             <GmMenu />
             {/if}
+            {#if !pip}
             <Dice />
+            {/if}
+            {#if $showPIP}
+            <iframe src={getPIPUrl()} style="zoom: 0.4;"  class="fixed right-2 bottom-2 z-50 h-screen w-screen border-2" title="PIP" />
+            {/if}
         {:else}
             {#if !$isMaster}
                 <div class="text-center mt-8">

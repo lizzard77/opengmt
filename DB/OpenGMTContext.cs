@@ -25,6 +25,7 @@ namespace OpenGMT
 
         internal void ImportJson()
         {
+            return;
             string dataFile = Path.Combine(_basePath, "creatures.json");
             if (Directory.Exists(_basePath) && System.IO.File.Exists(dataFile))
             {
