@@ -16,7 +16,7 @@
     let left = 0;
     let top = 0;
 
-    $hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
+    //$hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
     $hubConnection.on("players", data => {
         if ($isMaster)
             return;

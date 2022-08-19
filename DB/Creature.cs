@@ -1,13 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
 namespace OpenGMT
 {
     public class Creature
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         public string Name { get; set; }
         public IList<Attack> Attacks { get; set; }

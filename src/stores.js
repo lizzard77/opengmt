@@ -1,3 +1,4 @@
+import * as signalR from "@microsoft/signalr";
 import { writable } from "svelte/store";
 
 export const creatures = writable([]);
@@ -6,7 +7,6 @@ export const sounds = writable([]);
 export const scenes = writable([]);
 export const stage = writable({});
 export const session = writable({});
-export const hubConnection = writable();
 export const zoom = writable(1.0);
 export const fog = writable(true);
 export const isMaster = writable(false);
@@ -21,6 +21,21 @@ export const currentHandout = writable("");
 export const audioFile = writable();
 
 export const showPIP = writable(false);
+
+function createHubConnection() {
+	const { subscribe, set, update } = writable(null);
+    const conn = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
+
+    set(conn);
+
+	return {
+		subscribe,
+		addOne: () => update(n => n + 1),
+		reset: () => set(0)
+	};
+}
+
+export const hubConnection = createHubConnection();
 
 /*
 
