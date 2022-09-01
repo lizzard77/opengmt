@@ -1,6 +1,5 @@
 <script>
     import { afterUpdate } from "svelte";
-    import { isMaster, currentPlayer, hubConnection, squareSizeInPx, currentScene } from '../stores';
     
 	export let left = 0;
 	export let top = 0;
@@ -85,7 +84,7 @@
     }
 </script>
 
-<section on:mousedown={onMouseDown} on:touchstart={onTouchStart} style="left: {left}px; top: {top}px;" class="draggable" bind:clientWidth={contentWidth} bind:clientHeight={contentHeight}>
+<section on:mousedown={onMouseDown} on:touchstart|passive={onTouchStart} style="left: {left}px; top: {top}px;" class="draggable" bind:clientWidth={contentWidth} bind:clientHeight={contentHeight}>
     <slot></slot>
 </section>
 

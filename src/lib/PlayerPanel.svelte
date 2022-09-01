@@ -1,56 +1,31 @@
-<script>
-	import Icon from "./Icon.svelte"
-					
+<script>				
     import { createEventDispatcher } from "svelte";
-    import { combat, isMaster, currentScene, currentPlayer, hubConnection } from "../stores";
-    import { mdiEyeOff, mdiEye, mdiTarget, mdiLampOutline, mdiLamp } from "@mdi/js";
+    import { combat, isMaster, currentScene, currentPlayer, session } from "../stores";
     import { mdiSkull } from "@mdi/js";
+    import { hubConnection } from "../hub";
 
-    const dispatch = createEventDispatcher();
-    
+    import Icon from "./Icon.svelte"
+	import CreatureInfo from "./CreatureInfo.svelte"
+    import { updateState } from "../session";
+	
     function setPlayer(p)
     {
         $currentPlayer = p;
-        //centerPlayer(p);
         if ($isMaster)
-            $hubConnection.invoke("SetCurrentPlayer", JSON.stringify(p));
-    }
-
-    function centerPlayer(p)
-    {
-        if ($isMaster || p.visible)            
-            dispatch("centerMapToPlayer", p);
-    }
-
-    function toggleVisible(p)
-    {
-        p.visible = !p.visible;
-        $hubConnection.invoke("SendPlayers", JSON.stringify([ p ]));
-        $currentScene = $currentScene;
-        updateCombattantList();
-        
-    }
-
-    function toggleLight(p)
-    {
-        p.light = !p.light;
-        if (p.light)
-            p.visible = true;
-        $hubConnection.invoke("SendPlayers", JSON.stringify([ p ]));
-        $currentScene = $currentScene;
+            hubConnection.invoke("SetCurrentPlayer", JSON.stringify(p));
     }
 
     function updateInitiative()
     {
         console.log("updateInitiative");
         combatCreatures.sort((a, b) => b.initiative - a.initiative);
-        $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
+        hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
         combatCreatures = combatCreatures;
     }
 
     function updateHP()
     {
-        $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
+        hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
         combatCreatures = combatCreatures;
     }
 
@@ -62,23 +37,21 @@
         $combat = !$combat;
         if (!$combat)
         {
-            let tempc = $currentScene.creatures.filter(c => c.visible);
+            let tempc = $session.creatureStates.filter(c => c.visible);
             tempc.forEach(c => c.initiative = -1);
             combatCreatures = tempc;
-            $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
+            tempc.forEach(async (c) => await updateState(c));
         }
-        $hubConnection.invoke('SetCombat', $combat);
+        hubConnection.invoke('SetCombat', $combat);
     }
 
-    function updateCombattantList()
+    async function updateCombattantList()
     {
-        if (!$currentScene?.creatures?.length)
-            return;
-        let tempc = $currentScene.creatures.filter(c => c.visible);
+        let tempc = $session.creatureStates.filter(c => c.visible);
         tempc.forEach(c => c.initiative = Math.floor(Math.random() * 20));
         tempc.sort((a, b) => b.initiative - a.initiative);
         combatCreatures = tempc;
-        $hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
+        tempc.forEach(async (c) => await updateState(c));
     }
 
     $: updateCombattantList();
@@ -87,18 +60,7 @@
 {#if $currentScene?.creatures?.length > 0}
     <div class="flex flex-col p-2">
         {#each $currentScene.creatures as p}
-        <div class="m-0 p-1" class:bg-blue-300={p.id === $currentPlayer.id} on:click={() => setPlayer(p)}>
-            <button on:click={() => toggleVisible(p)} class="p-2 rounded-lg bg-slate-200 ">
-                <Icon size={20} path={p.visible ? mdiEye :mdiEyeOff} />
-            </button>
-            <button on:click={() => toggleLight(p)} class="p-2 rounded-lg bg-slate-200 ">
-                <Icon size={20} path={p.light ? mdiLamp : mdiLampOutline } />
-            </button>
-            <button class="p-2 w-40" style="border-left: 8px solid {p.color}">{p.name}</button>
-            <button on:click={() => centerPlayer(p)} class="p-2 rounded-lg bg-slate-200 ">
-                <Icon size={20} path={mdiTarget} />
-            </button>
-        </div>
+        <CreatureInfo creature={p} on:centerMapToPlayer/>
         {/each}
 
         <button on:click={startCombat} class="p-2 rounded-lg bg-slate-200 mt-8 mb-1">

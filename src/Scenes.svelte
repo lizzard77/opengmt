@@ -1,5 +1,6 @@
 <script>
-    import { hubConnection, session, scenes, currentScene, maps, creatures, currentPlayer } from "./stores";
+    import { session, scenes, currentScene, maps, creatures, currentPlayer } from "./stores";
+    import { hubConnection } from "./hub";
     export let isOpen = true;
 
     async function loadScene(scene)
@@ -23,7 +24,7 @@
                 body: JSON.stringify(sessionBody)
             }).then(r => r.json());
 
-        $hubConnection.invoke("LoadScene", s.id);
+        hubConnection.invoke("LoadScene", s.id);
         isOpen = false;
     }
 </script>

@@ -66,7 +66,7 @@ namespace OpenGMT.DB
             if (Directory.Exists(DataDir) && System.IO.File.Exists(dataFile))
             {
                 string data = System.IO.File.ReadAllText(dataFile);
-                return JsonSerializer.Deserialize<T>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return JsonSerializer.Deserialize<T>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true, PropertyNamingPolicy=JsonNamingPolicy.CamelCase, WriteIndented = true });
             }
 
             return default(T);
@@ -81,7 +81,7 @@ namespace OpenGMT.DB
                 fileName = getFileName<T>();
 
             string dataFile = Path.Combine(DataDir, fileName);
-            System.IO.File.WriteAllText(dataFile, JsonSerializer.Serialize(data));
+            System.IO.File.WriteAllText(dataFile, JsonSerializer.Serialize(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true, PropertyNamingPolicy=JsonNamingPolicy.CamelCase, WriteIndented = true }));
         }
     }
 }

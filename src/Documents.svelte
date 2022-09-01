@@ -1,10 +1,11 @@
 <script>
-    import {  hubConnection, currentHandout } from "./stores";
+    import { hubConnection } from "./hub";
+    import {  currentHandout } from "./stores";
 
     function setHandout(asset = "")
     {
         $currentHandout = asset;
-        $hubConnection.invoke('SetHandout', JSON.stringify(asset));
+        hubConnection.invoke('SetHandout', JSON.stringify(asset));
     }
 </script>
 

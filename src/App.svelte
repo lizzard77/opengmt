@@ -1,7 +1,6 @@
 <script>
-    import * as signalR from "@microsoft/signalr";
     import { Router, Route, navigate } from "svelte-routing";
-    import { showPIP, sounds, isMaster, hubConnection, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
+    import { showPIP, sounds, isMaster, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
 
     import AudioBoard from "./AudioBoard.svelte";
     import CharacterSheet from "./CharacterSheet.svelte";
@@ -10,14 +9,12 @@
     import Stage from "./Stage.svelte";
     import Scenes from "./Scenes.svelte";
     import ProgressCircle from "./lib/ProgressCircle.svelte";
-    import GmMenu from "./lib/GMMenu.svelte";
-    import Start from "./Start.svelte";
+    import DmDash from "./DMDash.svelte";    
+    import { get } from "./api";
+    import { hubConnection } from "./hub";
+import { loadSession } from "./session";
     
-    let left = 0;
-    let top = 0;
-
-    //$hubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
-    $hubConnection.on("players", data => {
+    hubConnection.on("players", data => {
         if ($isMaster)
             return;
         const incomingPlayerData = JSON.parse(data);
@@ -38,7 +35,7 @@
         $currentScene = $currentScene;
     });
 
-    $hubConnection.on("move", data => {
+    hubConnection.on("move", data => {
         if ($isMaster)
             return;
         
@@ -53,7 +50,7 @@
         }
     });
 
-    $hubConnection.on("setCurrentPlayer", data =>
+    hubConnection.on("setCurrentPlayer", data =>
     {
         if ($isMaster)
             return;
@@ -66,7 +63,7 @@
         }
     });
 
-    $hubConnection.on("loadScene", data => {
+    hubConnection.on("loadScene", data => {
         if ($isMaster)
             return;
         console.log("loadScene", data);
@@ -74,12 +71,10 @@
     });
     
     let baseData = Promise.all([
-        (async () => {
-            await $hubConnection.start();
-        })(),
+        //hubConnection.start(),
 
         (async () => {
-            let loadedCreatures = await fetch("/api/creatures").then(r => r.json());
+            let loadedCreatures = await get("/api/creatures");
             loadedCreatures.forEach(p => {
                 p.x = Math.floor(Math.random() * 20);
                 p.y = Math.floor(Math.random() * 15);
@@ -87,52 +82,32 @@
                 p.visible = false;
             });
             $creatures = loadedCreatures;
-            console.log("creatures", $creatures);
         })(),
 
         (async () => {
-            $maps = await fetch("/api/maps").then(r => r.json());
-            console.log("maps", $maps);
+            $maps = await get("/api/maps");
         })(),
 
         (async () => {
-            $scenes = await fetch("/api/scenes").then(r => r.json());
-            console.log("scenes", $scenes);
+            $scenes = await get("/api/scenes");
         })(),
 
         (async () => {
-            $sounds = await fetch("/api/sounds").then(r => r.json());
+            $sounds = await get("/api/sounds");
         })()
 
     ]);
     
     let loader = (async () => {
             await baseData;
-            $session = await fetch("/api/session").then(r => r.json());
-            console.log("session", $session);
-            if ($session.SceneId)
-                loadScene($session.SceneId);
+            await loadSession();
         })();
-
-    function loadScene(id)
-    {
-        const s = $scenes.find(s => s.id === id);
-        s.map = $maps.find(m => m.id === s.mapId);
-        s.creatures = s.creatureIds.map(c => {
-            return $creatures.find(cc => cc.id === c);
-        });
-        $currentScene = s;
-        $currentPlayer = $currentScene.creatures[0];
-    }
 
     async function handleKey(e)
     {
         if (e.key === "m" && e.ctrlKey) {
             e.preventDefault();
-            $isMaster = !$isMaster;        
-            console.log("set master=", $isMaster);
-            if ($isMaster)
-                $hubConnection.invoke("SendPlayers", JSON.stringify($currentScene.creatures));
+            $isMaster = !$isMaster;
         }
     }
 
@@ -146,8 +121,6 @@
 
     const url = new URL(window.location.href);
     const pip = url.searchParams.get("pip") === "true";
-
-    $: if ($currentScene?.id) navigate("/game");
 </script>
 
 <svelte:window on:keydown={handleKey}/>
@@ -162,16 +135,13 @@
             <div>
             <Route path="sheets" component="{CharacterSheet}" />
             <Route path="docs" component="{Documents}" />
-            <Route path="audio" component="{AudioBoard}" />
             <Route path="scenes" component="{Scenes}" />
-            <Route path="game" component="{Stage}" />
-            <Route path="/" component="{Start}" />
+            <Route path="audio" component="{AudioBoard}" />
+            <Route path="/" component="{Stage}" />
+            <Route path="dash" component="{DmDash}" />
             </div>
             
             {#if $currentScene && $currentScene.id}
-                {#if $isMaster}
-                <GmMenu />
-                {/if}
                 {#if !pip}
                 <Dice />
                 {/if}

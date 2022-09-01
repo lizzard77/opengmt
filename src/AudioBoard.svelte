@@ -1,5 +1,6 @@
 <script>
-    import { sounds, audioFile } from "./stores";
+    import GmMenu from "./lib/GMMenu.svelte";
+import { sounds, audioFile } from "./stores";
 
     let playTime;
     let audioUrl;
@@ -32,6 +33,7 @@
     }
 </script>
 
+<GmMenu />
 {#if $audioFile}
 <button on:click={pause} class="p-2 rounded-lg bg-slate-200">Pause</button>
 {playTime}

@@ -1,5 +1,6 @@
 <script>
-    import { hubConnection, session, scenes, currentScene, maps, creatures, currentPlayer } from "./stores";
+    import { session, scenes, currentScene, maps, creatures, currentPlayer } from "./stores";
+    import { hubConnection } from "./hub";
 
     async function loadScene(scene)
     {
@@ -25,20 +26,8 @@
                 }
             ]
         };
-
-        console.log("send session", sessionBody);
-
-        $session = await fetch("/api/session", 
-            { 
-                method: "PUT",
-                headers: {
-                    'Accept': 'application/json, text/plain',
-                    'Content-Type': 'application/json;charset=UTF-8'
-                }, 
-                body: JSON.stringify(sessionBody)
-            });
-
-        $hubConnection.invoke("LoadScene", s.id);
+        $session = await putObject("/api/session", sessionBody);
+        hubConnection.invoke("LoadScene", s.id);
     }
 </script>
 

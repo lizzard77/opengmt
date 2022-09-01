@@ -1,1 +1,57 @@
-{"Id":0,"Created":"0001-01-01T00:00:00","SceneId":3,"CreatureStates":[]}
+{
+  "id": 5477,
+  "created": "2000-01-01T00:00:00",
+  "sceneId": 3,
+  "creatureStates": [
+    {
+      "creatureId": 0,
+      "x": 1,
+      "y": 1,
+      "initiative": 5,
+      "visible": false,
+      "light": false,
+      "visionNormal": 0,
+      "visionDim": 0
+    },
+    {
+      "creatureId": 0,
+      "x": 1,
+      "y": 1,
+      "initiative": 5,
+      "visible": false,
+      "light": true,
+      "visionNormal": 0,
+      "visionDim": 0
+    },
+    {
+      "creatureId": 4,
+      "x": 1,
+      "y": 1,
+      "initiative": 10,
+      "visible": true,
+      "light": false,
+      "visionNormal": 10,
+      "visionDim": 10
+    },
+    {
+      "creatureId": 1,
+      "x": 19,
+      "y": 8,
+      "initiative": 18,
+      "visible": true,
+      "light": true,
+      "visionNormal": 0,
+      "visionDim": 0
+    },
+    {
+      "creatureId": 5,
+      "x": 6,
+      "y": 11,
+      "initiative": 8,
+      "visible": true,
+      "light": false,
+      "visionNormal": 0,
+      "visionDim": 0
+    }
+  ]
+}

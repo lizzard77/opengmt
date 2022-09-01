@@ -1,6 +1,7 @@
 <script>
-    import { currentScene, fog, combat, hubConnection, currentPlayer, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
+    import { currentScene, session, fog, combat, currentPlayer, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
     import { Router, Route, navigate } from "svelte-routing";
+
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -9,6 +10,8 @@
     import PlayerPanel from "./lib/PlayerPanel.svelte";
     import PlayerList from "./lib/PlayerList.svelte";
     import Modal from "./lib/Modal.svelte";
+    import GmMenu from "./lib/GMMenu.svelte";
+    import { hubConnection } from "./hub";
 
     let showReach = true;
     let w = 0;
@@ -19,9 +22,7 @@
     let handout = "";
     let showHandout = false;
 
-    //$hubConnection.start();
-
-    $hubConnection.on("centerMap", (l,t) => {
+    hubConnection.on("centerMap", (l,t) => {
         if ($isMaster)
             return;
         console.log("centerMap", t, l);
@@ -29,21 +30,21 @@
         top = -((t * $squareSizeInPx) - h / 2);
     });
 
-    $hubConnection.on("setFog", (a) => {
+    hubConnection.on("setFog", (a) => {
         if ($isMaster)
             return;
         console.log("setFog", a);
         $fog = a;
     });
 
-    $hubConnection.on("setCombar", (a) => {
+    hubConnection.on("setCombat", (a) => {
         if ($isMaster)
             return;
         console.log("setCombat", a);
         $combat = a;
     });
 
-    $hubConnection.on("setHandout", (a) => {
+    hubConnection.on("setHandout", (a) => {
         if ($isMaster)
             return;
         console.log("setHandout", a);
@@ -60,7 +61,7 @@
         left = -((creature.x * $squareSizeInPx) - w / 2);
         top = -((creature.y* $squareSizeInPx) - h / 2);
         if (creature.visible)
-            $hubConnection.invoke('CenterMap', creature.x, creature.y);
+            hubConnection.invoke('CenterMap', creature.x, creature.y);
     }
 
     setMapCenter($currentPlayer);
@@ -75,10 +76,11 @@
     const pip = url.searchParams.get("pip") === "true";
     if (pip)
         $zoom = 0.5;
-
-    $: if (!$currentScene?.id) navigate("/");
-
 </script>
+
+{#if $isMaster}
+<GmMenu />
+{/if}
 
 <div class="flex h-screen w-screen overflow-hidden">
     <main class="flex-1 relative overflow-hidden" bind:clientWidth={w} bind:clientHeight={h}>

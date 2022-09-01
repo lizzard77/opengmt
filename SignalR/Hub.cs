@@ -80,7 +80,7 @@ namespace OpenGMT.SignalR
         public async Task SetCombat(bool active)
         {
             Console.WriteLine("Set Combat");
-            await Clients.All.SendAsync("setCombar", active);
+            await Clients.All.SendAsync("setCombat", active);
         }
 
         public async Task LoadScene(long id)
@@ -93,6 +93,12 @@ namespace OpenGMT.SignalR
         {
             Console.WriteLine("Center Map", x, y);
             await Clients.All.SendAsync("centerMap", x, y);
+        }
+
+        public async Task SessionInfo(string data)
+        {
+            Console.WriteLine("Session Info", data);
+            await Clients.All.SendAsync("sessionInfo", data);
         }
     }
 }

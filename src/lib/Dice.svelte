@@ -94,6 +94,6 @@
 </div>
 {:else}
     <div class="fixed bottom-2 right-2 flex items-center">
-        <button on:click={() => isOpen = true} class="ml-3 p-2 rounded-lg bg-slate-200 border-4 mr-2"><Icon path={mdiDiceD20Outline} size=24 /></button>
+        <button on:click={() => isOpen = true} class="p-2 rounded-lg bg-slate-200 border-4 ml-2"><Icon path={mdiDiceD20Outline} size=24 /></button>
     </div>
 {/if}

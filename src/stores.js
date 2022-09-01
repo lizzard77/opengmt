@@ -7,9 +7,19 @@ export const sounds = writable([]);
 export const scenes = writable([]);
 export const stage = writable({});
 export const session = writable({});
-export const zoom = writable(1.0);
 export const fog = writable(true);
-export const isMaster = writable(false);
+
+const storedZoom = localStorage.getItem("zoom") || 1.0;
+export const zoom = writable(storedZoom);
+zoom.subscribe(value => {
+    localStorage.setItem("zoom", value);
+});
+
+const storedIsMaster = JSON.parse(localStorage.getItem("isMaster") || "false");
+export const isMaster = writable(storedIsMaster);
+isMaster.subscribe(value => {
+    localStorage.setItem("isMaster", JSON.stringify(value));
+});
 
 export const squareSizeInPx = writable(1.0);
 export const combat = writable(false);
@@ -22,23 +32,7 @@ export const audioFile = writable();
 
 export const showPIP = writable(false);
 
-function createHubConnection() {
-	const { subscribe, set, update } = writable(null);
-    const conn = new signalR.HubConnectionBuilder().withUrl("/hubs/game").build();
-
-    set(conn);
-
-	return {
-		subscribe,
-		addOne: () => update(n => n + 1),
-		reset: () => set(0)
-	};
-}
-
-export const hubConnection = createHubConnection();
-
 /*
-
 import { writable } from "svelte/store";
 
 const storedTheme = localStorage.getItem("theme");
@@ -46,7 +40,6 @@ export const theme = writable(storedTheme);
 theme.subscribe(value => {
     localStorage.setItem("theme", value === 'dark' ? 'dark' : 'light');
 });
-
 */
 
 /*

@@ -1,18 +1,22 @@
 <script>
-    import { fog, hubConnection, currentScene, currentPlayer, zoom, isMaster, squareSizeInPx } from "../stores";
+    import { fog, currentScene, currentPlayer, zoom, isMaster, squareSizeInPx, session } from "../stores";
     import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
-    
+    import { hubConnection } from "../hub";    
+    import { updateState } from "../session";
+
     export let showReach = true;
 
+    const dispatch = createEventDispatcher();
     let svg;
     let map = $currentScene.map;
     let imageWidth = 2048;
     let imageHeight = 1536;
     let oneFoot = 1;
+    let states = [];
 
     $: {
         map = $currentScene.map;
+        states = $session.creatureStates;
         if (map && svg) { 
             imageWidth = map.imageWidth * $zoom; 
             imageHeight = map.imageHeight * $zoom;
@@ -51,7 +55,8 @@
             e.preventDefault();
             const { id, x, y } = $currentPlayer;
             // don't await
-            $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
+            hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
+            updateState($currentPlayer);
             $currentScene.creatures = $currentScene.creatures;
         }
     }
@@ -77,7 +82,7 @@
         $currentPlayer.x = clickX;
         $currentPlayer.y = clickY;
         const { id, x, y } = $currentPlayer;
-        $hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
+        hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
         $currentScene.creatures = $currentScene.creatures;
 
         //dispatch("centerMapToPlayer");
