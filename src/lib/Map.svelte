@@ -2,7 +2,7 @@
     import { fog, currentScene, currentPlayer, zoom, isMaster, squareSizeInPx, session } from "../stores";
     import { createEventDispatcher } from "svelte";
     import { hubConnection } from "../hub";    
-    import { updateState } from "../session";
+    import { getState, updateState } from "../session";
 
     export let showReach = true;
 
@@ -13,10 +13,12 @@
     let imageHeight = 1536;
     let oneFoot = 1;
     let states = [];
+    let currentPlayerState = { x: 0, y: 0, initiative: 0, reach : 0,  size: 5, color: "pink"};
 
     $: {
         map = $currentScene.map;
         states = $session.creatureStates;
+        currentPlayerState = getState($currentPlayer.id);
         if (map && svg) { 
             imageWidth = map.imageWidth * $zoom; 
             imageHeight = map.imageHeight * $zoom;
@@ -54,14 +56,20 @@
         {
             e.preventDefault();
             const { id, x, y } = $currentPlayer;
+
+            const current = getState(id);
+            current.x = x;
+            current.y = y;
+            await updateState(current);    
+
             // don't await
             hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
-            updateState($currentPlayer);
+            //updateState($currentPlayer);
             $currentScene.creatures = $currentScene.creatures;
         }
     }
 
-    function click(e)
+    async function click(e)
     {
         if (!$isMaster)
             return;
@@ -85,6 +93,12 @@
         hubConnection.invoke("MovePlayer", JSON.stringify({ id, x, y }));
         $currentScene.creatures = $currentScene.creatures;
 
+        const current = getState(id);
+        current.x = x;
+        current.y = y;
+        await updateState(current);   
+        console.log("update state", current) ;
+
         //dispatch("centerMapToPlayer");
     }
 </script>
@@ -105,13 +119,13 @@
     <line x1="0" y1="{i}" x2="{map.widthInSquares}" y2="{i}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: {map.gridOpacity||1};" />
     {/each}
 
-    {#if $currentPlayer}
-        {#if showReach && $currentPlayer.visible}
-        <circle cx="{$currentPlayer.x}" cy="{$currentPlayer.y}" r="{oneFoot * $currentPlayer.reach}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
-        <circle cx="{$currentPlayer.x}" cy="{$currentPlayer.y}" r="{oneFoot * 5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
+    {#if currentPlayerState}
+        {#if showReach && currentPlayerState.visible}
+        <circle cx="{currentPlayerState.x}" cy="{currentPlayerState.y}" r="{oneFoot * currentPlayerState.reach}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
+        <circle cx="{currentPlayerState.x}" cy="{currentPlayerState.y}" r="{oneFoot * 5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
         {/if}
         
-        {#each $currentScene.creatures.filter(c => $isMaster || c.visible) as p}
+        {#each $session.creatureStates.filter(c => $isMaster || c.visible) as p}
         <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size}" style="fill:{p.color}" />
         {/each}
     {/if}
