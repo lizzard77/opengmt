@@ -24,15 +24,15 @@ namespace OpenGMT.SignalR
                 string data = System.IO.File.ReadAllText(dataFile);
 
                 var session = JsonSerializer.Deserialize<Session>(data);
-                if (session.CreatureStates == null)
-                    session.CreatureStates = new List<CreatureState>();
-                var newState = JsonSerializer.Deserialize<IList<CreatureState>>(message);
+                if (session.Scene.Map.Markers == null)
+                    session.Scene.Map.Markers = new List<MapMarker>();
+                var newState = JsonSerializer.Deserialize<IList<MapMarker>>(message);
 
                 if (newState != null)
                 {
                     foreach (var n in newState)
                     {
-                        var creature = session.CreatureStates.FirstOrDefault(c => c.CreatureId == n.CreatureId);
+                        var creature = session.Scene.Map.Markers.FirstOrDefault(c => c.CreatureId == n.CreatureId);
                         if (creature != null)
                         {
                             creature.X = n.X;
@@ -42,7 +42,7 @@ namespace OpenGMT.SignalR
                             creature.VisionNormal = n.VisionNormal;
                             creature.VisionDim = n.VisionDim;
                         } else {
-                            session.CreatureStates.Add(n);
+                            session.Scene.Map.Markers.Add(n);
                         }
                     }
                     File.WriteAllText(dataFile, JsonSerializer.Serialize(session));

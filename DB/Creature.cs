@@ -1,8 +1,13 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace OpenGMT
 {
     public class Creature
     {
         public long Id { get; set; }
+
         public string Name { get; set; }
         public IList<Attack> Attacks { get; set; }
         public int HPMax { get; set; }
@@ -31,10 +36,32 @@ namespace OpenGMT
         public string Actions { get; set; }
 
         public int Initiative { get; set; }
-        public IDictionary<string,int> Abilities { get; set; }
-        public IDictionary<string,int> Skills { get; set; }
-        public IDictionary<string,int> Inventory { get; set; }
-        public int[] Money { get; set; } = { 0,0,0,0,0 };
+
+        private string abilitiesString = "{}";
+        private string skillsString = "{}";
+        private string inventoryString = "{}";
+        private string moneyString = "[]";
+
+        [JsonIgnore]
+        public string AbilitiesString { get => abilitiesString; set => abilitiesString = value; }
+        [NotMapped]
+        public IDictionary<string, int> Abilities { get => JsonSerializer.Deserialize<Dictionary<string, int>>(abilitiesString); set => abilitiesString = JsonSerializer.Serialize(value); }
+
+        [JsonIgnore]
+        public string SkillsString { get => skillsString; set => skillsString = value; }
+        [NotMapped]
+        public IDictionary<string, int> Skills { get => JsonSerializer.Deserialize<Dictionary<string, int>>(skillsString); set => skillsString = JsonSerializer.Serialize(value); }
+
+        [JsonIgnore]
+        public string InventoryString { get => inventoryString; set => inventoryString = value; }
+        [NotMapped]
+        public IDictionary<string, int> Inventory { get => JsonSerializer.Deserialize<Dictionary<string, int>>(inventoryString); set => inventoryString = JsonSerializer.Serialize(value); }
+
+
+        [JsonIgnore]
+        public string MoneyString { get => moneyString; set => moneyString = value; }
+        [NotMapped]
+        public int[] Money { get => JsonSerializer.Deserialize<int[]>(moneyString); set => moneyString = JsonSerializer.Serialize(value); } 
 
         public string Age { get; set; }
         public string Height { get; set; }
@@ -43,6 +70,8 @@ namespace OpenGMT
         public string SkinColor { get; set; }
         public string HairColor { get; set; }
 
+        [JsonIgnore]
+        public IList<Scene> Scenes { get; set; }
     }
 
     public class Attack

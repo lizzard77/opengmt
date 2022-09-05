@@ -1,8 +1,16 @@
+using System.Text.Json.Serialization;
+
 namespace OpenGMT
 {
-    public class CreatureState
+    public class MapMarker
     {
+        public long Id { get; set; }
+
         public long CreatureId { get; set; }
+        public Creature Creature { get; set; }
+        public long MapId { get; set; }
+        public Map Map { get; set; }
+
         public decimal X { get; set; }
         public decimal Y { get; set; }
         public long Initiative { get; set; }

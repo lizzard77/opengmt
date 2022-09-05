@@ -1,12 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using OpenGMT;
 using OpenGMT.DB;
 using OpenGMT.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var dataDir = Path.Combine(builder.Environment.ContentRootPath, "data");
+if (!Directory.Exists(dataDir))
+    Directory.CreateDirectory(dataDir);
+
 builder.Services.AddCors();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddTransient<FileDB>();
+builder.Services.AddDbContext<OpenGMTContext>(
+    options =>
+    {
+        options.UseSqlite($"Filename={dataDir}/OpenGMT.sqlite");
+    });
 
 var app = builder.Build();
 
@@ -37,6 +49,10 @@ app.UseEndpoints(endpoints =>
     endpoints.MapFallbackToFile("index.html").AllowAnonymous();
 });
 
-
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<OpenGMTContext>();
+    db.Database.Migrate();
+}
 
 app.Run();

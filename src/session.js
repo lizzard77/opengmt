@@ -27,26 +27,15 @@ export async function updateState(p)
 
 export async function loadSession()
 {
-    const s = await apiGet("/api/session");
-    let scene;
-    if (s.sceneId)
-        scene = loadScene(s.sceneId);
-
-    if (s.creatureStates && scene)
-    {
-        s.creatureStates.forEach(c => {
-            const creature = scene.creatures.find(ccc => ccc.id === c.creatureId);
-            if (creature)
-            {
-                c.color = creature.color;
-                c.size = creature.size;
-                c.reach = creature.reach;
-            }
-        });
-    }
+    const sess = await apiGet("/api/session");
     
-    session.set(s);
-    console.log("loaded session", s)
+    if (sess && sess.scene)
+    {
+        console.log("loaded session", sess)
+        session.set(sess);
+        currentScene.set(sess.scene);
+        currentPlayer.set(sess.scene.creatures[0]);    
+    }
 }
 
 export function getState(id)
@@ -68,17 +57,3 @@ export function getState(id)
     }
     return s.creatureStates.find(c => c.creatureId === id) || defaultValues;
 }
-
-function loadScene(id)
-{
-    const s = get(scenes).find(s => s.id === id);
-    s.map = get(maps).find(m => m.id === s.mapId);
-    s.creatures = s.creatureIds.map(c => {
-        return get(creatures).find(cc => cc.id === c);
-    });
-    currentScene.set(s);
-    currentPlayer.set(s.creatures[0]);    
-    return s;
-}
-
-    

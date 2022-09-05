@@ -53,11 +53,11 @@
 
     function setMapCenter(e)
     {
-        console.log("setMapCenter", e.detail);
-        const creature = e.detail || $currentPlayer;
+        const creature = e?.detail || $currentPlayer;
         if (!creature)
             return;
 
+        console.log("setMapCenter", creature);
         left = -((creature.x * $squareSizeInPx) - w / 2);
         top = -((creature.y* $squareSizeInPx) - h / 2);
         if (creature.visible)

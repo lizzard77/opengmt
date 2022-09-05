@@ -8,10 +8,12 @@ namespace OpenGMT.Controllers
     public class SoundController : Controller
     {        
         private readonly IWebHostEnvironment env;
+        private readonly OpenGMTContext context;
 
-        public SoundController(IWebHostEnvironment env)
+        public SoundController(IWebHostEnvironment env, OpenGMTContext context)
         {
             this.env = env;
+            this.context = context;
         }
 
         [HttpGet("/api/sounds")]

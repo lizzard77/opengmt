@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OpenGMT.DB;
 
 namespace OpenGMT.Controllers
@@ -9,22 +10,24 @@ namespace OpenGMT.Controllers
     public class CreatureTemplateController : Controller
     {        
         private readonly FileDB db;
+        private readonly OpenGMTContext context;
 
-        public CreatureTemplateController(FileDB db)
+        public CreatureTemplateController(FileDB db, OpenGMTContext context)
         {
             this.db = db;
+            this.context = context;
         }
 
         [HttpGet("/api/creatureTemplates")]
         public IActionResult Get()
         {
-            return Json(db.Creatures);
+            return Json(context.Creatures);
         }
 
         [HttpPut("/api/creatureTemplates")]
         public IActionResult Put(Creature info)
         {
-            db.Upsert(info);
+            context.Entry(info).State = info.Id > 0 ? EntityState.Modified : EntityState.Added;
             return Ok();
         }
     }
