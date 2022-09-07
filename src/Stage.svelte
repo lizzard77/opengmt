@@ -31,7 +31,7 @@
     });
 
     hubConnection.on("setFog", (a) => {
-        if ($isMaster)
+        if ($isMaster && !pip)
             return;
         console.log("setFog", a);
         $fog = a;
