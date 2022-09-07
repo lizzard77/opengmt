@@ -1,8 +1,7 @@
 <script>
     import { createEventDispatcher } from "svelte";
-    import { currentScene, currentPlayer, combat } from "../stores";
+    import { currentScene, currentMarker, combat } from "../stores";
     import { mdiSkull } from "@mdi/js";
-    import CombatAction from "./CombatAction.svelte";
     import Icon from "./Icon.svelte";
     const dispatch = createEventDispatcher();
     

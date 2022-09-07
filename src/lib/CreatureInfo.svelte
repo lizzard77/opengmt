@@ -1,6 +1,6 @@
 <script>
     import { createEventDispatcher } from "svelte";
-    import { currentPlayer, session } from "../stores";
+    import { currentMarker, session } from "../stores";
     import { mdiEyeOff, mdiEye, mdiTarget, mdiLampOutline, mdiLamp } from "@mdi/js";
     import { hubConnection } from "../hub";
     import { getState, updateState } from "../session";
@@ -10,16 +10,24 @@
     
     export let creature;
 
-    let state = getState(creature.id);
-    $: if ($session) { state = getState(creature.id); visible = state.visible; light = state.light; }
-
-    const { id, name, color } = creature;
-    let { visible, light } = state;
+    let { id, name, color } = creature;
+    let { visible, light } = getState(id);
+    $:  {
+        if (id)
+        {
+            let state = $session?.markers?.find(c => c.creatureId === id);
+            if (state)
+            {
+                visible = state.visible; 
+                light = state.light;
+            }
+        }
+    }
 
     function setPlayer()
     {
-        $currentPlayer = creature;
-        hubConnection.invoke("SetCurrentPlayer", JSON.stringify(creature));
+        $currentMarker = getState(creature.id);
+        //hubConnection.invoke("SetCurrentPlayer", JSON.stringify(creature));
     }
 
     function centerPlayer()
@@ -29,23 +37,23 @@
 
     async function toggleVisible()
     {
-        const current = getState(id);
-        current.visible = !current.visible;
-        await updateState(current);    
+        $currentMarker.visible = !$currentMarker.visible;
+        if (!$currentMarker.visible)
+            $currentMarker.light = false;
+        await updateState($currentMarker);    
     }
 
     async function toggleLight()
     {
-        const current = getState(id);
-        current.light = !current.light;
-        if (current.light)
-            current.visible = true;
-        await updateState(current);
+        $currentMarker.light = !$currentMarker.light;
+        if ($currentMarker.light)
+            $currentMarker.visible = true;
+        await updateState($currentMarker);
     }
 
 </script>
 		
-<div class="m-0 p-1" class:bg-blue-300={id === $currentPlayer.id} on:click={setPlayer}>
+<div class="m-0 p-1" class:bg-blue-300={id === $currentMarker.creatureId} on:click={setPlayer}>
     <button on:click={toggleVisible} class="p-2 rounded-lg bg-slate-200 ">
         <Icon size={20} path={visible ? mdiEye :mdiEyeOff} />
     </button>

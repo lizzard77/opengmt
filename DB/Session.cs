@@ -8,5 +8,6 @@ namespace OpenGMT
         public DateTime Created { get; set; }
         public long SceneId { get; set; }
         public Scene Scene { get; set; }
+        public IList<MapMarker> Markers { get; set; } = new List<MapMarker>();
     }
 }

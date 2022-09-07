@@ -31,6 +31,14 @@
         await putObject("/api/scenes", sceneUpdate);
         $currentScene = sceneUpdate;
     }
+
+    async function addCharacters()
+    {
+        $creatures.forEach(c => {
+            $currentScene.creatures.push(c);
+        });
+        await saveScene();
+    }
 </script>
 
 <GmMenu />
@@ -43,7 +51,7 @@
         <div class="box">
             <h1>Charaktere</h1>
             <div class="flex flex-row">
-                <button><Icon path={mdiGlasses} size={16} /></button>
+                <button on:click={addCharacters}><Icon path={mdiGlasses} size={16} /></button>
             </div>
 
             {#each $currentScene.creatures.filter(cc => cc.type === "pc") as c}

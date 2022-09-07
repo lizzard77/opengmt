@@ -16,7 +16,7 @@
             id: 5477,
             sceneId: s.id, 
             created : "2000-01-01", 
-            creatureStates : [
+            markers : [
                 {
                     creatureId: $currentPlayer.id,
                     x: $currentPlayer.x,

@@ -1,11 +1,11 @@
 <script>
-    import { session, scenes, currentScene, maps, creatures, currentPlayer } from "./stores";
+    import { session, scenes, currentScene, maps, creatures, currentMarker } from "./stores";
     import { hubConnection } from "./hub";
     export let isOpen = true;
 
     async function loadScene(scene)
     {
-        const s = $scenes.find(ss => ss.id === scene.id);
+        /*const s = $scenes.find(ss => ss.id === scene.id);
         s.map = $maps.find(m => m.id === s.mapId);
         s.creatures = s.creatureIds.map(c => {
             return $creatures.find(cc => cc.id === c);
@@ -25,7 +25,7 @@
             }).then(r => r.json());
 
         hubConnection.invoke("LoadScene", s.id);
-        isOpen = false;
+        isOpen = false;*/
     }
 </script>
 

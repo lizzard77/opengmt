@@ -17,8 +17,6 @@ namespace OpenGMT
         public decimal FootPerSquare { get; set; }
         public float GridOpacity { get; set; }
 
-        public IList<MapMarker> Markers { get; set; } = new List<MapMarker>();
-
         [JsonIgnore]
         public IList<Scene> Scenes { get; set; }
     }

@@ -1,31 +1,30 @@
 <script>				
-    import { createEventDispatcher } from "svelte";
-    import { combat, isMaster, currentScene, currentPlayer, session } from "../stores";
+    import { combat, isMaster, currentScene, currentMarker, session } from "../stores";
     import { mdiSkull } from "@mdi/js";
     import { hubConnection } from "../hub";
+    import { getState, updateState } from "../session";
 
     import Icon from "./Icon.svelte"
 	import CreatureInfo from "./CreatureInfo.svelte"
-    import { updateState } from "../session";
 	
     function setPlayer(p)
     {
-        $currentPlayer = p;
-        if ($isMaster)
-            hubConnection.invoke("SetCurrentPlayer", JSON.stringify(p));
+        $currentMarker = getState(p.id);
+        //if ($isMaster)
+        //    hubConnection.invoke("SetCurrentPlayer", JSON.stringify(p));
     }
 
     function updateInitiative()
     {
         console.log("updateInitiative");
         combatCreatures.sort((a, b) => b.initiative - a.initiative);
-        hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
+        //hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
         combatCreatures = combatCreatures;
     }
 
     function updateHP()
     {
-        hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
+        //hubConnection.invoke("SendPlayers", JSON.stringify(combatCreatures));
         combatCreatures = combatCreatures;
     }
 
@@ -37,17 +36,19 @@
         $combat = !$combat;
         if (!$combat)
         {
-            let tempc = $session.creatureStates.filter(c => c.visible);
+            let tempc = $session.markers.filter(c => c.visible);
             tempc.forEach(c => c.initiative = -1);
             combatCreatures = tempc;
             tempc.forEach(async (c) => await updateState(c));
         }
-        hubConnection.invoke('SetCombat', $combat);
+        //hubConnection.invoke('SetCombat', $combat);
     }
 
     async function updateCombattantList()
     {
-        let tempc = $session.creatureStates.filter(c => c.visible);
+        if (!$session?.markers)
+            return;
+        let tempc = $session.markers.filter(c => c.visible);
         tempc.forEach(c => c.initiative = Math.floor(Math.random() * 20));
         tempc.sort((a, b) => b.initiative - a.initiative);
         combatCreatures = tempc;
@@ -76,7 +77,7 @@
                 <th class="text-left p-1">EFFEKT</th>
             </tr>
         {#each combatCreatures as p}
-        <tr class="m-0 p-1" class:bg-blue-300={p.id === $currentPlayer.id}>
+        <tr class="m-0 p-1" class:bg-blue-300={p.creatureId === $currentMarker.creatureId}>
             <td>
                 <input class="w-12 text-center border-2" type="number" bind:value={p.initiative} on:change={updateInitiative} />
             </td>

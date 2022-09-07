@@ -28,7 +28,32 @@ namespace OpenGMT.Controllers
         [HttpPut("/api/scenes")]
         public IActionResult Put(Scene info)
         {
-            context.Entry(info).State = info.Id > 0 ? EntityState.Modified : EntityState.Added;
+
+            var existingScene = context.Scenes
+                .Include(s => s.Creatures)
+                .FirstOrDefault(s => s.Id==info.Id);
+
+            if (existingScene == null)
+            {
+                context.Scenes.Add(info);
+            } 
+            else 
+            {
+                context.Entry(existingScene).CurrentValues.SetValues(info);
+                foreach (var crea in info.Creatures)
+                {
+                    var existingCrea = existingScene.Creatures.FirstOrDefault(p => p.Id == crea.Id);
+                    if (existingCrea == null)
+                    {
+                        existingScene.Creatures.Add(crea);
+                    }
+                    else
+                    {
+                        context.Entry(existingCrea).CurrentValues.SetValues(crea);
+                    }
+                }
+            }
+            context.SaveChanges();
             return Ok();
         }
     }

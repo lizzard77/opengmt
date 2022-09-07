@@ -1,5 +1,5 @@
 <script>
-    import { currentScene, session, fog, combat, currentPlayer, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
+    import { currentScene, session, fog, combat, currentMarker, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
     import { Router, Route, navigate } from "svelte-routing";
 
     
@@ -53,18 +53,18 @@
 
     function setMapCenter(e)
     {
-        const creature = e?.detail || $currentPlayer;
-        if (!creature)
+        const marker = e?.detail || $currentMarker;
+        if (!marker)
             return;
 
-        console.log("setMapCenter", creature);
-        left = -((creature.x * $squareSizeInPx) - w / 2);
-        top = -((creature.y* $squareSizeInPx) - h / 2);
-        if (creature.visible)
-            hubConnection.invoke('CenterMap', creature.x, creature.y);
+        console.log("setMapCenter", marker);
+        left = -((marker.x * $squareSizeInPx) - w / 2);
+        top = -((marker.y* $squareSizeInPx) - h / 2);
+        //if (marker.visible)
+        //    hubConnection.invoke('CenterMap', marker.x, marker.y);
     }
 
-    setMapCenter($currentPlayer);
+    setMapCenter($currentMarker);
 
     $: if ($currentHandout !== handout)
     {
@@ -104,7 +104,7 @@
 
     <Modal bind:isOpen={showHandout}>
         <div class="w-full p-4 bg-white">
-            <img class="w-full" src={handout} />
+            <img class="w-full" src={handout} alt="Handout" />
         </div>
     </Modal>
 </div>  

@@ -17,6 +17,7 @@ namespace OpenGMT.SignalR
         {
             Console.WriteLine("Got players");
 
+/*
             string dataDir = env.ContentRootPath + "data";
             string dataFile = Path.Combine(dataDir, "session.json");
             if (Directory.Exists(dataDir) && System.IO.File.Exists(dataFile))
@@ -49,7 +50,7 @@ namespace OpenGMT.SignalR
                 }
             }
 
-
+*/
             await Clients.All.SendAsync("players", message);
         }
 

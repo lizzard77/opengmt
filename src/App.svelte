@@ -1,6 +1,6 @@
 <script>
     import { Router, Route, navigate } from "svelte-routing";
-    import { showPIP, sounds, isMaster, creatures, scenes, maps, session, currentScene, currentPlayer } from "./stores";
+    import { showPIP, sounds, isMaster, creatures, scenes, maps, session, currentScene, currentMarker } from "./stores";
 
     import AudioBoard from "./AudioBoard.svelte";
     import CharacterSheet from "./CharacterSheet.svelte";
@@ -12,15 +12,14 @@
     import DmDash from "./DMDash.svelte";    
     import { get } from "./api";
     import { hubConnection } from "./hub";
-import { loadSession } from "./session";
     
-    hubConnection.on("players", data => {
+    /*hubConnection.on("players", data => {
         if ($isMaster)
             return;
         const incomingPlayerData = JSON.parse(data);
         incomingPlayerData.forEach(d => 
         {
-            const player = $currentScene.creatures.find(c => c.id == d.id);
+            const player = $session.creatureStates.find(c => c.id == d.id);
             if (player)
             {
                 player.x = d.x;
@@ -33,14 +32,14 @@ import { loadSession } from "./session";
             }
         });
         $currentScene = $currentScene;
-    });
+    });*/
 
-    hubConnection.on("move", data => {
+    /*hubConnection.on("move", data => {
         if ($isMaster)
             return;
         
         const { id, x, y } = JSON.parse(data);
-        const creature = $currentScene.creatures.find(c => c.id === id);
+        const creature = $session.creatureStates.find(c => c.id === id);
         if (creature && (creature.x !== x || creature.y !== y)) {
             console.log("move creature", creature.name, "to", x, y);
             creature.x = x;
@@ -48,9 +47,9 @@ import { loadSession } from "./session";
             $currentScene = $currentScene;
             $currentPlayer = $currentPlayer;
         }
-    });
+    });*/
 
-    hubConnection.on("setCurrentPlayer", data =>
+    /*hubConnection.on("setCurrentPlayer", data =>
     {
         if ($isMaster)
             return;
@@ -61,18 +60,9 @@ import { loadSession } from "./session";
             console.log("set current player", creature.name);
             $currentPlayer = creature;
         }
-    });
+    });*/
 
-    hubConnection.on("loadScene", data => {
-        if ($isMaster)
-            return;
-        console.log("loadScene", data);
-        loadScene(data);
-    });
-    
     let baseData = Promise.all([
-        //hubConnection.start(),
-
         (async () => {
             let loadedCreatures = await get("/api/creatures");
             loadedCreatures.forEach(p => {
@@ -100,7 +90,6 @@ import { loadSession } from "./session";
     
     let loader = (async () => {
             await baseData;
-            await loadSession();
         })();
 
     async function handleKey(e)

@@ -1,4 +1,4 @@
-import { session, scenes, creatures, maps, currentScene, currentPlayer } from "./stores";
+import { session, scenes, creatures, maps, currentScene, currentMarker } from "./stores";
 import { get } from "svelte/store";
 import { get as apiGet, putObject } from "./api";
 import { hubConnection } from "./hub";
@@ -11,16 +11,17 @@ hubConnection.on("sessionInfo", (e) => {
 export async function updateState(p)
 {
     let s = get(session);
-    const states = s.creatureStates.filter(c => c.creatureId !== p.creatureId);
-    const currentState = s.creatureStates.find(c => c.creatureId === p.creatureId) || p;
+    
+    const states = s?.markers?.filter(c => c.creatureId !== p.creatureId) || [];
+    const currentState = s?.markers?.find(c => c.creatureId === p.creatureId) || p;
 
     currentState.x = p.x;
     currentState.y = p.y;
     currentState.initiative = p.initiative;
     currentState.visible = p.visible;
     currentState.light = p.light;
-
-    const sessionBody = { ...s, creatureStates : [ ...states, currentState ] };
+    
+    const sessionBody = { ...s, markers : [ ...states, currentState ] };
     await putObject("/api/session", sessionBody);
     session.set(sessionBody);
 }
@@ -34,13 +35,14 @@ export async function loadSession()
         console.log("loaded session", sess)
         session.set(sess);
         currentScene.set(sess.scene);
-        currentPlayer.set(sess.scene.creatures[0]);    
+        currentMarker.set(sess.markers[0]);    
     }
 }
 
 export function getState(id)
 {
     let s = get(session);
+    
     const defaultValues = 
     {
       "creatureId": id,
@@ -55,5 +57,17 @@ export function getState(id)
       "size" : 5,
       "color" : "white"
     }
-    return s.creatureStates.find(c => c.creatureId === id) || defaultValues;
+    let marker =  s?.markers?.find(c => c.creatureId === id) || defaultValues;
+
+    let cList = get(creatures);
+    let c = cList.find(cc => cc.id === id);
+    if (c)
+    {
+        marker.color = c.color;
+        console.log("corrected");
+    }
+
+    return marker;
+
+
 }
