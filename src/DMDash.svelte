@@ -1,5 +1,5 @@
 <script>
-    import { session, isMaster, currentScene, currentHandout, creatures, showPIP } from "./stores";
+    import { currentScene, currentHandout, creatures } from "./stores";
     import { mdiGlasses } from "@mdi/js";
 
     import Icon from "./lib/Icon.svelte";
@@ -8,9 +8,15 @@
     import GmMenu from "./lib/GMMenu.svelte";
     import { putObject } from "./api";
     import { hubConnection } from "./hub";
+    import Upload from "./lib/Upload.svelte";
+    import AudioBoard from "./AudioBoard.svelte";
 
     let { name, description, strongStart, secretsAndHints, phantasticLocations } = $currentScene;
 
+    let playTime;
+    let audioUrl;
+    let playTimeTimer;
+    let audioFile;
     
     function setHandout(asset = "")
     {
@@ -38,6 +44,30 @@
             $currentScene.creatures.push(c);
         });
         await saveScene();
+    }
+
+    function play(url)
+    { 
+        console.log(url)
+        audioFile = new Audio(url);
+        audioFile.play();
+
+        playTimeTimer = setInterval(() => {
+            if (audioFile)
+                playTime = Math.floor(audioFile.currentTime/60) + ":" + Math.floor(audioFile.currentTime%60);
+        }, 1000);
+    }
+
+    function pause()
+    { 
+        audioFile.pause();
+        clearInterval(playTimeTimer);
+    }
+
+    function stop()
+    {
+        audioFile.pause();
+        audioFile = null;
     }
 </script>
 
@@ -108,8 +138,15 @@
             {#if $currentHandout}
             <button on:click={() => setHandout("")}>Handout Schließen</button>
             {:else}
+            <Upload folder="handouts" /><br />
             <button on:click={() => setHandout("/assets/handouts/BarthensProvisions-1-scaled.jpg")}>BarthensProvisions-1-scaled.jpg</button>
+            <button on:click={() => setHandout("/assets/handouts/637981721880603677.png")}>Dorf</button>
             {/if}
+        </div>
+
+        <div class="box">
+            <h1>Audio</h1>
+            <AudioBoard />
         </div>
 
         <div class="box">
@@ -166,6 +203,6 @@
     :focus { @apply bg-white }
 
     .box {
-        @apply px-2 w-full md:w-6/12;
+        @apply px-2 w-full md:w-6/12 overflow-auto max-h-96;
     }
 </style>

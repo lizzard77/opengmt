@@ -21,7 +21,7 @@
 
     let handout = "";
     let showHandout = false;
-
+    
     hubConnection.on("centerMap", (l,t) => {
         if ($isMaster)
             return;
@@ -45,7 +45,7 @@
     });
 
     hubConnection.on("setHandout", (a) => {
-        if ($isMaster)
+        if ($isMaster && !pip)
             return;
         console.log("setHandout", a);
         $currentHandout = JSON.parse(a);
@@ -60,8 +60,6 @@
         console.log("setMapCenter", marker);
         left = -((marker.x * $squareSizeInPx) - w / 2);
         top = -((marker.y* $squareSizeInPx) - h / 2);
-        //if (marker.visible)
-        //    hubConnection.invoke('CenterMap', marker.x, marker.y);
     }
 
     setMapCenter($currentMarker);
@@ -78,7 +76,7 @@
         $zoom = 0.5;
 </script>
 
-{#if $isMaster}
+{#if $isMaster && !pip}
 <GmMenu />
 {/if}
 
@@ -96,7 +94,7 @@
         {/if}
     </main>
 
-    {#if $isMaster}
+    {#if $isMaster && !pip}
     <div class="">
         <PlayerPanel on:centerMapToPlayer={setMapCenter} />
     </div>
