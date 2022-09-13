@@ -52,7 +52,14 @@ namespace OpenGMT.Controllers
                         context.Entry(existingCrea).CurrentValues.SetValues(crea);
                     }
                 }
+
+                var toRemove = existingScene.Creatures.Where(c => !info.Creatures.Any(cc => cc.Id == c.Id)).ToList();
+                foreach (var crea in toRemove)
+                {
+                    existingScene.Creatures.Remove(crea);
+                }
             }
+
             context.SaveChanges();
             return Ok();
         }

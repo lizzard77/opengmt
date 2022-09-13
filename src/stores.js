@@ -2,6 +2,9 @@ import * as signalR from "@microsoft/signalr";
 import { writable } from "svelte/store";
 import { loadSession } from "./session";
 
+export const activeSection = writable("");
+export const statsEditing = writable(false);
+
 export const creatures = writable([]);
 export const maps = writable([]);
 export const sounds = writable([]);
@@ -29,7 +32,6 @@ export const currentMarker = writable({ id: 0, name: "", x:0, y:0, reach : 1, vi
 export const currentScene = writable({ id: 0, map: null, creatures : null, name : null, description : null, strongStart : null, secretsAndHints : null, phantasticLocations : null });
 
 export const currentHandout = writable("");
-export const audioFile = writable();
 
 export const showPIP = writable(false);
 

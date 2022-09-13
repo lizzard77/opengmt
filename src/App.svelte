@@ -1,17 +1,12 @@
 <script>
-    import { Router, Route, navigate } from "svelte-routing";
-    import { showPIP, sounds, isMaster, creatures, scenes, maps, session, currentScene, currentMarker } from "./stores";
+    import { Router, Route } from "svelte-routing";
+    import { showPIP, sounds, isMaster, creatures, scenes, maps, currentScene } from "./stores";
 
-    import AudioBoard from "./AudioBoard.svelte";
-    import CharacterSheet from "./CharacterSheet.svelte";
-    import Documents from "./Documents.svelte";
-    import Dice  from "./lib/Dice.svelte";
     import Stage from "./Stage.svelte";
-    import Scenes from "./Scenes.svelte";
-    import ProgressCircle from "./lib/ProgressCircle.svelte";
     import DmDash from "./DMDash.svelte";    
+
+    import ProgressCircle from "./lib/ProgressCircle.svelte";
     import { get } from "./api";
-    import { hubConnection } from "./hub";
     
     /*hubConnection.on("players", data => {
         if ($isMaster)
@@ -83,7 +78,16 @@
         })(),
 
         (async () => {
-            $sounds = await get("/api/sounds");
+            const soundFiles = await get("/api/sounds");
+            $sounds = soundFiles.map((fileName) => {
+                return {
+                    url : fileName,
+                    isPlaying : false,
+                    audioFile : null,
+                    playTime : "",
+                    loops : false
+                }
+            });
         })()
 
     ]);
@@ -114,30 +118,19 @@
 
 <svelte:window on:keydown={handleKey}/>
 
-    {#await loader}
-        <div class="text-center mt-8">
-            <ProgressCircle />
-            Lade Daten...
-        </div>
-    {:then}
-        <Router>
-            <div>
-            <Route path="sheets" component="{CharacterSheet}" />
-            <Route path="docs" component="{Documents}" />
-            <Route path="scenes" component="{Scenes}" />
-            <Route path="audio" component="{AudioBoard}" />
-            <Route path="/" component="{Stage}" />
-            <Route path="dash" component="{DmDash}" />
-            </div>
-            
-            {#if $currentScene && $currentScene.id}
-                {#if !pip}
-                <Dice />
-                {/if}
-                {#if $showPIP}
-                <iframe src={getPIPUrl()} style="zoom: 0.4;"  class="fixed right-2 bottom-2 z-50 h-screen w-screen border-2" title="PIP" />
-                {/if}
-            {/if}
-        </Router>
-    {/await}
+{#await loader}
+    <div class="text-center mt-8">
+        <ProgressCircle />
+        Lade Daten...
+    </div>
+{:then}
+<Router>
+    <Route path="/" component="{Stage}" />
+    <Route path="dash" component="{DmDash}" />
+</Router>
+
+{#if $currentScene && $currentScene.id && $showPIP}
+<iframe src={getPIPUrl()} style="zoom: 0.4;"  class="fixed right-2 bottom-2 z-50 h-screen w-screen border-2" title="PIP" />
+{/if}
+{/await}
 

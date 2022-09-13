@@ -3,16 +3,27 @@
     export let value;
     export let optionalValue = "";
     let edit;
+
+    import { statsEditing } from '../stores';
 </script>
 
-<dt on:click={() => edit.focus()}>{key}</dt>
-<dd contenteditable bind:innerHTML={value} bind:this={edit}>
-    {value || "-"}
-    {#if optionalValue}
-    , {optionalValue}
+{#if !$statsEditing}
+    {#if value}
+    <dt>{key}</dt>
+    <dd>{value}</dd>
+    <br />
     {/if}
-</dd>
-<br />
+{:else}
+    <dt on:click={() => edit.focus()}>{key}</dt>
+    <dd contenteditable bind:innerHTML={value} bind:this={edit}>
+        {value || "-"}
+        {#if optionalValue}
+        , {optionalValue}
+        {/if}
+    </dd>
+    <br />
+{/if}
+
 
 <style>
     dl { @apply text-red-800 }

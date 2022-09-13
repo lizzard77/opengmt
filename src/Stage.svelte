@@ -1,17 +1,14 @@
 <script>
-    import { currentScene, session, fog, combat, currentMarker, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
-    import { Router, Route, navigate } from "svelte-routing";
-
+    import { fog, combat, currentMarker, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
-    import MapSettings from "./lib/MapSettings.svelte";
     import MapTools from "./lib/MapTools.svelte";
     import PlayerPanel from "./lib/PlayerPanel.svelte";
     import PlayerList from "./lib/PlayerList.svelte";
     import Modal from "./lib/Modal.svelte";
-    import GmMenu from "./lib/GMMenu.svelte";
     import { hubConnection } from "./hub";
+    import Screen from "./Screen.svelte";
 
     let showReach = true;
     let w = 0;
@@ -76,33 +73,28 @@
         $zoom = 0.5;
 </script>
 
-{#if $isMaster && !pip}
-<GmMenu />
-{/if}
-
-<div class="flex h-screen w-screen overflow-hidden">
-    <main class="flex-1 relative overflow-hidden" bind:clientWidth={w} bind:clientHeight={h}>
-        <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
-            <Map {showReach} on:centerMapToPlayer={setMapCenter} />
-        </Draggable>
-        {#if !pip}
-            <MapSettings bind:showReach />
-            {#if !$isMaster}
-            <PlayerList on:centerMapToPlayer={setMapCenter} />
+<Screen title="Karte">
+    <div class="flex h-screen w-screen overflow-hidden">
+        <main class="flex-1 relative overflow-hidden" bind:clientWidth={w} bind:clientHeight={h}>
+            <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
+                <Map {showReach} on:centerMapToPlayer={setMapCenter} />
+            </Draggable>
+            {#if !pip}
+                <PlayerList on:centerMapToPlayer={setMapCenter} />
+                <MapTools on:centerMapToPlayer={setMapCenter} />
             {/if}
-            <MapTools on:centerMapToPlayer={setMapCenter} />
-        {/if}
-    </main>
+        </main>
 
-    {#if $isMaster && !pip}
-    <div class="">
-        <PlayerPanel on:centerMapToPlayer={setMapCenter} />
-    </div>
-    {/if}    
-
-    <Modal bind:isOpen={showHandout}>
-        <div class="w-full p-4 bg-white">
-            <img class="w-full" src={handout} alt="Handout" />
+        {#if $isMaster && !pip}
+        <div class="">
+            <!--PlayerPanel on:centerMapToPlayer={setMapCenter} /-->
         </div>
-    </Modal>
-</div>  
+        {/if}    
+
+        <Modal bind:isOpen={showHandout}>
+            <div class="w-full p-4 bg-white">
+                <img class="w-full" src={handout} alt="Handout" />
+            </div>
+        </Modal>
+    </div>  
+</Screen>

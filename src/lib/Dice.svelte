@@ -1,5 +1,5 @@
 <script>
-    import { mdiDiceD20Outline, mdiDiceD4, mdiDiceD6, mdiDiceD8, mdiDiceD10, mdiDiceD12, mdiDiceD20 } from "@mdi/js";
+    import { mdiDiceD4, mdiDiceD6, mdiDiceD8, mdiDiceD10, mdiDiceD12, mdiDiceD20 } from "@mdi/js";
 
     const dicePaths = {
         W4: mdiDiceD4,
@@ -43,7 +43,7 @@
     }
 
 
-    let isOpen = false;
+    export let isOpen = false;
 </script>
 
 {#if isOpen}
@@ -52,7 +52,9 @@
     {#if !rolled}
         <div class="border-2 rounded-xl p-2 m-2 flex bg-black portrait:flex-col">
             {#each dice as d}
-            <div class="border-2 m-1 bg-white rounded-full w-16 h-16 grid place-items-center" on:click={() => addDice(d)}>{d.name}</div>
+            <div class="border-2 m-1 bg-white rounded-full w-10 h-10 grid place-items-center" on:click={() => addDice(d)}>
+                <Icon path={dicePaths[d.name]} size=24 />
+            </div>
             {/each}
         </div>
         {#if selectedDice.length > 0}
@@ -92,8 +94,4 @@
         </div>
     {/if}
 </div>
-{:else}
-    <div class="fixed bottom-2 right-2 flex items-center">
-        <button on:click={() => isOpen = true} class="p-2 rounded-lg bg-slate-200 border-4 ml-2"><Icon path={mdiDiceD20Outline} size=24 /></button>
-    </div>
 {/if}

@@ -1,5 +1,8 @@
 <script>
+    import { statsEditing } from '../stores';
     import StatInfo from "./StatInfo.svelte";
+    import { mdiClose, mdiPencil } from "@mdi/js";
+    import Icon from "./Icon.svelte";
 
     export let creature = {};
     export let isOpen = false;
@@ -35,13 +38,23 @@
 
             isOpen = false;
     }
-
 </script>
 
 <div class="flex flex-col flex-wrap p-8" style="background-image: url('/assets/paper.jpg');">
+    <div class="absolute right-2 top-2 flex">
+    {#if !$statsEditing}
+    <button class=" bg-slate-200 p-2 rounded-lg" on:click={() => $statsEditing = !$statsEditing}><Icon path={mdiPencil} /></button>
+
+    {/if}
+        <button on:click={() => isOpen = false} class="rounded-lg bg-slate-200 p-2 ml-2"><Icon path={mdiClose} /></button>
+    </div>
+
     <div>
-        <h1 class="font-bold text-3xl text-red-800 font-serif uppercase first-letter:text-4xl"
-            contenteditable bind:innerHTML={name}>{name}</h1>
+        {#if $statsEditing}
+        <h1 class="font-bold text-3xl text-red-800 font-serif uppercase first-letter:text-4xl" contenteditable bind:innerHTML={name}>{name}</h1>
+        {:else}
+        <h1 class="font-bold text-3xl text-red-800 font-serif uppercase first-letter:text-4xl">{name}</h1>
+        {/if}
         <p class="italic">Some other Info, unaligned</p>
     </div>
 
@@ -57,7 +70,7 @@
 
     <table>
         <tr>
-            <td><b>STR</b><br /><span contenteditable bind:innerHTML={abilities.STR}>{abilities.STR}</span> ({getModifier(abilities?.STR)})</td>
+            <td><b>STÄ</b><br /><span contenteditable bind:innerHTML={abilities.STR}>{abilities.STR}</span> ({getModifier(abilities?.STR)})</td>
             <td><b>GES</b><br /><span contenteditable bind:innerHTML={abilities.DEX}>{abilities.DEX}</span> ({getModifier(abilities?.DEX)})</td>
             <td><b>KON</b><br /><span contenteditable bind:innerHTML={abilities.CON}>{abilities.CON}</span> ({getModifier(abilities?.CON)})</td>
             <td><b>INT</b><br /><span contenteditable bind:innerHTML={abilities.INT}>{abilities.INT}</span> ({getModifier(abilities?.INT)})</td>
@@ -86,8 +99,7 @@
 </div>
 
 <div class="mt-4 text-right">
-    <button on:click={save} class="rounded-lg bg-slate-200 p-2">Speichern</button>
-    <button on:click={() => isOpen = false} class="rounded-lg bg-slate-200 p-2">Abbrechen</button>
+    <button on:click={save} class="rounded-lg bg-slate-200 p-2" disabled={!$statsEditing}>Speichern</button>
 </div>
 
 

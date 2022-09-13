@@ -46,14 +46,6 @@ let dice = [
       values: [],
       modifier: 0,
       image: 'https://i.imgur.com/XyqQZQs.png'
-    },
-    {
-      number: 0,
-      name: 'W100',
-      sides: 100,
-      values: [],
-      modifier: 0,
-      image: 'https://i.imgur.com/XyqQZQs.png'
     }
   ];
 
