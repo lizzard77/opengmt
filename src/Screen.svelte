@@ -6,9 +6,13 @@ import Menu from "./lib/Menu.svelte";
 
 export let backlink = "";
 export let title = "OpenGMT";
+
+const url = new URL(window.location.href);
+const pip = url.searchParams.get("pip") === "true";
 </script>
 
 <div class="absolute flex flex-col h-full w-full">
+    {#if !pip}
     <header class="w-full bg-white border-b-2 flex flex-row items-center p-2">
         <slot name="header">
             <slot name="left">
@@ -30,20 +34,23 @@ export let title = "OpenGMT";
             </slot>
         </slot>
     </header>
+    {/if}
 
-    <div class="flex flex-1 overflow-auto md:flex-row">
+    <div class="md:flex flex-1 overflow-auto md:flex-row">
+        {#if !pip}
         <div id="leftMenu" class="hidden md:block">
             <Menu />
         </div>
+        {/if}
 
-        <div class="flex flex-row">
-            <slot />
-        </div>
+        <slot />
     </div>
 
+    {#if !pip}
     <footer class="md:hidden">
         <slot name="footer">
             <Menu />
         </slot>
     </footer>
+    {/if}
 </div>

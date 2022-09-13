@@ -1,6 +1,6 @@
 <script>
     import { Router, Route } from "svelte-routing";
-    import { showPIP, sounds, isMaster, creatures, scenes, maps, currentScene } from "./stores";
+    import { sounds, isMaster, creatures, scenes, maps } from "./stores";
 
     import Stage from "./Stage.svelte";
     import DmDash from "./DMDash.svelte";    
@@ -104,16 +104,6 @@
         }
     }
 
-    function getPIPUrl()
-    {
-        const url = new URL(window.location.href);
-        url.pathname = "";
-        url.searchParams.set("pip", "true");
-        return url.toString();
-    }
-
-    const url = new URL(window.location.href);
-    const pip = url.searchParams.get("pip") === "true";
 </script>
 
 <svelte:window on:keydown={handleKey}/>
@@ -129,8 +119,6 @@
     <Route path="dash" component="{DmDash}" />
 </Router>
 
-{#if $currentScene && $currentScene.id && $showPIP}
-<iframe src={getPIPUrl()} style="zoom: 0.4;"  class="fixed right-2 bottom-2 z-50 h-screen w-screen border-2" title="PIP" />
-{/if}
+
 {/await}
 

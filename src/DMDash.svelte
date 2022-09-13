@@ -1,5 +1,5 @@
 <script>
-    import { currentScene, currentHandout, creatures } from "./stores";
+    import { showPIP, activeSection, currentScene, currentHandout, creatures } from "./stores";
     import { mdiGlasses } from "@mdi/js";
 
     import Icon from "./lib/Icon.svelte";
@@ -10,8 +10,13 @@
     import Upload from "./lib/Upload.svelte";
     import AudioBoard from "./lib/AudioBoard.svelte";
     import Screen from "./Screen.svelte";
+import Pip from "./lib/PIP.svelte";
+import Draggable from "./lib/Draggable.svelte";
+import Map from "./lib/Map.svelte";
 
     let { name, description, strongStart, secretsAndHints, phantasticLocations } = $currentScene;
+
+    $activeSection = "dash";
 
     function setHandout(asset = "")
     {
@@ -46,6 +51,14 @@
         $currentScene.creatures = $currentScene.creatures.filter(cc => cc.id !== c.id);
         await saveScene();
     }
+
+    let showReach = true;
+    let w = 0;
+    let h = 0;
+    let left = 0;
+    let top = 0;
+
+
 </script>
 
 <style>
@@ -62,13 +75,12 @@
     :focus { @apply bg-white }
 
     .box {
-        @apply w-full md:w-6/12 basis-52 overflow-auto pr-2;
+        @apply w-full md:w-5/12 basis-36 flex-grow overflow-auto pr-2;
     }
 </style>
 
 <Screen title={$currentScene.name}>
-    <div class="p-4">
-        <div class="min-h-fit md:h-full md:min-h-0 md:flex md:flex-col md:flex-wrap">
+        <div class="p-4 min-h-fit md:h-full md:min-h-0 md:flex md:flex-col md:flex-wrap">
             <div class="box">
                 <h1>Charaktere</h1>
                 <div class="flex flex-row">
@@ -140,6 +152,15 @@
                 <AudioBoard />
             </div>
 
+            <div class="box flex-grow basis-[400px]" >
+                <h1>Map</h1>
+                <div bind:clientWidth={w} bind:clientHeight={h} class="flex-1 relative" >
+                    <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
+                        <Map {showReach} />
+                    </Draggable>
+                </div>
+            </div>
+
             <div class="box overflow-hidden">
                     <h1 class="text-lg font-bold mb-4 mt-4">Dialoge</h1>
                     <tt class="text-xs">
@@ -177,7 +198,6 @@
                     </tt>
             </div>
         </div>
-    </div>
 </Screen>
 
 <Modal bind:isOpen={showMonsterStats}>

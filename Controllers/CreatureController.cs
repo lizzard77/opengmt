@@ -28,6 +28,7 @@ namespace OpenGMT.Controllers
         public IActionResult Put(Creature info)
         {
             context.Entry(info).State = info.Id > 0 ? EntityState.Modified : EntityState.Added;
+            context.SaveChanges();
             return Ok();
         }
     }

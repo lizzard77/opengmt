@@ -1,5 +1,5 @@
 <script>
-    import { fog, combat, currentMarker, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
+    import { activeSection, fog, combat, currentMarker, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
@@ -18,6 +18,8 @@
 
     let handout = "";
     let showHandout = false;
+
+    $activeSection = "stage";
     
     hubConnection.on("centerMap", (l,t) => {
         if ($isMaster)
@@ -74,7 +76,7 @@
 </script>
 
 <Screen title="Karte">
-    <div class="flex h-screen w-screen overflow-hidden">
+    <div class="flex h-full w-screen overflow-hidden">
         <main class="flex-1 relative overflow-hidden" bind:clientWidth={w} bind:clientHeight={h}>
             <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
                 <Map {showReach} on:centerMapToPlayer={setMapCenter} />
@@ -87,7 +89,7 @@
 
         {#if $isMaster && !pip}
         <div class="">
-            <!--PlayerPanel on:centerMapToPlayer={setMapCenter} /-->
+            <PlayerPanel on:centerMapToPlayer={setMapCenter} />
         </div>
         {/if}    
 

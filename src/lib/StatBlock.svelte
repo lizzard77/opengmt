@@ -1,5 +1,5 @@
 <script>
-    import { statsEditing } from '../stores';
+    import { statsEditing, currentScene } from '../stores';
     import StatInfo from "./StatInfo.svelte";
     import { mdiClose, mdiPencil } from "@mdi/js";
     import Icon from "./Icon.svelte";
@@ -35,6 +35,9 @@
                 }, 
                 body: JSON.stringify(creatureUpdate)
             });
+
+            const creas = $currentScene.creatures.filter(c => c.id !== creatureUpdate.id);
+            $currentScene.creatures = [ ...creas, creatureUpdate ];
 
             isOpen = false;
     }
