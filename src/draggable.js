@@ -21,10 +21,13 @@ export function draggable(node, params) {
     node.style.left = offsetX + 'px';
     node.style.top = offsetY + 'px';
 
-    node.addEventListener('mousedown', startDrag);
-    node.addEventListener('mousemove', drag);
-    node.addEventListener('mouseup', endDrag);
-    node.addEventListener('mouseleave', endDrag);
+    node.addEventListener('mousedown', startDrag, true);
+    node.addEventListener('mousemove', drag, true);
+    node.addEventListener('mouseup', endDrag, true);
+    node.addEventListener('mouseleave', endDrag, true);
+    node.addEventListener('touchstart', startDrag, true);
+    node.addEventListener('touchmove', drag, true);
+    node.addEventListener('touchend', endDrag, true);
 
     new ResizeObserver(() => {
         offsetX = 0;
@@ -33,13 +36,17 @@ export function draggable(node, params) {
         node.style.top = offsetY + 'px';
     }).observe(node);
 
+    
     function startDrag(event) 
     {
         event.preventDefault();
         isDragging = true;
         moved = false;
-        lastX = event.clientX;
-        lastY = event.clientY;
+
+        const cx = event.clientX || event.touches[0].clientX;
+        const cy = event.clientY || event.touches[0].clientY;
+        lastX = cx;
+        lastY = cy;
 
         contentRect = node.getBoundingClientRect();
         containerWidth = node.parentNode.clientWidth;
@@ -54,10 +61,13 @@ export function draggable(node, params) {
             return;
         event.preventDefault();
 
-        const dx = event.clientX - lastX;
-        const dy = event.clientY - lastY;
-        lastX = event.clientX;
-        lastY = event.clientY;
+        
+        const cx = event.clientX || event.touches[0].clientX;
+        const cy = event.clientY || event.touches[0].clientY;
+        const dx = cx - lastX;
+        const dy = cy - lastY;        
+        lastX = cx;
+        lastY = cy;
 
         if (dx || dy)
             moved = true;
@@ -82,8 +92,24 @@ export function draggable(node, params) {
         if (moved)
             window.addEventListener('click', captureClick, true);  // <-- This registeres this listener for the capture phase instead of the bubbling phase!
 
-        lastX = event.clientX;
-        lastY = event.clientY;
         isDragging = false;
+    }
+
+    function setOffsets(x,y)
+    {
+        offsetX = x;
+        offsetY = y;
+        node.style.left = offsetX + 'px';
+        node.style.top = offsetY + 'px';
+    }
+    
+    return {
+        destroy() {
+            node.removeEventListener('mousedown', startDrag, true);
+            node.removeEventListener('mousemove', drag, true);
+            node.removeEventListener('mouseup', endDrag, true);
+            node.removeEventListener('mouseleave', endDrag, true);
+            console.log("cleaned up event handlers")
+        }
     }
 }

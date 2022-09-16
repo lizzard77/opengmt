@@ -1,7 +1,6 @@
 <script>
     import { currentScene, currentMarker, isMaster, squareSizeInPx, session } from "../stores";
     import { getState, updateState } from "../session";
-    import MapTools from "./MapTools.svelte";
 
     export let showReach = true;
     export let zoom = 1.0;
