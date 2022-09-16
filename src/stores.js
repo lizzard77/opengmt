@@ -10,14 +10,6 @@ export const maps = writable([]);
 export const sounds = writable([]);
 export const scenes = writable([]);
 export const stage = writable({});
-export const fog = writable(true);
-
-
-const storedZoom = parseFloat(localStorage.getItem("zoom")) || 1.0;
-export const zoom = writable(storedZoom);
-zoom.subscribe(value => {
-    localStorage.setItem("zoom", JSON.stringify(value));
-});
 
 const storedIsMaster = JSON.parse(localStorage.getItem("isMaster") || "false");
 export const isMaster = writable(storedIsMaster);
