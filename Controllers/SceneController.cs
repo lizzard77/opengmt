@@ -1,8 +1,5 @@
-using System.IO;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpenGMT.DB;
 
 namespace OpenGMT.Controllers
 {
@@ -10,12 +7,10 @@ namespace OpenGMT.Controllers
     [Route("[controller]")]
     public class SceneController : Controller
     {        
-        private readonly FileDB db;
         private readonly OpenGMTContext context;
 
-        public SceneController(FileDB db, OpenGMTContext context)
+        public SceneController(OpenGMTContext context)
         {
-            this.db = db;
             this.context = context;
         }
 

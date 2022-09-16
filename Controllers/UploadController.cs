@@ -36,7 +36,7 @@ namespace OpenGMT.Controllers
                     }
                 }
             }
-            return Ok(); // BadRequest("Keine Dateiinhalte erhalten");
+            return Ok(); 
         }
     }
 }

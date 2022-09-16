@@ -1,7 +1,5 @@
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpenGMT.DB;
 
 namespace OpenGMT.Controllers
 {
@@ -9,12 +7,10 @@ namespace OpenGMT.Controllers
     [Route("[controller]")]
     public class CreatureController : Controller
     {        
-        private readonly FileDB db;
         private readonly OpenGMTContext context;
 
-        public CreatureController(FileDB db, OpenGMTContext context)
+        public CreatureController(OpenGMTContext context)
         {
-            this.db = db;
             this.context = context;
         }
 

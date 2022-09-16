@@ -1,10 +1,7 @@
-using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using OpenGMT.DB;
 using OpenGMT.SignalR;
 
 namespace OpenGMT.Controllers
@@ -13,13 +10,11 @@ namespace OpenGMT.Controllers
     [Route("[controller]")]
     public class SessionController : Controller
     {        
-        private readonly FileDB db;
         private readonly IHubContext<GameHub> hubContext;
         private readonly OpenGMTContext context;
 
-        public SessionController(FileDB db, IHubContext<GameHub> hubContext, OpenGMTContext context)
+        public SessionController(IHubContext<GameHub> hubContext, OpenGMTContext context)
         {
-            this.db = db;
             this.hubContext = hubContext;
             this.context = context;
         }

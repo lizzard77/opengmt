@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using OpenGMT;
-using OpenGMT.DB;
 using OpenGMT.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +12,6 @@ builder.Services.AddCors();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
-builder.Services.AddTransient<FileDB>();
 builder.Services.AddDbContext<OpenGMTContext>(
     options =>
     {
@@ -21,8 +19,6 @@ builder.Services.AddDbContext<OpenGMTContext>(
     });
 
 var app = builder.Build();
-
-FileDB.DataDir = Path.Combine(app.Environment.ContentRootPath, "data");
 
 if (app.Environment.IsDevelopment())
 {
