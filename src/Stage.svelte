@@ -1,20 +1,22 @@
 <script>
-    import { activeSection, fog, combat, currentMarker, isMaster, squareSizeInPx, currentHandout, zoom } from "./stores";
+    import { activeSection, combat, currentMarker, isMaster, squareSizeInPx, currentHandout } from "./stores";
     
     import Draggable from "./lib/Draggable.svelte";
     import Map from "./lib/Map.svelte";
-    import MapTools from "./lib/MapTools.svelte";
     import PlayerPanel from "./lib/PlayerPanel.svelte";
     import PlayerList from "./lib/PlayerList.svelte";
     import Modal from "./lib/Modal.svelte";
     import { hubConnection } from "./hub";
     import Screen from "./Screen.svelte";
+    import MapTools from "./lib/MapTools.svelte";
 
     let showReach = true;
     let w = 0;
     let h = 0;
     let left = 0;
     let top = 0;
+    let zoom = 0.5;
+    let fog = true;
 
     let handout = "";
     let showHandout = false;
@@ -33,7 +35,7 @@
         if ($isMaster && !pip)
             return;
         console.log("setFog", a);
-        $fog = a;
+        fog = a;
     });
 
     hubConnection.on("setCombat", (a) => {
@@ -72,18 +74,19 @@
     const url = new URL(window.location.href);
     const pip = url.searchParams.get("pip") === "true";
     if (pip)
-        $zoom = 0.5;
+        zoom = 0.5;
+
 </script>
 
 <Screen title="Karte">
     <div class="flex h-full w-screen overflow-hidden">
-        <main class="flex-1 relative overflow-hidden" bind:clientWidth={w} bind:clientHeight={h}>
-            <Draggable bind:left bind:top screenWidth={w} screenHeight={h}>
-                <Map {showReach} on:centerMapToPlayer={setMapCenter} />
+        <main class="flex-1 relative overflow-hidden">
+            <Draggable>
+                <Map {showReach} on:centerMapToPlayer={setMapCenter} {fog} {zoom} />
             </Draggable>
+            <MapTools bind:fog bind:zoom />
             {#if !pip}
                 <PlayerList on:centerMapToPlayer={setMapCenter} />
-                <MapTools on:centerMapToPlayer={setMapCenter} />
             {/if}
         </main>
 

@@ -1,25 +1,23 @@
 <script>
-    import { fog, currentScene, currentMarker, zoom, isMaster, squareSizeInPx, session } from "../stores";
-    import { createEventDispatcher } from "svelte";
-    import { hubConnection } from "../hub";    
+    import { currentScene, currentMarker, isMaster, squareSizeInPx, session } from "../stores";
     import { getState, updateState } from "../session";
+    import MapTools from "./MapTools.svelte";
 
     export let showReach = true;
+    export let zoom = 1.0;
+    export let fog = true;
 
-    const dispatch = createEventDispatcher();
     let svg;
     let map = $currentScene.map;
     let imageWidth = 2048;
     let imageHeight = 1536;
     let oneFoot = 1;
-    let states = [];
-
+    
     $: {
         map = $currentScene?.map;
-        states = $session?.markers;
         if (map && svg) { 
-            imageWidth = map.imageWidth * $zoom; 
-            imageHeight = map.imageHeight * $zoom;
+            imageWidth = map.imageWidth * zoom; 
+            imageHeight = map.imageHeight * zoom;
             $squareSizeInPx = imageWidth / map.widthInSquares;
             oneFoot = 1/map.footPerSquare;
         }
@@ -143,7 +141,7 @@
         </mask>
     </defs>
 
-    {#if $fog}
+    {#if fog}
     <rect x="0" y="0" width="{map.widthInSquares}" height="{map.widthInSquares}" style="fill: #100510;" mask="url(#hole)" />
     {/if}
 </svg>

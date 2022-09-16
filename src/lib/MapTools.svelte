@@ -1,16 +1,19 @@
 <script>
-    import { fog, zoom, isMaster } from '../stores';
+    import { isMaster } from '../stores';
     import { mdiOpenInNew, mdiFullscreen, mdiCloud, mdiCloudOutline } from "@mdi/js";
     import { hubConnection } from "../hub";
     import Icon from './Icon.svelte';
     
+    export let zoom = 1.0;
+    export let fog = true;
+
     function toggleZoom()
     {
         const levels = [0.5,1,1.5];
-        let index = levels.indexOf($zoom);
+        let index = levels.indexOf(zoom);
         index++;
         if (index > levels.length-1) index = 0;
-        $zoom = levels[index];
+        zoom = levels[index];
     }
 
     function toggleFullScreen()
@@ -58,17 +61,17 @@
 
     function toggleFog()
     {
-        $fog = !$fog
-        hubConnection.invoke('SetFog', $fog);
+        fog = !fog
+        hubConnection.invoke('SetFog', fog);
     }
 
 </script>
 
 <div class="absolute p-2 top-0 right-0 z-50 flex">
-    <button on:click={toggleZoom} class="p-2 rounded-lg bg-slate-200 border-4 ml-2">{$zoom*100}%</button>
+    <button on:click={toggleZoom} class="p-2 rounded-lg bg-slate-200 border-4 ml-2">{zoom*100}%</button>
     <button on:click={toggleFullScreen} class="p-2 rounded-lg bg-slate-200 border-4 flex ml-2"><Icon path={mdiFullscreen} size=24 /></button>
     {#if window.name !== "OpenGMTStage" && $isMaster}
         <button on:click={popout} class="p-2 rounded-lg bg-slate-200 border-4 ml-2"><Icon path={mdiOpenInNew} size=24 /></button>
-        <button on:click={toggleFog} class="p-2 rounded-lg bg-slate-200 border-4 ml-2"><Icon path={$fog ? mdiCloud : mdiCloudOutline } size=24 /></button>
+        <button on:click={toggleFog} class="p-2 rounded-lg bg-slate-200 border-4 ml-2"><Icon path={fog ? mdiCloud : mdiCloudOutline } size=24 /></button>
     {/if}
 </div>

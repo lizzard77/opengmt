@@ -167,7 +167,7 @@
                     <h1>Map</h1>
                     <div class="flex-1 relative w-full h-96 overflow-hidden">
                         <Draggable>
-                        <Map />
+                            <Map />
                         </Draggable>
                     </div>
                 </div>
