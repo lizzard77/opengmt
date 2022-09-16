@@ -16,7 +16,8 @@ namespace OpenGMT
         public string SecretsAndHints { get; set; }
         public string PhantasticLocations { get; set; }
         public string MagicItems { get; set; }
-        public string Handouts { get; set; }
-        public string Sounds { get; set; }
+        public string ScenesAndEncounters { get; set; }
+
+        public IList<Asset> Assets { get; set; }
     }
 }

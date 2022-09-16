@@ -28,7 +28,7 @@
     async function handleKey(e)
     {
         let handled = false;
-
+        
         if (e.code === "ArrowLeft")
         {
             $currentMarker.x = Math.max($currentMarker.x - 0.25,0);
@@ -67,7 +67,8 @@
     {
         if (!$isMaster)
             return;
-        
+    
+        svg.focus();
         const clickX =  e.offsetX / $squareSizeInPx;
         const clickY = e.offsetY / $squareSizeInPx;
 
@@ -94,11 +95,10 @@
     }
 </script>
 
-<svelte:window on:keydown={handleKey}/>
-
 {#if map}
 <svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {map.widthInSquares} {map.heightInSquares}" 
-    on:click={click}
+    tabindex="-1"
+    on:click={click} on:keydown={handleKey} 
     style="width: {imageWidth}px; height: {imageHeight}px;">
 
     <image href="{$isMaster && map.imageUrlDM ? map.imageUrlDM : map.imageUrl}" x="0" y="0" width={map.widthInSquares} height={map.heightInSquares} />

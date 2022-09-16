@@ -6,11 +6,13 @@ namespace OpenGMT.Controllers
     [Route("[controller]")]
     public class UploadController : Controller
     {
+        private readonly OpenGMTContext context;
         private string _rootPath;
 
-        public UploadController(IHostEnvironment env)
+        public UploadController(IHostEnvironment env, OpenGMTContext context)
         {
             _rootPath = Path.Combine(env.ContentRootPath, "public");
+            this.context = context;
         }
 
         [HttpPost]
@@ -26,7 +28,7 @@ namespace OpenGMT.Controllers
             {
                 if (formFile.Length > 0)
                 {
-                    var ext = Path.GetExtension(formFile.FileName);
+                    var ext = Path.GetExtension(formFile.FileName).ToLower();
                     var id = DateTime.Now.Ticks;
                     var fileNameOnly = $"{id}{ext}";
                     var fileName = Path.Combine(dataPath, fileNameOnly);
@@ -34,6 +36,20 @@ namespace OpenGMT.Controllers
                     {
                         await formFile.CopyToAsync(stream);
                     }
+
+                    var assetType = folder.EndsWith("audio") ? AssetType.Video : AssetType.GenericFile;
+                    if (ext.EndsWith("jpg") || ext.EndsWith("png") || ext.EndsWith("gif"))
+                        assetType = AssetType.Image;
+
+                    var assetInfo = new Asset()
+                    {
+                        FilePath = fileName,
+                        Uri = fileName.Replace(_rootPath, "").Replace('\\', '/'),
+                        Name = formFile.FileName,
+                        Type = assetType
+                    };
+                    context.Assets.Add(assetInfo);
+                    context.SaveChanges();
                 }
             }
             return Ok(); 

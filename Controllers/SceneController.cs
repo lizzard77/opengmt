@@ -17,7 +17,10 @@ namespace OpenGMT.Controllers
         [HttpGet("/api/scenes")]
         public IActionResult Get()
         {
-            return Json(context.Scenes);
+            return Json(context.Scenes
+                .Include(s => s.Creatures)
+                .Include(s => s.Assets)
+                .ToList());
         }
 
         [HttpPut("/api/scenes")]
@@ -26,6 +29,7 @@ namespace OpenGMT.Controllers
 
             var existingScene = context.Scenes
                 .Include(s => s.Creatures)
+                .Include(s => s.Assets)
                 .FirstOrDefault(s => s.Id==info.Id);
 
             if (existingScene == null)
@@ -35,23 +39,49 @@ namespace OpenGMT.Controllers
             else 
             {
                 context.Entry(existingScene).CurrentValues.SetValues(info);
-                foreach (var crea in info.Creatures)
+
+                if (info.Creatures != null)
                 {
-                    var existingCrea = existingScene.Creatures.FirstOrDefault(p => p.Id == crea.Id);
-                    if (existingCrea == null)
+                    foreach (var crea in info.Creatures)
                     {
-                        existingScene.Creatures.Add(crea);
+                        var existingCrea = existingScene.Creatures.FirstOrDefault(p => p.Id == crea.Id);
+                        if (existingCrea == null)
+                        {
+                            existingScene.Creatures.Add(crea);
+                        }
+                        else
+                        {
+                            context.Entry(existingCrea).CurrentValues.SetValues(crea);
+                        }
                     }
-                    else
+
+                    var toRemove = existingScene.Creatures.Where(c => !info.Creatures.Any(cc => cc.Id == c.Id)).ToList();
+                    foreach (var crea in toRemove)
                     {
-                        context.Entry(existingCrea).CurrentValues.SetValues(crea);
+                        existingScene.Creatures.Remove(crea);
                     }
                 }
 
-                var toRemove = existingScene.Creatures.Where(c => !info.Creatures.Any(cc => cc.Id == c.Id)).ToList();
-                foreach (var crea in toRemove)
-                {
-                    existingScene.Creatures.Remove(crea);
+                if (info.Assets != null)
+                {                
+                    foreach (var asset in info.Assets)
+                    {
+                        var existingAsset = existingScene.Assets.FirstOrDefault(p => p.Id == asset.Id);
+                        if (existingAsset == null)
+                        {
+                            existingScene.Assets.Add(asset);
+                        }
+                        else
+                        {
+                            context.Entry(existingAsset).CurrentValues.SetValues(asset);
+                        }
+                    }
+
+                    var assetsToRemove = existingScene.Assets.Where(c => !info.Assets.Any(cc => cc.Id == c.Id)).ToList();
+                    foreach (var asset in assetsToRemove)
+                    {
+                        existingScene.Assets.Remove(asset);
+                    }
                 }
             }
 

@@ -14,13 +14,13 @@
     import Map from "./lib/Map.svelte";
     import CreatureSelect from "./lib/CreatureSelect.svelte";
 
-    let { name, description, strongStart, secretsAndHints, phantasticLocations } = $currentScene;
+    let { name, description, strongStart, secretsAndHints, phantasticLocations, scenesAndEncounters } = $currentScene;
 
     $activeSection = "dash";
 
     async function saveScene()
     {
-        const sceneUpdate ={ ...$currentScene, name, description, strongStart, secretsAndHints, phantasticLocations };
+        const sceneUpdate ={ ...$currentScene, name, description, strongStart, secretsAndHints, phantasticLocations, scenesAndEncounters };
         await putObject("/api/scenes", sceneUpdate);
         $currentScene = sceneUpdate;
     }
@@ -101,7 +101,7 @@
 
                 <div class="box col-start-1">
                     <h1>Szenen und Begegnungen</h1>
-                    <p contenteditable bind:innerHTML={strongStart} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={scenesAndEncounters} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenGMT;
 
@@ -10,9 +11,10 @@ using OpenGMT;
 namespace OpenGMT.Migrations
 {
     [DbContext(typeof(OpenGMTContext))]
-    partial class OpenGMTContextModelSnapshot : ModelSnapshot
+    [Migration("20220916104805_Assets")]
+    partial class Assets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -55,9 +57,6 @@ namespace OpenGMT.Migrations
 
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Uri")
-                        .HasColumnType("TEXT");
 
                     b.Property<float?>("Volume")
                         .HasColumnType("REAL");
