@@ -36,17 +36,17 @@
     });*/
 
     hubConnection.on("setHandout", (a) => {
-        if ($isMaster)
-            return;
         console.log("setHandout", a);
         $currentHandout = JSON.parse(a);
     });
 
-    $: if ($currentHandout !== handout)
-    {
-        handout = $currentHandout;
-        showHandout = handout !== "";
-    }
+    /*$: {
+        if ($currentHandout !== handout)
+        {
+            handout = $currentHandout;
+            showHandout = handout !== "";
+        }
+    }*/
 
     let centerX = 0;
     let centerY = 0;
@@ -63,9 +63,12 @@
             {/if}    
         </main>
 
-        <Modal bind:isOpen={showHandout}>
+        <Modal isOpen={$currentHandout !== ""} on:closed={() => $currentHandout = ""}>
             <div class="w-full p-4 bg-white">
-                <img class="w-full" src={handout} alt="Handout" />
+                <img class="w-full" src={$currentHandout} alt="Handout" />
+                <audio controls autoplay>
+                    <source src={$currentHandout} />
+                </audio>
             </div>
         </Modal>
     </div>  

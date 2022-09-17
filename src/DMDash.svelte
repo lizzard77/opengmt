@@ -1,18 +1,17 @@
 <script>
-    import { currentMarker, activeSection, currentScene, currentHandout } from "./stores";
-    import { mdiCross, mdiDelete, mdiDeleteOutline, mdiGlasses } from "@mdi/js";
+    import { activeSection, currentScene } from "./stores";
+    import { mdiGlasses } from "@mdi/js";
 
     import Icon from "./lib/Icon.svelte";
     import Modal from "./lib/Modal.svelte";
-    import StatBlock from "./lib/StatBlock.svelte";
     import { putObject } from "./api";
-    import { hubConnection } from "./hub";
     import Upload from "./lib/Upload.svelte";
     import AudioBoard from "./lib/AudioBoard.svelte";
     import Screen from "./Screen.svelte";
     import Draggable from "./lib/Draggable.svelte";
-    import Map from "./lib/Map.svelte";
     import CreatureSelect from "./lib/CreatureSelect.svelte";
+    import DashCreatureInfo from "./lib/DashCreatureInfo.svelte";
+    import DashAssetInfo from "./lib/DashAssetInfo.svelte";
 
     let { name, description, strongStart, secretsAndHints, phantasticLocations, scenesAndEncounters } = $currentScene;
 
@@ -25,21 +24,6 @@
         $currentScene = sceneUpdate;
     }
 
-    function setHandout(asset = "")
-    {
-        $currentHandout = asset;
-        hubConnection.invoke('SetHandout', JSON.stringify(asset));
-    }
-
-    let showMonsterStats = false;
-    let monsterStatBlock = {};
-
-    function showMonsterStatBlock(c = null)
-    {
-        monsterStatBlock  = c;
-        showMonsterStats = true;
-    }
-
     let showCreatureSelect = false;
 
     async function addSelectedCreature(e)
@@ -47,50 +31,21 @@
         $currentScene.creatures.push(e.detail);
         await saveScene();
     }
-
-    async function removeCreature(c)
-    {
-        $currentScene.creatures = $currentScene.creatures.filter(cc => cc.id !== c.id);
-        await saveScene();
-    }
-
-    let showReach = true;
-    let w = 0;
-    let h = 0;
-    let left = 0;
-    let top = 0;
 </script>
-
-<style>
-    button {
-        @apply mr-2 p-1 rounded-md text-sm bg-slate-200 border-0 flex
-    }
-
-    h1 {
-        @apply text-lg font-bold mt-4 border-b-2 border-red-800 mb-2
-    }
-
-    [contenteditable] { @apply p-2 border-slate-200 border-2 }
-    
-    :focus { @apply bg-white }
-
-    .box {
-        @apply w-full pr-2;
-    }
-</style>
 
 <Screen title={$currentScene.name}>
         <div class="p-4 min-h-fit md:h-full md:min-h-0 md:grid md:grid-cols-3">
             <div class="col-start-1">
                 <div class="flex flex-row col-start-1">
                     <button class="flex items-center" on:click={() => showCreatureSelect = true}><Icon path={mdiGlasses} size={16} class="mr-2" /> Kreatur hinzufügen</button>
+                    <Upload folder="handouts" /><br />
                 </div>
 
                 <div class="box col-start-1">
                     <h1>Charaktere</h1>
 
                     {#each $currentScene.creatures.filter(cc => cc.type === "pc") as c}
-                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size={16} /></button></div>
+                    <DashCreatureInfo creature={c} />
                     {/each}
                 </div>
 
@@ -125,19 +80,14 @@
                     </div>
 
                     {#each $currentScene.creatures.filter(cc => cc.type === "npc") as c}
-                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size={16} /></button></div>
+                    <DashCreatureInfo creature={c} />
                     {/each}
                 </div>
 
                 <div class="box col-start-2">
                     <h1>Monster</h1>
-                    <div class="flex flex-row">
-                        <button on:click={showMonsterStatBlock}>+</button>
-                        <button>Schnellerzeugung</button>
-                    </div>
-
                     {#each $currentScene.creatures.filter(cc => cc.type === "monster") as c}
-                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size={16} /></button></div>
+                    <DashCreatureInfo creature={c} />
                     {/each}
                 </div>
 
@@ -147,13 +97,9 @@
 
                 <div class="box col-start-2">
                     <h1>Handouts</h1>
-                    {#if $currentHandout}
-                    <button on:click={() => setHandout("")}>Handout Schließen</button>
-                    {:else}
-                    <Upload folder="handouts" /><br />
-                    <button on:click={() => setHandout("/assets/handouts/BarthensProvisions-1-scaled.jpg")}>BarthensProvisions-1-scaled.jpg</button>
-                    <button on:click={() => setHandout("/assets/handouts/637981721880603677.png")}>Dorf</button>
-                    {/if}
+                    {#each $currentScene.assets as asset}
+                    <DashAssetInfo {asset} />
+                    {/each}
                 </div>
 
                 <div class="box basis-52 col-start-2">
@@ -210,14 +156,27 @@
         </div>
 </Screen>
 
-{#if showMonsterStats}
-<Modal bind:isOpen={showMonsterStats}>
-    <StatBlock creature={monsterStatBlock} />
+{#if showCreatureSelect}
+<Modal bind:isOpen={showCreatureSelect}>
+    <CreatureSelect on:creatureSelected={addSelectedCreature} bind:isOpen={showCreatureSelect} />
 </Modal>
 {/if}
 
-{#if showCreatureSelect}
-<Modal  bind:isOpen={showCreatureSelect}>
-<CreatureSelect on:creatureSelected={addSelectedCreature} />
-</Modal>
-{/if}
+<style>
+    button {
+        @apply mr-2 p-1 rounded-md text-sm bg-slate-200 border-0 flex
+    }
+
+    h1 {
+        @apply text-lg font-bold mt-4 border-b-2 border-red-800 mb-2
+    }
+
+    [contenteditable] { @apply p-2 border-slate-200 border-2 }
+    
+    :focus { @apply bg-white }
+
+    .box {
+        @apply w-full pr-2;
+    }
+</style>
+

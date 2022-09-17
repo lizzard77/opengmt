@@ -1,5 +1,4 @@
 <script>
-    import Upload from "./Upload.svelte";
     import { sounds } from "../stores";
     import { mdiRepeat, mdiPlay, mdiPause, mdiStop } from "@mdi/js";
     import Icon from "./Icon.svelte";
@@ -59,35 +58,31 @@
     }
 </script>
 
-<div class="flex mb-2">
-<Upload folder="sounds" /><br />
-</div>
-
 <ul class="">
 {#each $sounds as sound}
     <li class="flex mb-2">
-        <button on:click={() => toggleLooping(sound)}><Icon path={mdiRepeat} color={sound.loops ? "green" : "silver"} /></button> 
+        <button on:click={() => toggleLooping(sound)}><Icon path={mdiRepeat} color={sound.loops ? "green" : "silver"} size={16} /></button> 
         {#if sound.audioFile}
             {#if sound.isPlaying}
-            <button class="p-2 rounded-lg bg-slate-200" on:click={() => pause(sound)}><Icon path={mdiPause} /></button>
+            <button class="p-2 rounded-lg bg-slate-200" on:click={() => pause(sound)}><Icon path={mdiPause} size={16} /></button>
             {:else}
-            <button on:click={() => resume(sound)}><Icon path={mdiPlay} /></button>     
+            <button on:click={() => resume(sound)}><Icon path={mdiPlay} size={16} /></button>     
             {/if}
 
-        <button class="p-2 rounded-lg bg-slate-200" on:click={() => stop(sound)}><Icon path={mdiStop} /></button>
+        <button class="p-2 rounded-lg bg-slate-200" on:click={() => stop(sound)}><Icon path={mdiStop} size={16} /></button>
         {sound.playTime}
         {:else}
-        <button on:click={() => play(sound)}><Icon path={mdiPlay} /></button> 
+        <button on:click={() => play(sound)}><Icon path={mdiPlay} size={16} /></button> 
         {/if}
+        <span class="ml-2">
         {sound.url.slice(sound.url.lastIndexOf('/')+1)}
-        
-
+        </span>
     </li>
 {/each}
 </ul>
 
 <style>
     button {
-        @apply mr-2 p-1 rounded-md text-sm bg-slate-200 border-0 flex
+        @apply ml-1 p-1 rounded-md text-sm bg-slate-200 border-0 flex
     }
 </style>
