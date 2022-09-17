@@ -22,7 +22,7 @@
     });
 
     hubConnection.on("setFog", (a) => {
-        if ($isMaster && !pip)
+        if ($isMaster)
             return;
         console.log("setFog", a);
         fog = a;
@@ -36,14 +36,11 @@
     });*/
 
     hubConnection.on("setHandout", (a) => {
-        if ($isMaster && !pip)
+        if ($isMaster)
             return;
         console.log("setHandout", a);
         $currentHandout = JSON.parse(a);
     });
-
-
-    //setMapCenter($currentMarker);
 
     $: if ($currentHandout !== handout)
     {
@@ -53,29 +50,18 @@
 
     let centerX = 0;
     let centerY = 0;
-
-    //setTimeout(() => { centerX = 30; centerY=20; }, 1000);
-
-    const url = new URL(window.location.href);
-    const pip = url.searchParams.get("pip") === "true";
-    //if (pip)
-    //    zoom = 0.5;
 </script>
 
 <Screen title="Karte">
     <div class="flex h-full w-screen overflow-hidden">
         <main class="flex-1 relative overflow-hidden">
             <Draggable showTools={true} bind:centerX bind:centerY />
-            {#if !pip}
-                <PlayerList />
-            {/if}
-        </main>
-
-        {#if $isMaster && !pip}
-        <div class="">
+            {#if $isMaster}
             <PlayerPanel on:centerMapToPlayer={(e) => { console.log(e.detail); centerX = e.detail.x; centerY = e.detail.y; }} />
-        </div>
-        {/if}    
+            {:else}
+            <PlayerList />
+            {/if}    
+        </main>
 
         <Modal bind:isOpen={showHandout}>
             <div class="w-full p-4 bg-white">

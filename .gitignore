@@ -27,3 +27,5 @@ bin
 obj
 wwwroot
 public/assets
+data/OpenGMT.sqlite-shm
+data/OpenGMT.sqlite-wal
