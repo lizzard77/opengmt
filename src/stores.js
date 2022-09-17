@@ -20,7 +20,7 @@ isMaster.subscribe(value => {
 export const squareSizeInPx = writable(1.0);
 export const combat = writable(false);
 
-export const currentMarker = writable({ id: 0, name: "", x:0, y:0, reach : 1, visible : true, light : true, creatureId : -1, initiative : -1, color : "pink" });
+export const currentMarker = writable({ id: 0, name: "", x:0, y:0, reach : 1, visible : true, light : true, creatureId : -1, initiative : -1, color : "pink", size: 1 });
 export const currentScene = writable({ id: 0, map: null, creatures : null, name : null, description : null, strongStart : null, secretsAndHints : null, phantasticLocations : null, scenesAndEncounters : null });
 
 export const currentHandout = writable("");

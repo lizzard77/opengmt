@@ -26,10 +26,10 @@ namespace OpenGMT.Controllers
         [HttpPut("/api/scenes")]
         public IActionResult Put(Scene info)
         {
-
             var existingScene = context.Scenes
                 .Include(s => s.Creatures)
                 .Include(s => s.Assets)
+                .Include(s => s.Map)
                 .FirstOrDefault(s => s.Id==info.Id);
 
             if (existingScene == null)
@@ -56,9 +56,13 @@ namespace OpenGMT.Controllers
                     }
 
                     var toRemove = existingScene.Creatures.Where(c => !info.Creatures.Any(cc => cc.Id == c.Id)).ToList();
+                    var sessions = context.Session.Where(s => s.SceneId == existingScene.Id).ToList();
                     foreach (var crea in toRemove)
                     {
                         existingScene.Creatures.Remove(crea);
+                        var removeMarkers = context.MapMarker.Where(m => m.CreatureId == crea.Id && m.MapId == existingScene.Map.Id).ToList();
+                        foreach (var marker in removeMarkers)
+                            context.MapMarker.Remove(marker);
                     }
                 }
 

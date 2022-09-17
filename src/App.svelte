@@ -1,12 +1,13 @@
 <script>
     import { Router, Route } from "svelte-routing";
-    import { sounds, isMaster, creatures, scenes, maps } from "./stores";
+    import { sounds, isMaster, creatures, scenes, maps, session, currentMarker } from "./stores";
 
     import Stage from "./Stage.svelte";
     import DmDash from "./DMDash.svelte";    
 
     import ProgressCircle from "./lib/ProgressCircle.svelte";
     import { get } from "./api";
+    import { hubConnection } from "./hub";
     
     /*hubConnection.on("players", data => {
         if ($isMaster)
@@ -44,18 +45,15 @@
         }
     });*/
 
-    /*hubConnection.on("setCurrentPlayer", data =>
+    hubConnection.on("setCurrentPlayer", data =>
     {
-        if ($isMaster)
-            return;
-        
-        const { id } = JSON.parse(data);
-        const creature = $currentScene.creatures.find(c => c.id === id);
+        const { creatureId } = JSON.parse(data);
+        const creature = $session.markers.find(c => c.creatureId === creatureId);
         if (creature && creature.visible) {
-            console.log("set current player", creature.name);
-            $currentPlayer = creature;
+            console.log("set current player", creature);
+            $currentMarker = creature;
         }
-    });*/
+    });
 
     let baseData = Promise.all([
         (async () => {

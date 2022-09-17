@@ -1,10 +1,11 @@
 <script>
     import { currentScene, currentMarker, isMaster, squareSizeInPx, session } from "../stores";
     import { getState, updateState } from "../session";
+    import { hubConnection } from "../hub";
 
     export let showReach = true;
     export let zoom = 1.0;
-    export let fog = true;
+    export let fog = false;
 
     let svg;
     let map = $currentScene.map;
@@ -62,9 +63,6 @@
 
     async function click(e)
     {
-        if (!$isMaster)
-            return;
-    
         svg.focus();
         const clickX =  e.offsetX / $squareSizeInPx;
         const clickY = e.offsetY / $squareSizeInPx;
@@ -76,6 +74,7 @@
         if (anotherPlayer.length)
         {
             $currentMarker = anotherPlayer[0];
+            await hubConnection.invoke("SetCurrentPlayer", JSON.stringify($currentMarker));
             return;
         }
 
@@ -90,6 +89,8 @@
         await updateState(current);
         $currentMarker = $currentMarker;
     }
+
+    $: console.log("fog", fog, "zoom", zoom)
 </script>
 
 {#if map}
@@ -107,11 +108,12 @@
     <line x1="0" y1="{i}" x2="{map.widthInSquares}" y2="{i}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: {map.gridOpacity||1};" />
     {/each}
 
-    {#if $currentMarker}
-        {#if showReach && $currentMarker.visible}
+    {#if $currentMarker && $currentMarker.visible}
+        {#if showReach}
         <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.reach}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
         <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * 5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
         {/if}
+        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.size}" style="fill:transparent;stroke:rgb(0,255,255);opacity:1;stroke-width:0.1" />
     {/if}
 
     {#if $session?.markers}
@@ -122,9 +124,10 @@
 
     <defs>
         <mask id="hole">
-            <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="white"/>
             {#if $isMaster}
             <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="#999"/>
+            {:else}
+            <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="white"/>
             {/if}
             {#if $session?.markers}
                 {#each $session.markers.filter(c => c.light) as p}

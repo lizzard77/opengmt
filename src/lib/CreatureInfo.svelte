@@ -27,12 +27,12 @@
     function setPlayer()
     {
         $currentMarker = getState(creature.id);
-        //hubConnection.invoke("SetCurrentPlayer", JSON.stringify(creature));
+        hubConnection.invoke("SetCurrentPlayer", JSON.stringify($currentMarker));
     }
 
     function centerPlayer()
     {
-        dispatch("centerMapToPlayer", creature);
+        dispatch("centerMapToPlayer", $currentMarker);
     }
 
     async function toggleVisible()

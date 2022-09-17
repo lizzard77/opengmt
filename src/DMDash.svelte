@@ -1,5 +1,5 @@
 <script>
-    import { showPIP, activeSection, currentScene, currentHandout, creatures } from "./stores";
+    import { currentMarker, activeSection, currentScene, currentHandout } from "./stores";
     import { mdiCross, mdiDelete, mdiDeleteOutline, mdiGlasses } from "@mdi/js";
 
     import Icon from "./lib/Icon.svelte";
@@ -90,7 +90,7 @@
                     <h1>Charaktere</h1>
 
                     {#each $currentScene.creatures.filter(cc => cc.type === "pc") as c}
-                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size=16 /></button></div>
+                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size={16} /></button></div>
                     {/each}
                 </div>
 
@@ -125,7 +125,7 @@
                     </div>
 
                     {#each $currentScene.creatures.filter(cc => cc.type === "npc") as c}
-                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size=16 /></button></div>
+                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size={16} /></button></div>
                     {/each}
                 </div>
 
@@ -137,7 +137,7 @@
                     </div>
 
                     {#each $currentScene.creatures.filter(cc => cc.type === "monster") as c}
-                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size=16 /></button></div>
+                        <div class="flex" on:click={() => showMonsterStatBlock(c)}>{c.name} <button class="ml-2" on:click={() => removeCreature(c)}><Icon path={mdiDeleteOutline} size={16} /></button></div>
                     {/each}
                 </div>
 
@@ -166,9 +166,7 @@
                 <div class="box flex-grow basis-[400px] col-start-3" >
                     <h1>Map</h1>
                     <div class="flex-1 relative w-full h-96 overflow-hidden">
-                        <Draggable>
-                            <Map />
-                        </Draggable>
+                        <Draggable fog={false} zoom={0.5} />
                     </div>
                 </div>
 

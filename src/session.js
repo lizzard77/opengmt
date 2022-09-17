@@ -5,7 +5,10 @@ import { hubConnection } from "./hub";
 
 hubConnection.on("sessionInfo", (e) => {
     console.log("sessionInfo", JSON.parse(e));
-    session.set(JSON.parse(e));
+    const sess = JSON.parse(e);
+    session.set(sess);
+    const id = get(currentMarker).creatureId;
+    currentMarker.set(sess.markers.find(m => m.creatureId === id));
 });
 
 export async function updateState(p)

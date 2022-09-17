@@ -10,8 +10,8 @@
     function setPlayer(p)
     {
         $currentMarker = getState(p.id);
-        //if ($isMaster)
-        //    hubConnection.invoke("SetCurrentPlayer", JSON.stringify(p));
+        if ($isMaster)
+            hubConnection.invoke("SetCurrentPlayer", JSON.stringify($currentMarker));
     }
 
     function updateInitiative()

@@ -51,6 +51,11 @@
         showHandout = handout !== "";
     }
 
+    let centerX = 0;
+    let centerY = 0;
+
+    //setTimeout(() => { centerX = 30; centerY=20; }, 1000);
+
     const url = new URL(window.location.href);
     const pip = url.searchParams.get("pip") === "true";
     //if (pip)
@@ -60,7 +65,7 @@
 <Screen title="Karte">
     <div class="flex h-full w-screen overflow-hidden">
         <main class="flex-1 relative overflow-hidden">
-            <Draggable showTools={true} />
+            <Draggable showTools={true} bind:centerX bind:centerY />
             {#if !pip}
                 <PlayerList />
             {/if}
@@ -68,7 +73,7 @@
 
         {#if $isMaster && !pip}
         <div class="">
-            <PlayerPanel />
+            <PlayerPanel on:centerMapToPlayer={(e) => { console.log(e.detail); centerX = e.detail.x; centerY = e.detail.y; }} />
         </div>
         {/if}    
 
