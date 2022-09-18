@@ -17,11 +17,13 @@ namespace OpenGMT.Controllers
 
         [HttpPost]
         [Route("/api/upload")]
-        public async Task<IActionResult> UploadAsset([FromForm]List<IFormFile> files, [FromForm]string folder = "")
+        public async Task<IActionResult> UploadAsset([FromForm]List<IFormFile> files, [FromForm]string folder = "", [FromForm]long sceneId = 0)
         {
             var dataPath = Path.Combine(_rootPath, "assets", folder);
             if (!Directory.Exists(dataPath))
                 Directory.CreateDirectory(dataPath);
+
+            var scene = context.Scenes.FirstOrDefault(s => s.Id == sceneId);
 
             long size = files.Sum(f => f.Length);
             foreach (var formFile in files)
@@ -49,6 +51,14 @@ namespace OpenGMT.Controllers
                         Type = assetType
                     };
                     context.Assets.Add(assetInfo);
+
+                    if (scene != null)
+                    {
+                        if (scene.Assets == null)
+                            scene.Assets =new List<Asset>();
+                        scene.Assets.Add(assetInfo);
+                    }
+
                     context.SaveChanges();
                 }
             }

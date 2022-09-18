@@ -1,16 +1,21 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using OpenGMT.SignalR;
 
 namespace OpenGMT.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class SceneController : Controller
-    {        
+    {
+        private readonly IHubContext<GameHub> hubContext;
         private readonly OpenGMTContext context;
 
-        public SceneController(OpenGMTContext context)
+        public SceneController(IHubContext<GameHub> hubContext, OpenGMTContext context)
         {
+            this.hubContext = hubContext;
             this.context = context;
         }
 
@@ -24,7 +29,7 @@ namespace OpenGMT.Controllers
         }
 
         [HttpPut("/api/scenes")]
-        public IActionResult Put(Scene info)
+        public async Task<IActionResult> Put(Scene info)
         {
             var existingScene = context.Scenes
                 .Include(s => s.Creatures)
@@ -89,9 +94,25 @@ namespace OpenGMT.Controllers
                         existingScene.Assets.Remove(asset);
                     }
                 }
+
+                if (info.Map != null)
+                    existingScene.Map = context.Maps.FirstOrDefault(m => m.Id == info.Map.Id);
             }
 
             context.SaveChanges();
+
+            var session = context.Session
+                .Include(s => s.Markers)
+                .Include(s => s.Scene)
+                .Include(s => s.Scene.Creatures)
+                .Include(s => s.Scene.Assets)
+                .Include(s => s.Scene.Map)
+                .FirstOrDefault();
+            if (session.SceneId == existingScene.Id)
+            {
+                await hubContext.Clients.All.SendAsync("sessionInfo", JsonSerializer.Serialize(session, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+            }
+
             return Ok();
         }
     }

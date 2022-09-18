@@ -7,8 +7,9 @@ hubConnection.on("sessionInfo", (e) => {
     console.log("sessionInfo", JSON.parse(e));
     const sess = JSON.parse(e);
     session.set(sess);
+    currentScene.set(sess.scene);
     const id = get(currentMarker).creatureId;
-    currentMarker.set(sess.markers.find(m => m.creatureId === id));
+    currentMarker.set(sess.markers.find(m => m.creatureId === id));    
 });
 
 export async function updateState(p)
@@ -31,8 +32,7 @@ export async function updateState(p)
 
 export async function loadSession()
 {
-    const sess = await apiGet("/api/session");
-    
+    const sess = await apiGet("/api/session");    
     if (sess && sess.scene)
     {
         console.log("loaded session", sess)

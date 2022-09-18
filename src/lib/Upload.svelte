@@ -1,4 +1,6 @@
 <script>
+    import { currentScene } from "../stores";
+
     let working = false;
     let files;
     let browseInput;
@@ -11,6 +13,7 @@
         status = "Sende Daten";
         const formData = new FormData();
         formData.append("folder", folder);
+        formData.append("sceneId", $currentScene.id.toString());
         for (let i=0; i<files.length; i++)
             formData.append('files', files[i]);
 

@@ -13,6 +13,8 @@
     import DashCreatureInfo from "./lib/DashCreatureInfo.svelte";
     import DashAssetInfo from "./lib/DashAssetInfo.svelte";
     import DashPcInfo from "./lib/DashPCInfo.svelte";
+    import MapSelect from "./lib/MapSelect.svelte";
+    import { loadSession } from "./session";
 
     $activeSection = "scene";
 
@@ -22,12 +24,13 @@
         $currentScene = $currentScene;
     }
 
-    let showCreatureSelect = false;
+    let showMapSelect = false;
 
-    async function addSelectedCreature(e)
+    async function setMap(e)
     {
-        $currentScene.creatures.push(e.detail);
+        $currentScene.map = e.detail;
         await saveScene();
+        await loadSession();
     }
 </script>
 
@@ -36,6 +39,7 @@
             <div class="col-start-1">
                 <div class="flex flex-row col-start-1">
                     <Upload folder="handouts" /><br />
+                    <button on:click={() => showMapSelect = true}>Map</button>
                 </div>
 
                 <div class="box col-start-1">
@@ -125,9 +129,9 @@
         </div>
 </Screen>
 
-{#if showCreatureSelect}
-<Modal bind:isOpen={showCreatureSelect}>
-    <CreatureSelect on:creatureSelected={addSelectedCreature} bind:isOpen={showCreatureSelect} />
+{#if showMapSelect}
+<Modal bind:isOpen={showMapSelect}>
+    <MapSelect on:mapSelected={setMap} bind:isOpen={showMapSelect} />
 </Modal>
 {/if}
 

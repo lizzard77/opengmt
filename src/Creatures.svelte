@@ -32,21 +32,23 @@
 </script>
 
 <Screen title={$currentScene.name}>
-        <div class="p-4 min-h-fit md:h-full md:min-h-0 md:grid md:grid-cols-3">
-            <div class="col-start-1">
-                <div class="flex flex-row col-start-1">
+        <div class="p-4 min-h-fit md:h-full md:min-h-0 md:grid md:grid-cols-3 w-full">
+            <div class="flex flex-col md:col-start-1 md:col-span-2">
+                <div class="flex flex-row col-start-1 col-span-2">
                     <button class="flex items-center" on:click={() => showCreatureSelect = true}><Icon path={mdiGlasses} size={16} class="mr-2" /> Kreatur hinzufügen</button>
                 </div>
 
-                <div class="box col-start-1">
+                <div class="box ">
                     <h1>Charaktere</h1>
 
                     {#each $currentScene.creatures.filter(cc => cc.type === "pc") as c}
                     <DashPcInfo creature={c} />
                     {/each}
                 </div>
+            </div>
 
-                <div class="box col-start-2">
+            <div class="md:col-start-3">
+                <div class="box">
                     <h1>NPCs</h1>
                     <div class="flex flex-row">
                         <button>+</button>
@@ -59,13 +61,12 @@
                     {/each}
                 </div>
 
-                <div class="box col-start-2">
+                <div class="box md:col-start-3">
                     <h1>Monster</h1>
                     {#each $currentScene.creatures.filter(cc => cc.type === "monster") as c}
                     <DashCreatureInfo creature={c} />
                     {/each}
                 </div>
-
             </div>
         </div>
 </Screen>

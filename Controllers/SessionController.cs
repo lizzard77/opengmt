@@ -85,7 +85,15 @@ namespace OpenGMT.Controllers
             }
             context.SaveChanges();
 
-            await hubContext.Clients.All.SendAsync("sessionInfo", JsonSerializer.Serialize(info, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+            var session = context.Session
+                .Include(s => s.Markers)
+                .Include(s => s.Scene)
+                .Include(s => s.Scene.Creatures)
+                .Include(s => s.Scene.Assets)
+                .Include(s => s.Scene.Map)
+                .FirstOrDefault();
+
+            await hubContext.Clients.All.SendAsync("sessionInfo", JsonSerializer.Serialize(session, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
             return Ok();
         }
 

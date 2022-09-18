@@ -48,25 +48,29 @@ function getModifier(ability)
             Lvl 1 | Zwerg | Kämpfer
         </div>
         <div class="text-xs text-right mr-4 ml-4 grow">
-            {creature.skillsText}<br />
-            {creature.senses}
+            
         </div>
-        <div class="flex flex-col text-center p-1 border-2 rounded-md">
-            <span class="text-xl font-bold">{creature.hpMax - creature.damage} / {creature.hpMax}</span>
-            <span class="uppercase">Trefferpunkte</span>
-            <!--span class="border-2 rounded-md">Erschöpfung</span-->
+        <div class="flex flex-col text-center ">
+            <div class="p-1 border-2 rounded-md flex flex-col">
+                <span class="text-xl font-bold">{creature.hpMax - creature.damage}/{creature.hpMax}</span>
+                <span class="uppercase">Treffer-<br/>punkte</span>                
+            </div>
+            <div class="grow border-2 rounded-md p-1 text-center sm:hidden"><span class="text-xl font-bold">{getModifier("DEX")}</span><br /><span  class="uppercase">Inititative</span></div>
         </div>
     </div>
 
-    <div class="flex text-center ">
-        <div class="grow border-2 rounded-md mr-1 p-1"><span class="text-xl font-bold">{getPassive("WIS")}</span><br /><span  class="uppercase">Pass.<br />Wahrnehmung</span></div>
-        <div class="grow border-2 rounded-md mr-1 p-1"><span class="text-xl font-bold">{getPassive("INT")}</span><br /><span  class="uppercase">Pass.<br />Nachforschungen</span></div>
-        <div class="grow border-2 rounded-md ml-8 mr-1 p-1"><span class="text-xl font-bold">{getModifier("DEX")}</span><br /><span  class="uppercase">Inititative</span></div>
-        <div class="grow border-2 rounded-md p-1"><span class="text-xl font-bold">{creature.armorClass}</span><br /><span  class="uppercase">Rüstungs-<br />klasse</span></div>
+    <div class="flex text-center">
+        <div class="border-2 rounded-md mr-1 p-1"><span class="text-xl font-bold">{getPassive("WIS")}</span><br /><span  class="uppercase">Pass.<br />Wahrnehmung</span></div>
+        <div class="border-2 rounded-md mr-1 p-1"><span class="text-xl font-bold">{getPassive("INT")}</span><br /><span  class="uppercase">Pass.<br />Nachf.</span></div>
+        <div class="grow"></div>
+        <div class="border-2 rounded-md p-1 ml-8"><span class="text-xl font-bold">{creature.armorClass}</span><br /><span  class="uppercase">Rüstungs-<br />klasse</span></div>
+        <div class="hidden sm:block border-2 rounded-md p-1 ml-1"><span class="text-xl font-bold">{getModifier("DEX")}</span><br /><span  class="uppercase">Inititative</span></div>
     </div>
 
     <div class="mt-2">
-        {@html creature.specialTraits}
+        <b>Fertigkeiten:</b> {creature.skillsText}<br />
+        <b>Eigenschaften:</b> {@html creature.specialTraits}<br />
+        <b>Sinne:</b> {creature.senses}
     </div>
 </div>
 
