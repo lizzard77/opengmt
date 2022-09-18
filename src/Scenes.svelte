@@ -1,37 +1,38 @@
 <script>
-    import { session, scenes, currentScene, maps, creatures, currentMarker } from "./stores";
-    import { hubConnection } from "./hub";
+    import { session, scenes, creatures, currentScene } from "./stores";
+    import { get, putObject } from "./api";
     export let isOpen = true;
 
     async function loadScene(scene)
     {
-        /*const s = $scenes.find(ss => ss.id === scene.id);
-        s.map = $maps.find(m => m.id === s.mapId);
-        s.creatures = s.creatureIds.map(c => {
-            return $creatures.find(cc => cc.id === c);
-        });
-        $currentScene = s;
-        $currentPlayer = $currentScene.creatures[0];
-
-        const sessionBody = { SceneId: s.id, Updated : "2000-01-01" };
-        $session = await fetch("/api/session", 
-            { 
-                method: "PUT",
-                headers: {
-                    'Accept': 'application/json, text/plain',
-                    'Content-Type': 'application/json;charset=UTF-8'
-                }, 
-                body: JSON.stringify(sessionBody)
-            }).then(r => r.json());
-
-        hubConnection.invoke("LoadScene", s.id);
-        isOpen = false;*/
+        $session.markers = [];
+        $session.scene = scene;
+        $session.sceneId = scene.id;
+        await putObject("/api/session", $session);
+        $session = $session;
+        $currentScene = scene;
+        isOpen = false;
     }
+
+    async function createScene()
+    {
+        var newscene = {
+            creatures: $creatures.filter(c => c.type === "pc"),
+            description: "",
+            name: newSceneName
+        };
+        await putObject("/api/scenes", newscene);
+        $scenes = await get("/api/scenes");
+    }
+    
+    let newSceneName = "";
 </script>
 
     <div class="h-full w-full bg-white rounded-xl p-8">
+        Neue Szene: <input bind:value={newSceneName} class="border-2 mb-2" />
+        <button class="border-2 rounded-xl p-1 bg-slate-200" on:click={() => createScene()}>Neu</button>
+        <br />
         {#each $scenes as scene}
-        <button class="p-2 border-2" on:click={() => loadScene(scene)}>{scene.description}</button><br />
+        <button class="p-2 border-2 mb-2 rounded-lg" on:click={() => loadScene(scene)}>{scene.name}</button><br />
         {/each}
-        <button class="border-2 rounded-xl p-2 m-2 bg-black text-white" on:click={() => isOpen = false}>Starten</button>
     </div>

@@ -25,7 +25,7 @@ export const currentScene = writable({ id: 0, map: {}, creatures : [], name : nu
 
 export const currentHandout = writable("");
 
-export const session = writable({ markers : [] });
+export const session = writable({ id: 0, markers : [], scene : {}, sceneId : 0 });
 await loadSession();
 
 

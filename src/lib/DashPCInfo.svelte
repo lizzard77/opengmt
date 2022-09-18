@@ -1,0 +1,84 @@
+<script>
+import { currentScene } from "../stores";
+import { putObject } from "../api";
+import { mdiDeleteOutline, mdiGlasses } from "@mdi/js";
+import Modal from "./Modal.svelte";
+import StatBlock from "./StatBlock.svelte";
+import Icon from "./Icon.svelte";
+
+export let creature;
+
+let showMonsterStats = false;
+
+function showPcStatBlock(c = null)
+{
+    showMonsterStats = true;
+}
+
+async function removeCreature(c)
+{
+    $currentScene.creatures = $currentScene.creatures.filter(cc => cc.id !== c.id);
+    await putObject("/api/scenes", $currentScene);
+    $currentScene = $currentScene;
+}
+
+function getPassive(ability)
+{
+    const score = creature.abilities?.hasOwnProperty(ability) ? creature.abilities[ability] : 10;
+    return 10 + getModifier(ability) + creature.proficiencyBonus;
+}
+
+function getModifier(ability)
+{
+    const score = creature.abilities?.hasOwnProperty(ability) ? creature.abilities[ability] : 10;
+    return Math.trunc((score-10)/2);
+}
+
+</script>
+
+<div class="flex flex-col text-xs mb-6">
+    <div class="flex">
+        <button on:click={() => showPcStatBlock(creature)}><Icon path={mdiGlasses} size={16} /></button>
+        <button on:click={() => removeCreature(creature)}><Icon path={mdiDeleteOutline} size={16} /></button>
+    </div>
+
+    <div class="flex mt-2 mb-2">
+        <div class="ml-2 grow">
+            <span class="text-xl font-bold">{creature.name}</span><br />
+            Lvl 1 | Zwerg | Kämpfer
+        </div>
+        <div class="text-xs text-right mr-4 ml-4 grow">
+            {creature.skillsText}<br />
+            {creature.senses}
+        </div>
+        <div class="flex flex-col text-center p-1 border-2 rounded-md">
+            <span class="text-xl font-bold">{creature.hpMax - creature.damage} / {creature.hpMax}</span>
+            <span class="uppercase">Trefferpunkte</span>
+            <!--span class="border-2 rounded-md">Erschöpfung</span-->
+        </div>
+    </div>
+
+    <div class="flex text-center ">
+        <div class="grow border-2 rounded-md mr-1 p-1"><span class="text-xl font-bold">{getPassive("WIS")}</span><br /><span  class="uppercase">Pass.<br />Wahrnehmung</span></div>
+        <div class="grow border-2 rounded-md mr-1 p-1"><span class="text-xl font-bold">{getPassive("INT")}</span><br /><span  class="uppercase">Pass.<br />Nachforschungen</span></div>
+        <div class="grow border-2 rounded-md ml-8 mr-1 p-1"><span class="text-xl font-bold">{getModifier("DEX")}</span><br /><span  class="uppercase">Inititative</span></div>
+        <div class="grow border-2 rounded-md p-1"><span class="text-xl font-bold">{creature.armorClass}</span><br /><span  class="uppercase">Rüstungs-<br />klasse</span></div>
+    </div>
+
+    <div class="mt-2">
+        {@html creature.specialTraits}
+    </div>
+</div>
+
+{#if showMonsterStats}
+<Modal bind:isOpen={showMonsterStats}>
+    <StatBlock creature={creature} bind:isOpen={showMonsterStats} />
+</Modal>
+{/if}
+
+<style>
+    button {
+        @apply mr-1 p-1 rounded-md text-sm bg-slate-200 border-0 flex
+    }
+
+</style>

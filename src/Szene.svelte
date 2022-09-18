@@ -12,16 +12,14 @@
     import CreatureSelect from "./lib/CreatureSelect.svelte";
     import DashCreatureInfo from "./lib/DashCreatureInfo.svelte";
     import DashAssetInfo from "./lib/DashAssetInfo.svelte";
+    import DashPcInfo from "./lib/DashPCInfo.svelte";
 
-    let { name, description, strongStart, secretsAndHints, phantasticLocations, scenesAndEncounters } = $currentScene;
-
-    $activeSection = "dash";
+    $activeSection = "scene";
 
     async function saveScene()
     {
-        const sceneUpdate ={ ...$currentScene, name, description, strongStart, secretsAndHints, phantasticLocations, scenesAndEncounters };
-        await putObject("/api/scenes", sceneUpdate);
-        $currentScene = sceneUpdate;
+        await putObject("/api/scenes", $currentScene);
+        $currentScene = $currentScene;
     }
 
     let showCreatureSelect = false;
@@ -37,60 +35,31 @@
         <div class="p-4 min-h-fit md:h-full md:min-h-0 md:grid md:grid-cols-3">
             <div class="col-start-1">
                 <div class="flex flex-row col-start-1">
-                    <button class="flex items-center" on:click={() => showCreatureSelect = true}><Icon path={mdiGlasses} size={16} class="mr-2" /> Kreatur hinzufügen</button>
                     <Upload folder="handouts" /><br />
                 </div>
 
                 <div class="box col-start-1">
-                    <h1>Charaktere</h1>
-
-                    {#each $currentScene.creatures.filter(cc => cc.type === "pc") as c}
-                    <DashCreatureInfo creature={c} />
-                    {/each}
-                </div>
-
-                <div class="box col-start-1">
                     <h1>Starker Start</h1>
-                    <p contenteditable bind:innerHTML={strongStart} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={$currentScene.strongStart} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">
                     <h1>Szenen und Begegnungen</h1>
-                    <p contenteditable bind:innerHTML={scenesAndEncounters} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={$currentScene.scenesAndEncounters} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">
                     <h1>Geheimnisse und Hinweise</h1>
-                    <p class="" contenteditable bind:innerHTML={secretsAndHints} on:blur={saveScene}></p>
+                    <p class="" contenteditable bind:innerHTML={$currentScene.secretsAndHints} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">
                     <h1>Fantastische Orte</h1>
-                    <p contenteditable bind:innerHTML={phantasticLocations} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={$currentScene.phantasticLocations} on:blur={saveScene}></p>
                 </div>
             </div>
 
             <div class="col-start-2">
-                <div class="box col-start-2">
-                    <h1>NPCs</h1>
-                    <div class="flex flex-row">
-                        <button>+</button>
-                        <button>Dialoge</button>
-                        <button>Schnellerzeugung</button>
-                    </div>
-
-                    {#each $currentScene.creatures.filter(cc => cc.type === "npc") as c}
-                    <DashCreatureInfo creature={c} />
-                    {/each}
-                </div>
-
-                <div class="box col-start-2">
-                    <h1>Monster</h1>
-                    {#each $currentScene.creatures.filter(cc => cc.type === "monster") as c}
-                    <DashCreatureInfo creature={c} />
-                    {/each}
-                </div>
-
                 <div class="box col-start-2">
                     <h1>Magische Gegenstände</h1>
                 </div>

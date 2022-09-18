@@ -3,7 +3,8 @@
     import { sounds, isMaster, creatures, scenes, maps, session, currentMarker } from "./stores";
 
     import Stage from "./Stage.svelte";
-    import DmDash from "./DMDash.svelte";    
+    import Szene from "./Szene.svelte";    
+    import Creatures from "./Creatures.svelte";    
 
     import ProgressCircle from "./lib/ProgressCircle.svelte";
     import { get } from "./api";
@@ -114,7 +115,8 @@
 {:then}
 <Router>
     <Route path="/" component="{Stage}" />
-    <Route path="dash" component="{DmDash}" />
+    <Route path="scene" component="{Szene}" />
+    <Route path="creatures" component="{Creatures}" />
 </Router>
 
 

@@ -3,9 +3,13 @@ import { navigate } from 'svelte-routing';
 import { mdiArrowLeft, mdiDotsVertical, mdiCog } from '@mdi/js';
 import Icon from "./lib/Icon.svelte";
 import Menu from "./lib/Menu.svelte";
+import Modal from './lib/Modal.svelte';
+import Scenes from './Scenes.svelte';
 
 export let backlink = "";
 export let title = "OpenGMT";
+
+let chooseScene = false;
 </script>
 
 <div class="absolute flex flex-col h-full w-full">
@@ -20,7 +24,7 @@ export let title = "OpenGMT";
             </slot>
             
             <slot name="center">
-                <h1 class="flex-1 text-center text-2xl"><slot name="title">{title}</slot></h1>
+                <h1 class="flex-1 text-center text-2xl" on:click={() => chooseScene = true}><slot name="title">{title}</slot></h1>
             </slot>
             
             <slot name="right">
@@ -45,3 +49,9 @@ export let title = "OpenGMT";
         </slot>
     </footer>
 </div>
+
+{#if chooseScene}
+<Modal>
+    <Scenes bind:isOpen={chooseScene} />
+</Modal>
+{/if}

@@ -34,7 +34,9 @@ namespace OpenGMT.Controllers
 
             if (existingScene == null)
             {
-                context.Scenes.Add(info);
+                var scene = new Scene();
+                scene.Name = info.Name;
+                context.Scenes.Add(scene);
             } 
             else 
             {

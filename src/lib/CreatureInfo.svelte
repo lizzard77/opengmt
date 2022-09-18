@@ -53,7 +53,7 @@
 
 </script>
 		
-<div class="m-0 p-1" class:bg-blue-300={id === $currentMarker.creatureId} on:click={setPlayer}>
+<div class="m-0 p-1" class:bg-blue-300={id === $currentMarker?.creatureId} on:click={setPlayer}>
     <button on:click={toggleVisible} class="p-2 rounded-lg bg-slate-200 ">
         <Icon size={20} path={visible ? mdiEye :mdiEyeOff} />
     </button>
