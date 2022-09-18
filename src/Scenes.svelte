@@ -9,6 +9,7 @@
         $session.scene = scene;
         $session.sceneId = scene.id;
         await putObject("/api/session", $session);
+        
         $session = $session;
         $currentScene = scene;
         isOpen = false;
