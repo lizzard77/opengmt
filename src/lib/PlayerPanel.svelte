@@ -4,7 +4,7 @@
     import { hubConnection } from "../hub";
     import { getState, updateState } from "../session";
 
-    import Icon from "./Icon.svelte"
+    import Icon from "../components/Icon.svelte"
 	import CreatureInfo from "./CreatureInfo.svelte"
 	
     function setPlayer(p)

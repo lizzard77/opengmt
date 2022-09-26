@@ -6,7 +6,7 @@
     import { getState, updateState } from "../session";
     const dispatch = createEventDispatcher();
 
-    import Icon from "./Icon.svelte";
+    import Icon from "../components/Icon.svelte";
     
     export let creature;
 

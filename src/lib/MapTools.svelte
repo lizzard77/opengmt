@@ -2,7 +2,7 @@
     import { isMaster } from '../stores';
     import { mdiOpenInNew, mdiFullscreen, mdiCloud, mdiCloudOutline } from "@mdi/js";
     import { hubConnection } from "../hub";
-    import Icon from './Icon.svelte';
+    import Icon from '../components/Icon.svelte';
     
     export let zoom = 1.0;
     export let fog = true;

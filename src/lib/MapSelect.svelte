@@ -1,5 +1,5 @@
 <script>
-    import { maps, currentScene } from "../stores";
+    import { maps } from "../stores";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
@@ -7,7 +7,7 @@
     export let isOpen = false;
 </script>
 
-<h1>Hinzufügen</h1>
+<h1>Karte auswählen</h1>
 
 <ul>
     {#each $maps as c}

@@ -1,7 +1,7 @@
 <script>
     import { sounds } from "../stores";
     import { mdiRepeat, mdiPlay, mdiPause, mdiStop } from "@mdi/js";
-    import Icon from "./Icon.svelte";
+    import Icon from "../components/Icon.svelte";
 
     setInterval(() => {
             $sounds.forEach(f => {

@@ -2,12 +2,12 @@
     import { activeSection, currentScene } from "./stores";
     import { mdiGlasses } from "@mdi/js";
 
-    import Icon from "./lib/Icon.svelte";
-    import Modal from "./lib/Modal.svelte";
+    import Icon from "./components/Icon.svelte";
+    import Modal from "./components/Modal.svelte";
     import { putObject } from "./api";
-    import Upload from "./lib/Upload.svelte";
+    import Upload from "./components/Upload.svelte";
     import AudioBoard from "./lib/AudioBoard.svelte";
-    import Screen from "./Screen.svelte";
+    import Screen from "./components/Screen.svelte";
     import Draggable from "./lib/Draggable.svelte";
     import CreatureSelect from "./lib/CreatureSelect.svelte";
     import DashCreatureInfo from "./lib/DashCreatureInfo.svelte";

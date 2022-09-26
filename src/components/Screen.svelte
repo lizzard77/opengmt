@@ -1,10 +1,10 @@
 <script>
 import { navigate } from 'svelte-routing';
 import { mdiArrowLeft, mdiDotsVertical, mdiCog } from '@mdi/js';
-import Icon from "./lib/Icon.svelte";
-import Menu from "./lib/Menu.svelte";
-import Modal from './lib/Modal.svelte';
-import Scenes from './Scenes.svelte';
+import Icon from "./Icon.svelte";
+import Menu from "./Menu.svelte";
+import Modal from './Modal.svelte';
+import Scenes from '../lib/Scenes.svelte';
 
 export let backlink = "";
 export let title = "OpenGMT";

@@ -10,7 +10,7 @@
         W20: mdiDiceD20
     };
 
-    import Icon from './Icon.svelte';
+    import Icon from '../components/Icon.svelte';
     import { dice, roll2 } from "./dice";
 
     let selectedDice = [];
@@ -42,7 +42,6 @@
         selectedDice =  selectedDice;    
     }
 
-
     export let isOpen = false;
 </script>
 
@@ -53,7 +52,7 @@
         <div class="border-2 rounded-xl p-2 m-2 flex bg-black portrait:flex-col">
             {#each dice as d}
             <div class="border-2 m-1 bg-white rounded-full w-10 h-10 grid place-items-center" on:click={() => addDice(d)}>
-                <Icon path={dicePaths[d.name]} size=24 />
+                <Icon path={dicePaths[d.name]} size={24} />
             </div>
             {/each}
         </div>
@@ -61,7 +60,7 @@
         <div class="border-2 rounded-xl p-2 m-2 flex bg-slate-200">
             {#each selectedDice as d}
                 <div class="border-2 rounded-lg w-16 h-16 grid place-items-center">
-                    <span class="flex">{d.number} <Icon path={dicePaths[d.name]} size=24 /></span>
+                    <span class="flex">{d.number} <Icon path={dicePaths[d.name]} size={24} /></span>
                     <input type="number" bind:value={d.modifier} class="w-10 bg-slate-100 text-center" />
                 </div>
             {/each}

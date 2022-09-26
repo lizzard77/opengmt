@@ -71,6 +71,4 @@ export function getState(id)
     }
 
     return marker;
-
-
 }

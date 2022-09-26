@@ -2,9 +2,9 @@
 import { currentScene } from "../stores";
 import { putObject } from "../api";
 import { mdiDeleteOutline, mdiGlasses } from "@mdi/js";
-import Modal from "./Modal.svelte";
+import Modal from "../components/Modal.svelte";
 import StatBlock from "./StatBlock.svelte";
-import Icon from "./Icon.svelte";
+import Icon from "../components/Icon.svelte";
 
 export let creature;
 

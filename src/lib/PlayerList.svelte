@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { currentScene, currentMarker, combat } from "../stores";
     import { mdiSkull } from "@mdi/js";
-    import Icon from "./Icon.svelte";
+    import Icon from "../components/Icon.svelte";
     const dispatch = createEventDispatcher();
     
     let players = [];

@@ -2,7 +2,7 @@
     import { statsEditing, currentScene } from '../stores';
     import StatInfo from "./StatInfo.svelte";
     import { mdiClose, mdiPencil } from "@mdi/js";
-    import Icon from "./Icon.svelte";
+    import Icon from "../components/Icon.svelte";
 
     export let creature = {};
     export let isOpen = false;

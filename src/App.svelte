@@ -6,7 +6,7 @@
     import Szene from "./Szene.svelte";    
     import Creatures from "./Creatures.svelte";    
 
-    import ProgressCircle from "./lib/ProgressCircle.svelte";
+    import ProgressCircle from "./components/ProgressCircle.svelte";
     import { get } from "./api";
     import { hubConnection } from "./hub";
     

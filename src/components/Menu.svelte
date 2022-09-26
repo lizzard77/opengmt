@@ -1,6 +1,6 @@
 <script>
     import { mdiTheater, mdiDramaMasks, mdiDiceD20Outline, mdiChessPawn } from "@mdi/js";
-    import Dice from "./Dice.svelte";
+    import Dice from "../lib/Dice.svelte";
     import NavButton from "./NavButton.svelte";
 
     let showDice = false;
