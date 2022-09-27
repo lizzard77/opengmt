@@ -39,7 +39,7 @@ namespace OpenGMT.Controllers
                         await formFile.CopyToAsync(stream);
                     }
 
-                    var assetType = folder.EndsWith("audio") ? AssetType.Video : AssetType.GenericFile;
+                    var assetType = folder.EndsWith("audio") ? AssetType.Audio : AssetType.GenericFile;
                     if (ext.EndsWith("jpg") || ext.EndsWith("png") || ext.EndsWith("gif"))
                         assetType = AssetType.Image;
 
