@@ -23,12 +23,13 @@ namespace OpenGMT.Controllers
         public IActionResult Get()
         {
             var session = context.Session
-                .Include(s => s.Markers)
                 .Include(s => s.Scene)
+                .Include(s => s.Scene.Markers)
                 .Include(s => s.Scene.Creatures)
                 .Include(s => s.Scene.Assets)
                 .Include(s => s.Scene.Map)
                 .FirstOrDefault();
+
             if (session == null)
             {
                 session = new Session()
@@ -48,11 +49,7 @@ namespace OpenGMT.Controllers
         [HttpPut("/api/session")]
         public async Task<IActionResult> Put(Session info)
         {
-            var existingSession = context.Session
-                .Include(s => s.Markers)
-                .Include(s => s.Scene.Map)
-                .FirstOrDefault(s => s.Id==info.Id);
-
+            var existingSession = context.Session.FirstOrDefault(s => s.Id == info.Id);
             if (existingSession == null)
             {
                 context.Session.Add(info);
@@ -60,40 +57,18 @@ namespace OpenGMT.Controllers
             else 
             {
                 context.Entry(existingSession).CurrentValues.SetValues(info);
-                foreach (var marker in info.Markers)
-                {
-                    marker.Map = null;
-                    marker.MapId = existingSession.Scene.Map.Id;
-                    var existingMarker = existingSession.Markers.FirstOrDefault(p => p.Id == marker.Id);
-                    if (existingMarker == null)
-                    {
-                        existingSession.Markers.Add(marker);
-                    }
-                    else
-                    {
-                        context.Entry(existingMarker).CurrentValues.SetValues(marker);
-                    }
-                }
-                
-                foreach (var marker in existingSession.Markers)
-                {
-                    if (!info.Markers.Any(p => p.Id == marker.Id))
-                    {
-                        context.Remove(marker);
-                    }
-                }
             }
             context.SaveChanges();
 
             var session = context.Session
-                .Include(s => s.Markers)
                 .Include(s => s.Scene)
+                .Include(s => s.Scene.Markers)
                 .Include(s => s.Scene.Creatures)
                 .Include(s => s.Scene.Assets)
                 .Include(s => s.Scene.Map)
                 .FirstOrDefault();
 
-            await hubContext.Clients.All.SendAsync("sessionInfo", JsonSerializer.Serialize(session, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+            await hubContext.Clients.All.SendAsync("session", JsonSerializer.Serialize(session, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
             return Ok();
         }
 

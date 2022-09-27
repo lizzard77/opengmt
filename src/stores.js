@@ -8,8 +8,10 @@ export const statsEditing = writable(false);
 export const creatures = writable([]);
 export const maps = writable([]);
 export const sounds = writable([]);
+export const handouts = writable([]);
 export const scenes = writable([]);
 export const stage = writable({});
+export const markers = writable([]);
 
 const storedIsMaster = JSON.parse(localStorage.getItem("isMaster") || "false");
 export const isMaster = writable(storedIsMaster);
@@ -27,6 +29,7 @@ export const currentHandout = writable("");
 
 export const session = writable({ id: 0, markers : [], scene : {}, sceneId : 0 });
 await loadSession();
+
 
 
 /*

@@ -17,6 +17,7 @@ namespace OpenGMT
     {
         GenericFile = 0,
         Image = 1,
-        Video = 2
+        Audio = 2,
+        Video = 3
     }
 }

@@ -1,6 +1,6 @@
 <script>
     import { Router, Route } from "svelte-routing";
-    import { sounds, isMaster, creatures, scenes, maps, session, currentMarker } from "./stores";
+    import { markers, sounds, isMaster, creatures, scenes, maps, session, currentMarker } from "./stores";
 
     import Stage from "./Stage.svelte";
     import Szene from "./Szene.svelte";    
@@ -10,52 +10,6 @@
     import { get } from "./api";
     import { hubConnection } from "./hub";
     
-    /*hubConnection.on("players", data => {
-        if ($isMaster)
-            return;
-        const incomingPlayerData = JSON.parse(data);
-        incomingPlayerData.forEach(d => 
-        {
-            const player = $session.creatureStates.find(c => c.id == d.id);
-            if (player)
-            {
-                player.x = d.x;
-                player.y = d.y;
-                player.visible = d.visible;
-                player.initiative = d.initiative;
-                player.light = d.light;
-                player.damage = d.damage;
-                player.hp = d.hp;
-            }
-        });
-        $currentScene = $currentScene;
-    });*/
-
-    /*hubConnection.on("move", data => {
-        if ($isMaster)
-            return;
-        
-        const { id, x, y } = JSON.parse(data);
-        const creature = $session.creatureStates.find(c => c.id === id);
-        if (creature && (creature.x !== x || creature.y !== y)) {
-            console.log("move creature", creature.name, "to", x, y);
-            creature.x = x;
-            creature.y = y;
-            $currentScene = $currentScene;
-            $currentPlayer = $currentPlayer;
-        }
-    });*/
-
-    hubConnection.on("setCurrentPlayer", data =>
-    {
-        const { creatureId } = JSON.parse(data);
-        const creature = $session.markers.find(c => c.creatureId === creatureId);
-        if (creature && creature.visible) {
-            console.log("set current player", creature);
-            $currentMarker = creature;
-        }
-    });
-
     let baseData = Promise.all([
         (async () => {
             let loadedCreatures = await get("/api/creatures");
@@ -74,21 +28,7 @@
 
         (async () => {
             $scenes = await get("/api/scenes");
-        })(),
-
-        (async () => {
-            const soundFiles = await get("/api/sounds");
-            $sounds = soundFiles.map((fileName) => {
-                return {
-                    url : fileName,
-                    isPlaying : false,
-                    audioFile : null,
-                    playTime : "",
-                    loops : false
-                }
-            });
         })()
-
     ]);
     
     let loader = (async () => {

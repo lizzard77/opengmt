@@ -1,7 +1,7 @@
 <script>
     import { hubConnection } from "../hub";
     import { currentHandout } from "../stores";
-    import { mdiRepeat, mdiPlay, mdiPause, mdiStop } from "@mdi/js";
+    import { mdiPlay, mdiStop } from "@mdi/js";
     import Icon from "../components/Icon.svelte";
 
     export let asset;

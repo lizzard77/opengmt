@@ -33,6 +33,7 @@ namespace OpenGMT.Controllers
         {
             var existingScene = context.Scenes
                 .Include(s => s.Creatures)
+                .Include(s => s.Markers)
                 .Include(s => s.Assets)
                 .Include(s => s.Map)
                 .FirstOrDefault(s => s.Id==info.Id);
@@ -102,8 +103,8 @@ namespace OpenGMT.Controllers
             context.SaveChanges();
 
             var session = context.Session
-                .Include(s => s.Markers)
                 .Include(s => s.Scene)
+                .Include(s => s.Scene.Markers)
                 .Include(s => s.Scene.Creatures)
                 .Include(s => s.Scene.Assets)
                 .Include(s => s.Scene.Map)

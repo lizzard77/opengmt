@@ -1,21 +1,16 @@
 <script>
-    import { activeSection, currentScene } from "./stores";
-    import { mdiGlasses } from "@mdi/js";
-
-    import Icon from "./components/Icon.svelte";
-    import Modal from "./components/Modal.svelte";
+    import { activeSection, currentScene, handouts } from "./stores";
+    import { loadSession } from "./session";
     import { putObject } from "./api";
+
+    import Modal from "./components/Modal.svelte";
     import Upload from "./components/Upload.svelte";
     import AudioBoard from "./lib/AudioBoard.svelte";
     import Screen from "./components/Screen.svelte";
     import Draggable from "./lib/Draggable.svelte";
-    import CreatureSelect from "./lib/CreatureSelect.svelte";
-    import DashCreatureInfo from "./lib/DashCreatureInfo.svelte";
     import DashAssetInfo from "./lib/DashAssetInfo.svelte";
-    import DashPcInfo from "./lib/DashPCInfo.svelte";
     import MapSelect from "./lib/MapSelect.svelte";
-    import { loadSession } from "./session";
-
+    
     $activeSection = "scene";
 
     async function saveScene()
@@ -35,7 +30,7 @@
 </script>
 
 <Screen title={$currentScene.name}>
-        <div class="p-4 min-h-fit md:h-full md:min-h-0 md:grid md:grid-cols-3">
+        <div class="p-4 min-h-fit lg:h-full lg:min-h-0 lg:grid lg:grid-cols-2">
             <div class="col-start-1">
                 <div class="flex flex-row col-start-1">
                     <Upload folder="handouts" /><br />
@@ -70,7 +65,7 @@
 
                 <div class="box col-start-2">
                     <h1>Handouts</h1>
-                    {#each $currentScene.assets as asset}
+                    {#each $handouts as asset}
                     <DashAssetInfo {asset} />
                     {/each}
                 </div>
@@ -81,7 +76,7 @@
                 </div>
             </div>
 
-            <div class="col-start-3">
+            <div class="col-start-2">
                 <div class="box flex-grow basis-[400px] col-start-3" >
                     <h1>Map</h1>
                     <div class="flex-1 relative w-full h-96 overflow-hidden">

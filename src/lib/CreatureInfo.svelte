@@ -1,6 +1,6 @@
 <script>
     import { createEventDispatcher } from "svelte";
-    import { currentMarker, session } from "../stores";
+    import { currentMarker, markers } from "../stores";
     import { mdiEyeOff, mdiEye, mdiTarget, mdiLampOutline, mdiLamp } from "@mdi/js";
     import { hubConnection } from "../hub";
     import { getState, updateState } from "../session";
@@ -15,7 +15,7 @@
     $:  {
         if (id)
         {
-            let state = $session?.markers?.find(c => c.creatureId === id);
+            let state = $markers?.find(c => c.creatureId === id);
             if (state)
             {
                 visible = state.visible; 
@@ -24,9 +24,11 @@
         }
     }
 
-    function setPlayer()
+    async function setPlayer()
     {
         $currentMarker = getState(creature.id);
+        await updateState($currentMarker);    
+        console.log("new player: ", creature.id, $currentMarker);
         hubConnection.invoke("SetCurrentPlayer", JSON.stringify($currentMarker));
     }
 

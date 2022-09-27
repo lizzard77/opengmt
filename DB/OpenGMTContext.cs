@@ -10,6 +10,7 @@ namespace OpenGMT
         public DbSet<Session> Session { get; set; }
         public DbSet<Asset> Assets { get; set; }
         public DbSet<MapMarker> MapMarker { get; set; }
+        public DbSet<Player> Players { get; set; }
 
         public OpenGMTContext(DbContextOptions<OpenGMTContext> options) : base(options)
         {   

@@ -1,5 +1,5 @@
 <script>
-    import { currentScene, currentMarker, isMaster, squareSizeInPx, session } from "../stores";
+    import { currentScene, currentMarker, isMaster, squareSizeInPx, session, markers } from "../stores";
     import { getState, updateState } from "../session";
     import { hubConnection } from "../hub";
 
@@ -67,7 +67,7 @@
         const clickX =  e.offsetX / $squareSizeInPx;
         const clickY = e.offsetY / $squareSizeInPx;
 
-        const anotherPlayer = $session.markers.filter(c => {
+        const anotherPlayer = $markers.filter(c => {
             const halb = (c.size * oneFoot) / 2;
             return (c.visible || $isMaster) && c.x >= clickX - halb && c.y >= clickY - halb && c.x < clickX + halb && c.y < clickY + halb;
         });
@@ -116,11 +116,9 @@
         <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.size}" style="fill:transparent;stroke:rgb(0,255,255);opacity:1;stroke-width:0.1" />
     {/if}
 
-    {#if $session?.markers}
-        {#each $session.markers.filter(c => $isMaster || c.visible) as p}
-        <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size}" style="fill:{p.color}" />
-        {/each}
-    {/if}
+    {#each $markers.filter(c => $isMaster || c.visible) as p}
+    <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size}" style="fill:{p.color}" />
+    {/each}
 
     <defs>
         <mask id="hole">
@@ -129,8 +127,8 @@
             {:else}
             <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="white"/>
             {/if}
-            {#if $session?.markers}
-                {#each $session.markers.filter(c => c.light) as p}
+
+            {#each $markers.filter(c => c.light) as p}
                 {#if $isMaster}
                 <circle r="{oneFoot * 40}" cx="{p.x}" cy="{p.y}" fill="#666"/>
                 <circle r="{oneFoot * 20}" cx="{p.x}" cy="{p.y}" fill="#333"/>
@@ -139,7 +137,6 @@
                 <circle r="{oneFoot * 20}" cx="{p.x}" cy="{p.y}" fill="black"/>
                 {/if}
             {/each}
-            {/if}
         </mask>
     </defs>
 

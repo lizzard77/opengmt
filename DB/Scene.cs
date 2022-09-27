@@ -9,8 +9,10 @@ namespace OpenGMT
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public IList<Creature> Creatures { get; set; }
+        public IList<Creature> Creatures { get; set; } = new List<Creature>();
+        public IList<MapMarker> Markers { get; set; } = new List<MapMarker>();
         public Map Map { get; set; }
+        public IList<Asset> Assets { get; set; } = new List<Asset>();
         
         public string StrongStart { get; set; }
         public string SecretsAndHints { get; set; }
@@ -18,6 +20,5 @@ namespace OpenGMT
         public string MagicItems { get; set; }
         public string ScenesAndEncounters { get; set; }
 
-        public IList<Asset> Assets { get; set; }
     }
 }

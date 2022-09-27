@@ -1,5 +1,5 @@
 <script>
-    import { sounds } from "../stores";
+    import { sounds, currentScene } from "../stores";
     import { mdiRepeat, mdiPlay, mdiPause, mdiStop } from "@mdi/js";
     import Icon from "../components/Icon.svelte";
 
@@ -17,7 +17,7 @@
 
     function play(sound)
     { 
-        const audioFile = new Audio(sound.url);
+        const audioFile = new Audio(sound.uri);
         audioFile.loop = sound.loops;
         audioFile.play();
         audioFile.addEventListener("ended", () => stop(sound));
@@ -69,14 +69,13 @@
             <button on:click={() => resume(sound)}><Icon path={mdiPlay} size={16} /></button>     
             {/if}
 
-        <button class="p-2 rounded-lg bg-slate-200" on:click={() => stop(sound)}><Icon path={mdiStop} size={16} /></button>
-        {sound.playTime}
+            <button class="p-2 rounded-lg bg-slate-200" on:click={() => stop(sound)}><Icon path={mdiStop} size={16} /></button>
+            {sound.playTime}
         {:else}
         <button on:click={() => play(sound)}><Icon path={mdiPlay} size={16} /></button> 
         {/if}
-        <span class="ml-2">
-        {sound.url.slice(sound.url.lastIndexOf('/')+1)}
-        </span>
+
+        <span class="ml-2">{sound.name}</span>
     </li>
 {/each}
 </ul>

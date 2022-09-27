@@ -1,5 +1,5 @@
 <script>				
-    import { combat, isMaster, currentScene, currentMarker, session } from "../stores";
+    import { combat, isMaster, currentScene, currentMarker, session, markers } from "../stores";
     import { mdiSkull } from "@mdi/js";
     import { hubConnection } from "../hub";
     import { getState, updateState } from "../session";
@@ -36,19 +36,18 @@
         $combat = !$combat;
         if (!$combat)
         {
-            let tempc = $session.markers.filter(c => c.visible);
+            let tempc = $markers.filter(c => c.visible);
             tempc.forEach(c => c.initiative = -1);
             combatCreatures = tempc;
             tempc.forEach(async (c) => await updateState(c));
         }
-        //hubConnection.invoke('SetCombat', $combat);
     }
 
     async function updateCombattantList()
     {
-        if (!$session?.markers)
+        if (!$markers)
             return;
-        let tempc = $session.markers.filter(c => c.visible);
+        let tempc = $markers.filter(c => c.visible);
         tempc.forEach(c => c.initiative = Math.floor(Math.random() * 20));
         tempc.sort((a, b) => b.initiative - a.initiative);
         combatCreatures = tempc;

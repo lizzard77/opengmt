@@ -1,17 +1,13 @@
 <script>
-    import { session, scenes, creatures, currentScene } from "../stores";
+    import { session, scenes, creatures, currentScene, markers } from "../stores";
     import { get, putObject } from "../api";
+    import { loadSession } from "../session";
     export let isOpen = true;
 
     async function loadScene(scene)
     {
-        $session.markers = [];
-        $session.scene = scene;
         $session.sceneId = scene.id;
-        await putObject("/api/session", $session);
-        
-        $session = $session;
-        $currentScene = scene;
+        await putObject("/api/session", $session);        
         isOpen = false;
     }
 
