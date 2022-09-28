@@ -11,6 +11,7 @@ namespace OpenGMT
 
         public IList<Creature> Creatures { get; set; } = new List<Creature>();
         public IList<MapMarker> Markers { get; set; } = new List<MapMarker>();
+        public long? MapId {get; set; }
         public Map Map { get; set; }
         public IList<Asset> Assets { get; set; } = new List<Asset>();
         

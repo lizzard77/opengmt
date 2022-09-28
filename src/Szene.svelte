@@ -1,5 +1,5 @@
 <script>
-    import { activeSection, currentScene, handouts } from "./stores";
+    import { currentCampaign, activeSection, currentScene, handouts } from "./stores";
     import { loadSession } from "./session";
     import { putObject } from "./api";
 
@@ -29,7 +29,7 @@
     }
 </script>
 
-<Screen title={$currentScene.name}>
+<Screen title={$currentCampaign.name + " - " + $currentScene.name}>
         <div class="p-4 min-h-fit lg:h-full lg:min-h-0 lg:grid lg:grid-cols-2">
             <div class="col-start-1">
                 <div class="flex flex-row col-start-1">

@@ -7,6 +7,7 @@ namespace OpenGMT
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public IList<Session> Sessions { get; set; }
+        [JsonIgnore]
+        public IList<Campaign> Campaigns { get; set; }
     }
 }

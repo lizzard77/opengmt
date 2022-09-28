@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenGMT;
 
@@ -10,9 +11,10 @@ using OpenGMT;
 namespace OpenGMT.Migrations
 {
     [DbContext(typeof(OpenGMTContext))]
-    partial class OpenGMTContextModelSnapshot : ModelSnapshot
+    [Migration("20220928063745_Campaigns")]
+    partial class Campaigns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -121,7 +123,7 @@ namespace OpenGMT.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("CurrentSceneId")
+                    b.Property<long>("CurrentSceneId")
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("DMPlayerId")
@@ -440,7 +442,9 @@ namespace OpenGMT.Migrations
                 {
                     b.HasOne("OpenGMT.Scene", "CurrentScene")
                         .WithMany()
-                        .HasForeignKey("CurrentSceneId");
+                        .HasForeignKey("CurrentSceneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CurrentScene");
                 });

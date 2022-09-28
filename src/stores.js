@@ -1,5 +1,5 @@
 import * as signalR from "@microsoft/signalr";
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
 import { loadSession } from "./session";
 
 export const activeSection = writable("");
@@ -27,8 +27,23 @@ export const currentScene = writable({ id: 0, map: {}, creatures : [], name : nu
 
 export const currentHandout = writable("");
 
-export const session = writable({ id: 0, markers : [], scene : {}, sceneId : 0 });
-await loadSession();
+//export const session = writable({ id: 0, markers : [], scene : {}, sceneId : 0 });
+//await loadSession();
+
+export const currentCampaign = writable();
+
+const storedUserName = localStorage.getItem("userName");
+export const userName = writable(storedUserName);
+userName.subscribe(value => {
+    localStorage.setItem("userName", value);
+});
+
+export const session = derived([userName], ($userName) => {
+    console.log("username derived", $userName);
+    return { id: 1, markers : [], scene : {}, sceneId : 11 };
+}, { id: 0, markers : [], scene : {}, sceneId : 0 });
+
+
 
 
 

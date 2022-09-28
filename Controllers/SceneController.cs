@@ -22,10 +22,19 @@ namespace OpenGMT.Controllers
         [HttpGet("/api/scenes")]
         public IActionResult Get()
         {
-            return Json(context.Scenes
+            return Json(context.Scenes.ToList());
+        }
+
+        [HttpGet("/api/scenes/{id}")]
+        public IActionResult Get(long id)
+        {
+            var scene =  context.Scenes
                 .Include(s => s.Creatures)
+                .Include(s => s.Markers)
                 .Include(s => s.Assets)
-                .ToList());
+                .Include(s => s.Map)
+                .FirstOrDefault(s => s.Id == id);
+            return scene != null ? Json(scene) : NotFound();
         }
 
         [HttpPut("/api/scenes")]
@@ -64,13 +73,9 @@ namespace OpenGMT.Controllers
                     }
 
                     var toRemove = existingScene.Creatures.Where(c => !info.Creatures.Any(cc => cc.Id == c.Id)).ToList();
-                    var sessions = context.Session.Where(s => s.SceneId == existingScene.Id).ToList();
                     foreach (var crea in toRemove)
                     {
                         existingScene.Creatures.Remove(crea);
-                        var removeMarkers = context.MapMarker.Where(m => m.CreatureId == crea.Id && m.MapId == existingScene.Map.Id).ToList();
-                        foreach (var marker in removeMarkers)
-                            context.MapMarker.Remove(marker);
                     }
                 }
 
@@ -102,6 +107,7 @@ namespace OpenGMT.Controllers
 
             context.SaveChanges();
 
+            /*
             var session = context.Session
                 .Include(s => s.Scene)
                 .Include(s => s.Scene.Markers)
@@ -113,8 +119,20 @@ namespace OpenGMT.Controllers
             {
                 await hubContext.Clients.All.SendAsync("sessionInfo", JsonSerializer.Serialize(session, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
             }
+            */
 
             return Ok();
+        }
+
+        [HttpPost("/api/scenes")]
+        public async Task<IActionResult> Post(Scene info)
+        {
+            if (info == null || !ModelState.IsValid)
+                return BadRequest();
+
+            context.Scenes.Add(info);
+            context.SaveChanges();
+            return Created("/api/scenes/" + info.Id, info);
         }
     }
 }
