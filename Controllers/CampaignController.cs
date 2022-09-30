@@ -48,7 +48,8 @@ namespace OpenGMT.Controllers
             if (info == null || !ModelState.IsValid)
                 return BadRequest();
 
-            context.Update(info);
+            var existingCampaign = context.Campaigns.FirstOrDefault(c => c.Id==info.Id);
+            context.Entry(existingCampaign).CurrentValues.SetValues(info);
             context.SaveChanges();
             return Json(info);
         }

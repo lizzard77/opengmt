@@ -108,14 +108,15 @@
 
     {#if $currentMarker && $currentMarker.visible}
         {#if showReach}
-        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.reach}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
-        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * 5}" style="fill:white;stroke:rgb(100,100,100);opacity:0.4;stroke-width:0.01" />
+        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * ($currentMarker.size + 30)}" style="fill:transparent;stroke:rgb(255,0,0);opacity:1;stroke-width:0.01" />
+        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * ($currentMarker.size + 5) / 2}" style="fill:white;stroke:rgb(0,255,255);opacity:0.6;stroke-width:0.01" />
+
         {/if}
-        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.size}" style="fill:transparent;stroke:rgb(0,255,255);opacity:1;stroke-width:0.1" />
+        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.size/2}" style="fill:transparent;stroke:rgb(0,0,255);opacity:1;stroke-width:0.05" />
     {/if}
 
     {#each $markers.filter(c => $isMaster || c.visible) as p}
-    <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size}" style="fill:{p.color}" />
+    <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size/2}" style="fill:{p.color}" />
     {/each}
 
     <defs>

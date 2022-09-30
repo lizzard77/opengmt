@@ -13,6 +13,7 @@
     $activeSection = "scene";
 
     let { name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations } = $currentScene;
+    //$: [ name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations ] = $currentScene;
 
     async function saveScene()
     {
@@ -31,7 +32,7 @@
     }
 </script>
 
-<Screen title={$currentCampaign.name + " - " + name}>
+<Screen title={$currentCampaign.name + " - " + $currentScene.name}>
         <div class="p-4 min-h-fit lg:h-full lg:min-h-0 lg:grid lg:grid-cols-2">
             <div class="col-start-1">
                 <div class="flex flex-row col-start-1">
@@ -41,7 +42,7 @@
 
                 <div class="box col-start-1">
                     <h1>Starker Start</h1>
-                    <p contenteditable bind:innerHTML={strongStart} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={$currentScene.strongStart} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">
@@ -149,4 +150,5 @@
         @apply w-full pr-2;
     }
 </style>
+
 

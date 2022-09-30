@@ -49,47 +49,42 @@
 <div class="absolute left-0 top-0 bg-black opacity-50 z-30 h-screen w-screen" on:click={() => isOpen = false}></div>
 <div class="m-0 absolute top-4 right-4 flex items-center z-50 portrait:flex-col">
     {#if !rolled}
-        <div class="border-2 rounded-xl p-2 m-2 flex bg-black portrait:flex-col">
-            {#each dice as d}
+        <div class="border-0 rounded-xl p-2 m-2 flex bg-black portrait:flex-col">
+            {#each dice.reverse() as d}
             <div class="border-2 m-1 bg-white rounded-full w-10 h-10 grid place-items-center" on:click={() => addDice(d)}>
                 <Icon path={dicePaths[d.name]} size={24} />
             </div>
             {/each}
+            <button class="p-1 mt-1 rounded-lg text-center bg-slate-200" on:click={roll}>Roll</button>
         </div>
         {#if selectedDice.length > 0}
         <div class="border-2 rounded-xl p-2 m-2 flex bg-slate-200">
             {#each selectedDice as d}
                 <div class="border-2 rounded-lg w-16 h-16 grid place-items-center">
                     <span class="flex">{d.number} <Icon path={dicePaths[d.name]} size={24} /></span>
-                    <input type="number" bind:value={d.modifier} class="w-10 bg-slate-100 text-center" />
+                    <input type="number" bind:value={d.modifier} class="w-10 bg-slate-100 text-center" on:focus={(e) => e.target.select()} />
                 </div>
             {/each}
             <button class="border-2 rounded-lg w-16 h-16 text-center bg-slate-200" on:click={roll}>Roll</button>
         </div>
     {/if}
     {:else}
-        <div class="border-2 rounded-xl p-4 m-4 flex bg-black portrait:flex-col">
+        <div class="border-0 rounded-xl p-4 m-4 flex bg-black portrait:flex-col">
             {#each selectedDice as d}
-                <div class="border-2 rounded-lg h-16 flex justify-center items-center text-white pl-2 pr-2">
-                    <div class="pr-4">{d.name}</div>
+                <div class="m-1 border-2 rounded-lg h-16 flex justify-center items-center text-white pl-2 pr-2">
+                    <div class="pr-2">{d.values.length}<Icon path={dicePaths[d.name]} size={24} color="#ffffff" /></div>
                     <div class="text-2xl">
-                        {#each d.values as v,i}
-                        {v}
-                            {#if i < d.values.length - 1}
-                            +
-                            {/if}
-                        {/each}
-
-                        {#if d.modifier > 0}
-                            + {d.modifier}
-                        {:else if d.modifier < 0}
-                            {d.modifier}
-                        {/if}
+                        <span>
+                        {#each d.values as v,i}{v}{#if i < d.values.length - 1}+{/if}{/each}
+                        </span>
+                        <span class="text-lime-500">
+                            {#if d.modifier > 0}+{d.modifier}
+                            {:else if d.modifier < 0}{d.modifier}{/if}
+                        </span>
                     </div>
-                    <div class="text-4xl"> = {d.total+d.modifier}</div>
+                    <div class="text-2xl">={d.total+d.modifier}</div>
                 </div>
             {/each}
-            <button class="border-2 rounded-full p-1 text-center bg-slate-200" on:click={reset}>X</button>
         </div>
     {/if}
 </div>

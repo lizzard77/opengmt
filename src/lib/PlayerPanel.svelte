@@ -48,7 +48,13 @@
         if (!$markers)
             return;
         let tempc = $markers.filter(c => c.visible);
-        tempc.forEach(c => c.initiative = Math.floor(Math.random() * 20));
+        tempc.forEach(c => {
+            c.initiative = Math.floor(Math.random() * 20);
+            const creature = $currentScene.creatures.find(cc => cc.id === c.creatureId);
+            c.name = creature.name + " (AC " + creature.armorClass + ")";
+            c.hp = creature.hpMax - creature.damage;
+            c.damage = creature.damage;
+        });
         tempc.sort((a, b) => b.initiative - a.initiative);
         combatCreatures = tempc;
         tempc.forEach(async (c) => await updateState(c));
@@ -68,11 +74,12 @@
         </button>
 
         {#if $combat}
-        <table>
+        <table class="text-sm">
             <tr>
                 <th class="text-left p-1">INI</th>
                 <th class="text-left p-1">NAME</th>
                 <th class="text-left p-1">HP</th>
+                <th class="text-left p-1">DMG</th>
                 <th class="text-left p-1">EFFEKT</th>
             </tr>
         {#each combatCreatures as p}
@@ -90,8 +97,10 @@
                 </button>
             </td>
             <td>
-                Max <input class="w-12 text-center border-2" type="number" bind:value={p.hp} on:change={updateHP} />
-                Dmg <input class="w-12 text-center border-2" type="number" bind:value={p.damage} on:change={updateHP} />
+                <input class="w-12 text-center border-2" type="number" bind:value={p.hp} on:change={updateHP} on:focus={(e) => e.target.select()} />
+            </td>
+            <td>
+                <input class="w-12 text-center border-2" type="number" bind:value={p.damage} on:change={updateHP} on:focus={(e) => e.target.select()} />
             </td>
             <td>
                 {#if p.hp-p.damage <= 0}
