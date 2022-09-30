@@ -46,6 +46,9 @@ namespace OpenGMT.Controllers
             {
                 context.Entry(existingMarker).CurrentValues.SetValues(info);
             }
+
+            info.Size = info.Creature.Size;
+            info.Color = info.Creature.Color;
             
             context.SaveChanges();
 
