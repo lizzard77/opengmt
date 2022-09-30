@@ -1,13 +1,13 @@
 <script>
-    import { session, scenes, creatures, currentScene, markers } from "../stores";
+    import { scenes, creatures, currentCampaign } from "../stores";
     import { get, putObject } from "../api";
-    import { loadSession } from "../session";
     export let isOpen = true;
 
     async function loadScene(scene)
     {
-        $session.sceneId = scene.id;
-        await putObject("/api/session", $session);        
+        $currentCampaign.currentSceneId = scene.id;
+        await putObject("/api/campaigns", $currentCampaign);
+        $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
         isOpen = false;
     }
 

@@ -2,9 +2,10 @@
     import { get, postObject } from "./api";
     import { userName, currentCampaign, isMaster } from "./stores";
 
-    let name;
+    let name = $userName;
+    let campaignId = parseInt(localStorage.getItem("campaignId") || "0");
+
     let campaignsToJoin;
-    let campaignId;
     let message;
     let nameTextBox;
     let campaignSelect;
@@ -16,7 +17,7 @@
         $userName = name;
         message = "";
 
-        if (!campaignId)
+        if (name && !campaignId)
         {
             const campaigns = await get("/api/campaigns");
             campaignsToJoin = campaigns.filter(c => c.players.find(p => p.name === name));
@@ -30,13 +31,20 @@
             } else {
                 campaignSelect?.focus();
             }
-        } else {
-            $currentCampaign = await get("/api/campaigns/" + campaignId);
-            
-            const player = $currentCampaign.players.find(p => p.name === name);
-            $isMaster = $currentCampaign.dmPlayerId === player.id;
-        }
+        } 
+
+        if (name && campaignId)
+            loadCampaign();
     }
+
+    async function loadCampaign()
+    {
+        $currentCampaign = await get("/api/campaigns/" + campaignId);
+        localStorage.setItem("campaignId", campaignId.toString());
+    }
+
+    if (name && campaignId)
+        loadCampaign();
 </script>
 
 <div class="m-auto mt-48 w-1/4">

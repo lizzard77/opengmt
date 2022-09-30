@@ -1,7 +1,6 @@
 <script>
     import { currentCampaign, activeSection, currentScene, handouts } from "./stores";
-    import { loadSession } from "./session";
-    import { putObject } from "./api";
+    import { get, putObject } from "./api";
 
     import Modal from "./components/Modal.svelte";
     import Upload from "./components/Upload.svelte";
@@ -13,23 +12,26 @@
     
     $activeSection = "scene";
 
+    let { name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations } = $currentScene;
+
     async function saveScene()
     {
-        await putObject("/api/scenes", $currentScene);
-        $currentScene = $currentScene;
+        const update = { ...$currentScene, name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations };
+        await putObject("/api/scenes", update);
+        $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
     }
 
     let showMapSelect = false;
 
     async function setMap(e)
     {
-        $currentScene.map = e.detail;
-        await saveScene();
-        await loadSession();
+        const update = { ...$currentScene, map : e.detail };
+        await putObject("/api/scenes", update);
+        $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
     }
 </script>
 
-<Screen title={$currentCampaign.name + " - " + $currentScene.name}>
+<Screen title={$currentCampaign.name + " - " + name}>
         <div class="p-4 min-h-fit lg:h-full lg:min-h-0 lg:grid lg:grid-cols-2">
             <div class="col-start-1">
                 <div class="flex flex-row col-start-1">
@@ -39,22 +41,22 @@
 
                 <div class="box col-start-1">
                     <h1>Starker Start</h1>
-                    <p contenteditable bind:innerHTML={$currentScene.strongStart} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={strongStart} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">
                     <h1>Szenen und Begegnungen</h1>
-                    <p contenteditable bind:innerHTML={$currentScene.scenesAndEncounters} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={scenesAndEncounters} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">
                     <h1>Geheimnisse und Hinweise</h1>
-                    <p class="" contenteditable bind:innerHTML={$currentScene.secretsAndHints} on:blur={saveScene}></p>
+                    <p class="" contenteditable bind:innerHTML={secretsAndHints} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">
                     <h1>Fantastische Orte</h1>
-                    <p contenteditable bind:innerHTML={$currentScene.phantasticLocations} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={phantasticLocations} on:blur={saveScene}></p>
                 </div>
             </div>
 

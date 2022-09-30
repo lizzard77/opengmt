@@ -47,7 +47,7 @@
 
 {#if isOpen}
 <div class="absolute left-0 top-0 bg-black opacity-50 z-30 h-screen w-screen" on:click={() => isOpen = false}></div>
-<div class="m-0 absolute bottom-4 right-4 flex items-center z-50 portrait:flex-col">
+<div class="m-0 absolute top-4 right-4 flex items-center z-50 portrait:flex-col">
     {#if !rolled}
         <div class="border-2 rounded-xl p-2 m-2 flex bg-black portrait:flex-col">
             {#each dice as d}

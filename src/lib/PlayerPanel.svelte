@@ -1,5 +1,5 @@
 <script>				
-    import { combat, isMaster, currentScene, currentMarker, session, markers } from "../stores";
+    import { combat, isMaster, currentScene, currentMarker, markers } from "../stores";
     import { mdiSkull } from "@mdi/js";
     import { hubConnection } from "../hub";
     import { getState, updateState } from "../session";

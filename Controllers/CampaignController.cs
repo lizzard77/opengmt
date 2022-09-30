@@ -32,6 +32,11 @@ namespace OpenGMT.Controllers
         public IActionResult Get(long id)
         {
             var campaign = context.Campaigns
+                .Include(s => s.CurrentScene)
+                .Include(s => s.CurrentScene.Map)
+                .Include(s => s.CurrentScene.Markers)
+                .Include(s => s.CurrentScene.Assets)
+                .Include(s => s.CurrentScene.Creatures)
                 .Include(s => s.Players)
                 .FirstOrDefault(c => c.Id == id);
             return campaign != null ? Json(campaign) : NotFound();

@@ -16,6 +16,8 @@ builder.Services.AddDbContext<OpenGMTContext>(
     options =>
     {
         options.UseSqlite($"Filename={dataDir}/OpenGMT.sqlite");
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
     });
 
 var app = builder.Build();

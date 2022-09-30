@@ -1,5 +1,5 @@
 <script>
-    import { currentScene, currentMarker, isMaster, squareSizeInPx, session, markers } from "../stores";
+    import { currentScene, currentMarker, isMaster, squareSizeInPx, markers } from "../stores";
     import { getState, updateState } from "../session";
     import { hubConnection } from "../hub";
 

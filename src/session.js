@@ -1,12 +1,12 @@
-import { session, scenes, creatures, maps, currentScene, currentMarker, markers, sounds, handouts } from "./stores";
+import { scenes, creatures, maps, currentScene, currentMarker, markers, sounds, handouts } from "./stores";
 import { get } from "svelte/store";
 import { get as apiGet, putObject } from "./api";
 import { hubConnection } from "./hub";
 
 hubConnection.on("session", (e) => 
     {
-        console.log("session", JSON.parse(e));
-        loadSession();
+        //console.log("session", JSON.parse(e));
+        //loadSession();
         /*
         const sess = JSON.parse(e);
         session.set(sess);
@@ -21,7 +21,6 @@ hubConnection.on("session", (e) =>
 hubConnection.on("marker", (e) => 
     {
         console.log("marker", JSON.parse(e));
-        
         const markerInfo = JSON.parse(e);
         
         let currentList = get(markers);    
@@ -40,18 +39,15 @@ hubConnection.on("setCurrentPlayer", e =>
         currentMarker.set(get(markers).find(m => m.creatureId === creatureId));
     });
 
-    
-
 export async function updateState(p)
 {
     let currentList = get(markers);    
     const otherMarkers = currentList.filter(c => c.creatureId !== p.creatureId) || [];    
     markers.set([ ...otherMarkers, p ]);
-
     await putObject("/api/marker", p);
 }
 
-export async function loadSession()
+/*export async function loadSession()
 {
     const sess = await apiGet("/api/session");    
     if (sess && sess.scene)
@@ -64,7 +60,7 @@ export async function loadSession()
         handouts.set(sess.scene.assets.filter(a => a.type !== 2));
         currentMarker.set(sess.scene.markers[0]);
     }
-}
+}*/
 
 export function getState(id)
 {    

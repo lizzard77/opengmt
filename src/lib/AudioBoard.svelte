@@ -3,7 +3,7 @@
     import { mdiRepeat, mdiPlay, mdiPause, mdiStop } from "@mdi/js";
     import Icon from "../components/Icon.svelte";
 
-    setInterval(() => {
+    /*setInterval(() => {
             $sounds.forEach(f => {
                 if (f.audioFile)
                 {
@@ -13,7 +13,7 @@
                 }
             });
             $sounds = $sounds;
-        }, 1000);
+        }, 1000);*/
 
     function play(sound)
     { 

@@ -1,6 +1,6 @@
 <script>
     import { Router, Route } from "svelte-routing";
-    import { userName, currentCampaign, markers, sounds, isMaster, creatures, scenes, maps, session, currentMarker } from "./stores";
+    import { userName, currentCampaign, markers, sounds, isMaster, creatures, scenes, maps } from "./stores";
 
     import Stage from "./Stage.svelte";
     import Szene from "./Szene.svelte";    
