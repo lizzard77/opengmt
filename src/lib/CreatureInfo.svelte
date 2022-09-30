@@ -55,15 +55,20 @@
 
 </script>
 		
-<div class="m-0 p-1" class:bg-blue-300={id === $currentMarker?.creatureId} on:click={setPlayer}>
-    <button on:click={toggleVisible} class="p-2 rounded-lg bg-slate-200 ">
-        <Icon size={20} path={visible ? mdiEye :mdiEyeOff} />
-    </button>
-    <button on:click={toggleLight} class="p-2 rounded-lg bg-slate-200 ">
-        <Icon size={20} path={light ? mdiLamp : mdiLampOutline } />
-    </button>
-    <button class="p-2 w-40" style="border-left: 8px solid {color}">{name}</button>
-    <button on:click={centerPlayer} class="p-2 rounded-lg bg-slate-200 ">
-        <Icon size={20} path={mdiTarget} />
-    </button>
+<div class="m-0 mt-1 p-0 text-sm" class:bg-blue-300={id === $currentMarker?.creatureId} on:click={setPlayer}>
+    <div>
+        <button class="m-2 pl-1" style="border-left: 8px solid {color}">{name}</button>
+    </div>
+    <div class="pl-5 block pb-2" class:hidden={id !== $currentMarker?.creatureId}>
+        <button on:click={toggleVisible} class="p-2 rounded-lg bg-slate-200 ">
+            <Icon size={16} path={visible ? mdiEye :mdiEyeOff} />
+        </button>
+        <button on:click={toggleLight} class="p-2 rounded-lg bg-slate-200 ">
+            <Icon size={16} path={light ? mdiLamp : mdiLampOutline } />
+        </button>
+        
+        <button on:click={centerPlayer} class="p-2 rounded-lg bg-slate-200 ">
+            <Icon size={16} path={mdiTarget} />
+        </button>
+    </div>
 </div>

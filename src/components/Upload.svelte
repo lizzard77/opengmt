@@ -1,5 +1,6 @@
 <script>
-    import { currentScene } from "../stores";
+    import { get } from "../api";
+    import { currentScene, currentCampaign } from "../stores";
 
     let working = false;
     let files;
@@ -21,6 +22,8 @@
           method: 'POST',
           body: formData
         }).then(r => r.text());
+
+        $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
 
         working = false;
     }

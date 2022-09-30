@@ -1,6 +1,6 @@
 <script>
-import { currentScene } from "../stores";
-import { putObject } from "../api";
+import { currentScene, currentCampaign } from "../stores";
+import { get, putObject } from "../api";
 import { mdiDeleteOutline, mdiGlasses } from "@mdi/js";
 import Modal from "../components/Modal.svelte";
 import StatBlock from "./StatBlock.svelte";
@@ -17,9 +17,10 @@ function showMonsterStatBlock(c = null)
 
 async function removeCreature(c)
 {
-    $currentScene.creatures = $currentScene.creatures.filter(cc => cc.id !== c.id);
-    await putObject("/api/scenes", $currentScene);
-    $currentScene = $currentScene;
+    let creatures = $currentScene.creatures.filter(cc => cc.id !== c.id);
+    const update = { ...$currentScene, creatures };
+    await putObject("/api/scenes", update);
+    $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
 }
 </script>
 

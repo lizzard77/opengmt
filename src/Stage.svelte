@@ -15,14 +15,20 @@
         $currentHandout = JSON.parse(a);
     });
 
+    hubConnection.on("setFog", (a) => {
+        console.log("setFog", a);
+        fog = JSON.parse(a);
+    });
+
     let centerX = 0;
     let centerY = 0;
+    let fog = true;
 </script>
 
 <Screen title="Karte">
-    <div class="flex h-full w-screen overflow-hidden">
+    <div class="relative flex h-full w-screen overflow-hidden">
         <main class="flex-1 relative overflow-hidden">
-            <Draggable showTools={true} bind:centerX bind:centerY />
+            <Draggable showTools={true} bind:centerX bind:centerY {fog} />
         </main>
         {#if $isMaster}
         <PlayerPanel on:centerMapToPlayer={(e) => { console.log(e.detail); centerX = e.detail.x; centerY = e.detail.y; }} />

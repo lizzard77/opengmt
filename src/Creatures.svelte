@@ -1,10 +1,10 @@
 <script>
-    import { activeSection, currentScene } from "./stores";
+    import { activeSection, currentScene, currentCampaign } from "./stores";
     import { mdiGlasses } from "@mdi/js";
 
     import Icon from "./components/Icon.svelte";
     import Modal from "./components/Modal.svelte";
-    import { putObject } from "./api";
+    import { get, putObject } from "./api";
     import Screen from "./components/Screen.svelte";
     import CreatureSelect from "./lib/CreatureSelect.svelte";
     import DashCreatureInfo from "./lib/DashCreatureInfo.svelte";
@@ -16,7 +16,7 @@
     {
         console.log($currentScene)
         await putObject("/api/scenes", $currentScene);
-        $currentScene = $currentScene;
+        $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
     }
 
     let showCreatureSelect = false;

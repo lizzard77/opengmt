@@ -89,8 +89,6 @@
         await updateState(current);
         $currentMarker = $currentMarker;
     }
-
-    $: console.log("fog", fog, "zoom", zoom)
 </script>
 
 {#if map}
@@ -123,7 +121,7 @@
     <defs>
         <mask id="hole">
             {#if $isMaster}
-            <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="#999"/>
+            <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="#777"/>
             {:else}
             <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="white"/>
             {/if}

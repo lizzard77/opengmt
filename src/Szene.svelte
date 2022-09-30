@@ -25,7 +25,7 @@
 
     async function setMap(e)
     {
-        const update = { ...$currentScene, map : e.detail };
+        const update = { ...$currentScene, mapId : e.detail.id, map : e.detail };
         await putObject("/api/scenes", update);
         $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
     }

@@ -13,10 +13,11 @@
         {
             sc.sort((a, b) => b.initiative - a.initiative);
             players = sc.filter(c => c.visible);
+            players.forEach(p => p.name = $currentScene.creatures.find(c => c.id === p.creatureId).name ?? "?")
         }
     }
 
-    $: refreshLists($currentScene.creatures);
+    $: refreshLists($currentScene.markers);
 
     function setPlayer(p)
     {
@@ -24,7 +25,7 @@
     }
 </script>
 
-<div class="fixed p-0 top-2 left-2 z-50 flex flex-col">
+<div class="absolute p-0 bottom-2 left-2 z-50 flex flex-col text-sm">
     <div class="absolute left-0 top-0 w-full h-full opacity-70 bg-white -z-40"></div>
     {#if players.length}
         {#if $combat}
@@ -69,7 +70,7 @@
                 {#each players as p}
                 <tr>
                     <td class="p-1">
-                        <button on:click={() => setPlayer(p)} class="m-1 p-1" style="border-left: 8px solid {p.color}">
+                        <button on:click={() => setPlayer(p)} class="p-1" style="border-left: 8px solid {p.color}">
                             {#if p.hp-p.damage <= 0}
                             <del>{p.name}</del>
                             {:else}

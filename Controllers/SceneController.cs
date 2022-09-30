@@ -44,9 +44,10 @@ namespace OpenGMT.Controllers
                 return BadRequest();
 
             context.AttachRange(info.Creatures);
-            context.AttachRange(info.Assets);
-            context.AttachRange(info.Markers);
-            context.Attach(info.Map);
+            //context.AttachRange(info.Assets);
+            //context.AttachRange(info.Markers);
+            //context.Attach(info.Map);
+            //context.Update(info);
 
             var existingScene = context.Scenes
                 .Include(s => s.Creatures)
@@ -55,17 +56,45 @@ namespace OpenGMT.Controllers
                 .Include(s => s.Map)
                 .FirstOrDefault(s => s.Id == info.Id);
 
+            var add = info.Creatures.Where(c => !existingScene.Creatures.Any(cc => cc.Id == c.Id)).ToList();
+            var remove = existingScene.Creatures.Where(c => !info.Creatures.Any(cc => cc.Id == c.Id)).ToList();
+            var removeMarkers = existingScene.Markers.Where(c => !info.Creatures.Any(cc => cc.Id == c.CreatureId)).ToList();
+
+            foreach (var c in add)
+                existingScene.Creatures.Add(c);
+            foreach (var c in remove)
+                existingScene.Creatures.Remove(c);
+            foreach (var m in removeMarkers)
+                existingScene.Markers.Remove(m);
+
+            context.Entry(existingScene).CurrentValues.SetValues(info);
+            context.SaveChanges();
+            return Ok();
+
+            //var existingScene = info;
+
+            
+            var existingScene2 = context.Scenes
+                .Include(s => s.Creatures)
+                .Include(s => s.Markers)
+                .Include(s => s.Assets)
+                .Include(s => s.Map)
+                .FirstOrDefault(s => s.Id == info.Id);
+
             existingScene.Creatures.Clear();
             foreach (var c in info.Creatures)
+            {
+                //context.Attach(c);
                 existingScene.Creatures.Add(c);
+            }
 
-            /*existingScene.Assets.Clear();
+            existingScene.Assets.Clear();
             foreach (var a in info.Assets)
                 existingScene.Assets.Add(a);
 
             existingScene.Markers.Clear();
             foreach (var m in info.Markers)
-                existingScene.Markers.Add(m);*/
+                existingScene.Markers.Add(m);
 
             context.SaveChanges();
             return Ok();
@@ -86,3 +115,4 @@ namespace OpenGMT.Controllers
 
 
             
+

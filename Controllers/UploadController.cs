@@ -42,6 +42,8 @@ namespace OpenGMT.Controllers
                     var assetType = folder.EndsWith("audio") ? AssetType.Audio : AssetType.GenericFile;
                     if (ext.EndsWith("jpg") || ext.EndsWith("png") || ext.EndsWith("gif"))
                         assetType = AssetType.Image;
+                    if (ext.EndsWith("wav") || ext.EndsWith("mp3") || ext.EndsWith("m4a"))
+                        assetType = AssetType.Audio;
 
                     var assetInfo = new Asset()
                     {

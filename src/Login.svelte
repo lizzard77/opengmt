@@ -47,7 +47,7 @@
         loadCampaign();
 </script>
 
-<div class="m-auto mt-48 w-1/4">
+<div class="m-auto mt-48 w-1/2 md:w-1/4">
     <h1 class="text-2xl font-bold">Join the Table</h1>
 
     <div class="mt-2">
