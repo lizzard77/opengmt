@@ -129,14 +129,17 @@
             {/if}
 
             {#each $markers.filter(c => c.light) as p}
-                {#if $isMaster}
-                <circle r="{oneFoot * 40}" cx="{p.x}" cy="{p.y}" fill="#666"/>
-                <circle r="{oneFoot * 20}" cx="{p.x}" cy="{p.y}" fill="#333"/>
-                {:else}
-                <circle r="{oneFoot * 40}" cx="{p.x}" cy="{p.y}" fill="darkgray"/>
-                <circle r="{oneFoot * 20}" cx="{p.x}" cy="{p.y}" fill="black"/>
-                {/if}
+                <circle r="{oneFoot * 60}" cx="{p.x}" cy="{p.y}" fill="black"/>
             {/each}
+
+            {#if !$isMaster}
+                {#each $markers.filter(c => c.light) as p}
+                    <circle r="{oneFoot * 60}" cx="{p.x}" cy="{p.y}" fill="#444"/>
+                {/each}
+                {#each $markers.filter(c => c.light) as p}
+                    <circle r="{oneFoot * 30}" cx="{p.x}" cy="{p.y}" fill="black"/>
+                {/each}
+            {/if}
         </mask>
     </defs>
 

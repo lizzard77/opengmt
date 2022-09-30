@@ -1,4 +1,4 @@
-import { scenes, creatures, maps, currentScene, currentMarker, markers, sounds, handouts } from "./stores";
+import { scenes, creatures, maps, currentScene, currentMarker, markers, sounds, handouts, currentCampaign } from "./stores";
 import { get } from "svelte/store";
 import { get as apiGet, putObject } from "./api";
 import { hubConnection } from "./hub";
@@ -18,49 +18,27 @@ hubConnection.on("session", (e) =>
         */
     });
 
-hubConnection.on("marker", (e) => 
+hubConnection.on("marker", async (e) => 
     {
-        console.log("marker", JSON.parse(e));
-        const markerInfo = JSON.parse(e);
-        
-        let currentList = get(markers);    
-        const otherMarkers = currentList.filter(c => c.creatureId !== markerInfo.creatureId) || [];    
-        markers.set([ ...otherMarkers, markerInfo ]);
-        console.log(get(markers))
-        
-        const id = get(currentMarker).creatureId;
-        currentMarker.set(get(markers).find(m => m.creatureId === id));    
+        const id = get(currentCampaign).id;
+        currentCampaign.set(await apiGet("/api/campaigns/" + id));
     });
 
-hubConnection.on("setCurrentPlayer", e =>
+hubConnection.on("setCurrentPlayer", async  (e) =>
     {
-        console.log("setCurrentPlayer", JSON.parse(e));
-        const { creatureId } = JSON.parse(e);
-        currentMarker.set(get(markers).find(m => m.creatureId === creatureId));
+        const id = get(currentCampaign).id;
+        currentCampaign.set(await apiGet("/api/campaigns/" + id));
     });
 
 export async function updateState(p)
 {
     let currentList = get(markers);    
     const otherMarkers = currentList.filter(c => c.creatureId !== p.creatureId) || [];    
-    markers.set([ ...otherMarkers, p ]);
+    //markers.set([ ...otherMarkers, p ]);
     await putObject("/api/marker", p);
+    const id = get(currentCampaign).id;
+    currentCampaign.set(await apiGet("/api/campaigns/" + id));
 }
-
-/*export async function loadSession()
-{
-    const sess = await apiGet("/api/session");    
-    if (sess && sess.scene)
-    {
-        console.log("loaded session", sess);
-        session.set(sess);
-        currentScene.set(sess.scene);
-        markers.set(sess.scene.markers);
-        sounds.set(sess.scene.assets.filter(a => a.type === 2));
-        handouts.set(sess.scene.assets.filter(a => a.type !== 2));
-        currentMarker.set(sess.scene.markers[0]);
-    }
-}*/
 
 export function getState(id)
 {    
