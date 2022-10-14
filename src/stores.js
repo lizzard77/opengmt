@@ -1,4 +1,3 @@
-import { mdiConsolidate } from "@mdi/js";
 import * as signalR from "@microsoft/signalr";
 import { writable, derived, get as getStoreValue } from "svelte/store";
 import { get, putObject } from "./api";
@@ -57,6 +56,53 @@ export const isMaster = derived([currentCampaign, userName], ([$currentCampaign,
 export const markers = derived(currentScene, ($currentScene) => $currentScene?.markers);
 export const sounds = derived(currentScene, ($currentScene) => $currentScene?.assets?.filter(a => a.type === 2));
 export const handouts = derived(currentScene, ($currentScene) => $currentScene?.assets?.filter(a => a.type !== 2));
+
+function createSoundPlayerStore()
+{
+    const { subscribe, set, update } = writable([]);
+	return {
+		subscribe,
+        set,
+        update,        
+        add: (sound, autoStart = false) => { 
+            update((players) => {
+                const file = new Audio(sound.uri);
+                const player = {
+                    ...sound,
+                    file,
+                    play: () => { file.play(); update((players) => players); },
+                    pause: () => { file.pause(); update((players) => players); },
+                    isPlaying : () => !file.paused,
+                    toggle: () => {
+                        if (file.duration && !file.paused)
+                            file.pause();
+                        else
+                            file.play();
+                    },
+                    seek: (time) => file.playTime = time,
+                    toggleLoop : () => file.loop = !file.loop,
+                    playTime : "?"
+                };
+                players.push(player);
+
+                file.addEventListener('timeupdate', () => {
+                    const m = "0" + Math.floor(file.currentTime / 60);
+                    const s = "0" + Math.floor(file.currentTime % 60);
+                    const ts = m.slice(-2) + ":" + s.slice(-2);
+                    if (player.playTime !== ts)
+                    {
+                        player.playTime = ts;
+                        update((players) => players);
+                    }
+                });
+                if (autoStart)
+                    player.play();
+                return players;
+            })
+        }
+	};
+}
+export const soundPlayers = createSoundPlayerStore();
 
 export const squareSizeInPx = writable(1.0);
 export const combat = writable(false);

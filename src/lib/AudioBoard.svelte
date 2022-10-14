@@ -1,22 +1,12 @@
 <script>
-    import { sounds, currentScene } from "../stores";
+    import { sounds, currentScene, soundPlayers } from "../stores";
     import { mdiRepeat, mdiPlay, mdiPause, mdiStop } from "@mdi/js";
     import Icon from "../components/Icon.svelte";
 
-    /*setInterval(() => {
-            $sounds.forEach(f => {
-                if (f.audioFile)
-                {
-                    const m = "0" + Math.floor(f.audioFile.currentTime / 60);
-                    const s = "0" + Math.floor(f.audioFile.currentTime % 60);
-                    f.playTime = m.slice(-2) + ":" + s.slice(-2);
-                }
-            });
-            $sounds = $sounds;
-        }, 1000);*/
-
     function play(sound)
     { 
+        soundPlayers.add(sound);
+        /*
         const audioFile = new Audio(sound.uri);
         audioFile.loop = sound.loops;
         audioFile.play();
@@ -25,6 +15,7 @@
         sound.audioFile = audioFile;
         sound.isPlaying = true;
         sound.playTime = "00:00";
+        */        
     }
 
     function toggleLooping(o)
@@ -56,9 +47,18 @@
         sound.audioFile = null;
         $sounds = $sounds;
     }
+
+    //setInterval(() => $soundPlayers = $soundPlayers, 1000);
 </script>
 
 <ul class="">
+    {#each $soundPlayers as player}
+    <div class="flex mb-2">
+        <button class="p-2 rounded-lg bg-slate-200" on:click={() => player.toggle()}><Icon path={player.isPlaying() ? mdiPause : mdiPlay} size={16} /></button>
+        {player.name}
+        {player.playTime}
+    </div>
+    {/each}
 {#each $sounds as sound}
     <li class="flex mb-2">
         <button on:click={() => toggleLooping(sound)}><Icon path={mdiRepeat} color={sound.loops ? "green" : "silver"} size={16} /></button> 

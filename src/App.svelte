@@ -1,15 +1,15 @@
 <script>
+    import { get } from "./api";
     import { Router, Route } from "svelte-routing";
-    import { userName, currentCampaign, markers, sounds, isMaster, creatures, scenes, maps } from "./stores";
+    import { userName, currentCampaign, creatures, scenes, maps } from "./stores";
 
     import Stage from "./Stage.svelte";
     import Szene from "./Szene.svelte";    
     import Creatures from "./Creatures.svelte";    
-
     import ProgressCircle from "./components/ProgressCircle.svelte";
-    import { get } from "./api";
     import Setup from "./Setup.svelte";
     import Login from "./Login.svelte";
+    
     let needInit = false;
     
     let baseData = Promise.all([

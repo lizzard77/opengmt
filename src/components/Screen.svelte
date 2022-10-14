@@ -1,7 +1,9 @@
 <script>
 import { navigate } from 'svelte-routing';
-import { mdiArrowLeft, mdiCog, mdiDiceD20Outline } from '@mdi/js';
+import { mdiArrowLeft, mdiCog, mdiDiceD20Outline, mdiMenu } from '@mdi/js';
 import { isMaster } from '../stores'; 
+import { fade, fly, slide } from 'svelte/transition';
+import { quintOut, backInOut } from 'svelte/easing';
 
 import Icon from "./Icon.svelte";
 import Menu from "./Menu.svelte";
@@ -14,6 +16,7 @@ export let title = "OpenGMT";
 
 let chooseScene = false;
 let showDice = false;
+let showMenu = false;
 </script>
 
 <div class="absolute flex flex-col h-full w-full">
@@ -23,7 +26,7 @@ let showDice = false;
                 {#if backlink}
                 <button on:click={() => navigate(backlink)}><Icon path={mdiArrowLeft} /></button>
                 {:else}
-                Logo
+                <button on:click={() => showMenu = !showMenu}><Icon path={mdiMenu} color="#777" /></button>
                 {/if}
             </slot>
             
@@ -43,11 +46,16 @@ let showDice = false;
     </header>
 
     <div class="md:flex flex-1 overflow-auto md:flex-row">
-        {#if $isMaster}
-        <div id="leftMenu" class="hidden md:block">
-            <Menu />
-        </div>
+        {#if $isMaster && showMenu}
+            <div class="absolute left-0 top-0 bg-black opacity-50 z-30 h-screen w-screen" on:click={() => showMenu = false}></div>
+            <div id="leftMenu" class="fixed left-0 top-0 p-2 z-50 h-screen bg-white drop-shadow-xl" transition:fly="{{ x: -200, duration: 200 }}">
+                <div class="p-1"><button on:click={() => showMenu = !showMenu}><Icon path={mdiArrowLeft} color="#777" /></button></div>
+                <div class="p-2 mr-8">
+                <Menu />
+                </div>
+            </div>
         {/if}
+
         <slot />
     </div>
 
