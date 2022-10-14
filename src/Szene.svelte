@@ -64,6 +64,7 @@
             <div class="col-start-2">
                 <div class="box col-start-2">
                     <h1>Magische Gegenstände</h1>
+                    <p>Liste hier</p>
                 </div>
 
                 <div class="box col-start-2">

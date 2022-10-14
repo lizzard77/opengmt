@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --force --host",
-    "dev-dotnet": "dotnet watch",
+    "dev": "start dotnet watch && vite --force --host",
     "build": "vite build && dotnet build",
     "preview": "vite preview"
   },
@@ -14,14 +13,14 @@
     "autoprefixer": "^10.4.11",
     "postcss": "^8.4.16",
     "postcss-load-config": "^4.0.1",
-    "svelte": "^3.50.1",
+    "svelte": "^3.51.0",
     "svelte-preprocess": "^4.10.7",
     "tailwindcss": "^3.1.8",
-    "vite": "^3.1.1"
+    "vite": "^3.1.8"
   },
   "dependencies": {
     "@mdi/js": "^7.0.96",
-    "@microsoft/signalr": "^6.0.9",
+    "@microsoft/signalr": "^6.0.10",
     "svelte-routing": "^1.6.0"
   }
 }
