@@ -13,24 +13,17 @@
     let needInit = false;
     
     let baseData = Promise.all([
-        (async () => {
-            $creatures = await get("/api/creatures");
-        })(),
-
-        (async () => {
-            $maps = await get("/api/maps");
-        })(),
-
-        (async () => {
-            $scenes = await get("/api/scenes");
-        })()
+        creatures.loadAll(),
+        maps.loadAll(),
+        scenes.loadAll()
     ]);
     
     let loader = (async () => {
-            await baseData;
-            await get("/api/players", (e) => needInit = true);
-            await get("/api/campaigns", (e) => needInit = true);
-        })();
+        await baseData;
+        await get("/api/players", (e) => needInit = true);
+        await get("/api/campaigns", (e) => needInit = true);
+        console.log(needInit)
+    })();
 </script>
 
 {#await loader}

@@ -1,6 +1,5 @@
 <script>
-    import { get, postObject } from "./api";
-    import { userName, currentCampaign, isMaster } from "./stores";
+    import { userName, currentCampaign } from "./stores";
 
     let name = $userName;
     let campaignId = parseInt(localStorage.getItem("campaignId") || "0");
@@ -19,7 +18,7 @@
 
         if (name && !campaignId)
         {
-            const campaigns = await get("/api/campaigns");
+            const campaigns = await currentCampaign.loadAll();
             campaignsToJoin = campaigns.filter(c => c.players.find(p => p.name === name));
             if (!campaignsToJoin.length)
             {
@@ -34,17 +33,11 @@
         } 
 
         if (name && campaignId)
-            loadCampaign();
-    }
-
-    async function loadCampaign()
-    {
-        $currentCampaign = await get("/api/campaigns/" + campaignId);
-        localStorage.setItem("campaignId", campaignId.toString());
+            await currentCampaign.load(campaignId);
     }
 
     if (name && campaignId)
-        loadCampaign();
+        currentCampaign.load(campaignId);
 </script>
 
 <div class="m-auto mt-48 w-1/2 md:w-1/4">

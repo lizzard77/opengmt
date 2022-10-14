@@ -1,40 +1,27 @@
 <script>
-import { currentScene, currentCampaign } from "../stores";
-import { get, putObject } from "../api";
 import { mdiDeleteOutline, mdiGlasses } from "@mdi/js";
+import { createEventDispatcher } from "svelte";
 import Modal from "../components/Modal.svelte";
 import StatBlock from "./StatBlock.svelte";
 import Icon from "../components/Icon.svelte";
 
+const dispatch = createEventDispatcher();
+
 export let creature;
-
-let showMonsterStats = false;
-
-function showMonsterStatBlock(c = null)
-{
-    showMonsterStats = true;
-}
-
-async function removeCreature(c)
-{
-    let creatures = $currentScene.creatures.filter(cc => cc.id !== c.id);
-    const update = { ...$currentScene, creatures };
-    await putObject("/api/scenes", update);
-    $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
-}
+let showStats = false;
 </script>
 
 <div class="flex mt-1">
-    <button on:click={() => showMonsterStatBlock(creature)}><Icon path={mdiGlasses} size={16} /></button>
-    <button on:click={() => removeCreature(creature)}><Icon path={mdiDeleteOutline} size={16} /></button>
+    <button on:click={() => showStats = true}><Icon path={mdiGlasses} size={16} /></button>
+    <button on:click={() => dispatch("removeCreature", creature)}><Icon path={mdiDeleteOutline} size={16} /></button>
     <span class="ml-2">
     {creature.name} 
     </span>
 </div>
 
-{#if showMonsterStats}
-<Modal bind:isOpen={showMonsterStats}>
-    <StatBlock creature={creature} bind:isOpen={showMonsterStats} />
+{#if showStats}
+<Modal bind:isOpen={showStats}>
+    <StatBlock creature={creature} bind:isOpen={showStats} />
 </Modal>
 {/if}
 

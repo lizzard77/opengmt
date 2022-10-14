@@ -1,5 +1,5 @@
 <script>
-    import { currentCampaign, activeSection, currentScene, handouts } from "./stores";
+    import { currentCampaign, activeSection, currentScene, scenes, handouts } from "./stores";
     import { get, putObject } from "./api";
 
     import Modal from "./components/Modal.svelte";
@@ -12,14 +12,14 @@
     
     $activeSection = "scene";
 
-    let { name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations } = $currentScene;
-    //$: [ name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations ] = $currentScene;
-
+    let name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations;
+    $: ({ name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations } = $currentScene);
+    
     async function saveScene()
     {
         const update = { ...$currentScene, name, strongStart, scenesAndEncounters, secretsAndHints, phantasticLocations };
-        await putObject("/api/scenes", update);
-        $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
+        scenes.save(update);
+        currentCampaign.reload();
     }
 
     let showMapSelect = false;
@@ -42,7 +42,7 @@
 
                 <div class="box col-start-1">
                     <h1>Starker Start</h1>
-                    <p contenteditable bind:innerHTML={$currentScene.strongStart} on:blur={saveScene}></p>
+                    <p contenteditable bind:innerHTML={strongStart} on:blur={saveScene}></p>
                 </div>
 
                 <div class="box col-start-1">

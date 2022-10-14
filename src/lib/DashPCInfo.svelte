@@ -1,27 +1,14 @@
 <script>
-import { currentScene, currentCampaign } from "../stores";
-import { get, putObject } from "../api";
 import { mdiDeleteOutline, mdiGlasses } from "@mdi/js";
+import { createEventDispatcher } from "svelte";
 import Modal from "../components/Modal.svelte";
 import StatBlock from "./StatBlock.svelte";
 import Icon from "../components/Icon.svelte";
 
+const dispatch = createEventDispatcher();
+
 export let creature;
-
-let showMonsterStats = false;
-
-function showPcStatBlock(c = null)
-{
-    showMonsterStats = true;
-}
-
-async function removeCreature(c)
-{
-    let creatures = $currentScene.creatures.filter(cc => cc.id !== c.id);
-    const update = { ...$currentScene, creatures };
-    await putObject("/api/scenes", update);
-    $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
-}
+let showStats = false;
 
 function getPassive(ability)
 {
@@ -39,8 +26,8 @@ function getModifier(ability)
 
 <div class="flex flex-row text-xs mb-4">
     <div class="flex flex-col">
-        <button class="mb-1" on:click={() => showPcStatBlock(creature)}><Icon path={mdiGlasses} size={16} /></button>
-        <button on:click={() => removeCreature(creature)}><Icon path={mdiDeleteOutline} size={16} /></button>
+        <button class="mb-1" on:click={() => showStats = true}><Icon path={mdiGlasses} size={16} /></button>
+        <button on:click={() => dispatch("removeCreature", creature)}><Icon path={mdiDeleteOutline} size={16} /></button>
     </div>
 
     <div class="p-4 border-2 rounded-xl ml-2 mr-2 flex-1">
@@ -77,9 +64,9 @@ function getModifier(ability)
     </div>
 </div>
 
-{#if showMonsterStats}
-<Modal bind:isOpen={showMonsterStats}>
-    <StatBlock creature={creature} bind:isOpen={showMonsterStats} />
+{#if showStats}
+<Modal bind:isOpen={showStats}>
+    <StatBlock creature={creature} bind:isOpen={showStats} />
 </Modal>
 {/if}
 

@@ -1,7 +1,7 @@
 import { mdiConsolidate } from "@mdi/js";
 import * as signalR from "@microsoft/signalr";
-import { writable, derived } from "svelte/store";
-import { get } from "./api";
+import { writable, derived, get as getStoreValue } from "svelte/store";
+import { get, putObject } from "./api";
 
 const storedUserName = localStorage.getItem("userName");
 export const userName = writable(storedUserName);
@@ -12,11 +12,39 @@ userName.subscribe(value => {
 export const activeSection = writable("");
 export const statsEditing = writable(false);
 
-export const creatures = writable([]);
-export const maps = writable([]);
-export const scenes = writable([]);
+function createApiStore(endpoint) 
+{
+    const { subscribe, set, update } = writable();
+	return {
+		subscribe,
+        set,
+        update,
+        loadAll: async () => set(await get("/api/" + endpoint, (e) => console.log("error loading " + endpoint, e))),
+        load: async (id) => await get("/api/" + id, (e) => console.log("error loading " + endpoint, e)),
+        save: async (data) => await putObject("/api/" + endpoint, data, (e) => console.log("error loading " + endpoint, e))
+    }
+};
 
-export const currentCampaign = writable();
+export const creatures = createApiStore("creatures");
+export const maps = createApiStore("maps");
+export const scenes = createApiStore("scenes");
+
+function createCampaignStore() 
+{
+    const { subscribe, set, update } = writable();
+	return {
+		subscribe,
+        set,
+        update,
+        loadAll: async () => await get("/api/campaigns"),
+        load: async (id) => {
+            set(await get("/api/campaigns/" + id));
+            localStorage.setItem("campaignId", id.toString());
+        },
+        reload: async () => set(await get("/api/campaigns/" + getStoreValue(currentCampaign).id))
+	};
+}
+export const currentCampaign = createCampaignStore();
 export const currentScene = derived(currentCampaign, ($currentCampaign) => $currentCampaign.currentScene);
 export const isMaster = derived([currentCampaign, userName], ([$currentCampaign, $userName]) => {
     if ($userName && $currentCampaign?.players?.length)
@@ -26,9 +54,9 @@ export const isMaster = derived([currentCampaign, userName], ([$currentCampaign,
     }
     return false;
 });
-export const markers = derived(currentScene, ($currentScene) => $currentScene.markers);
-export const sounds = derived(currentScene, ($currentScene) => $currentScene.assets.filter(a => a.type === 2));
-export const handouts = derived(currentScene, ($currentScene) => $currentScene.assets.filter(a => a.type !== 2));
+export const markers = derived(currentScene, ($currentScene) => $currentScene?.markers);
+export const sounds = derived(currentScene, ($currentScene) => $currentScene?.assets?.filter(a => a.type === 2));
+export const handouts = derived(currentScene, ($currentScene) => $currentScene?.assets?.filter(a => a.type !== 2));
 
 export const squareSizeInPx = writable(1.0);
 export const combat = writable(false);

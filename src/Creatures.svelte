@@ -1,10 +1,9 @@
 <script>
-    import { activeSection, currentScene, currentCampaign } from "./stores";
+    import { activeSection, currentScene, currentCampaign, scenes } from "./stores";
     import { mdiGlasses } from "@mdi/js";
 
     import Icon from "./components/Icon.svelte";
     import Modal from "./components/Modal.svelte";
-    import { get, putObject } from "./api";
     import Screen from "./components/Screen.svelte";
     import CreatureSelect from "./lib/CreatureSelect.svelte";
     import DashCreatureInfo from "./lib/DashCreatureInfo.svelte";
@@ -12,19 +11,21 @@
 
     $activeSection = "creatures";
 
-    async function saveScene()
-    {
-        console.log($currentScene)
-        await putObject("/api/scenes", $currentScene);
-        $currentCampaign = await get("/api/campaigns/" + $currentCampaign.id);
-    }
-
     let showCreatureSelect = false;
 
     async function addSelectedCreature(e)
     {
         $currentScene.creatures.push(e.detail);
-        await saveScene();
+        await scenes.save($currentScene);
+        await currentCampaign.reload();
+    }
+
+    async function removeSelectedCreature(e)
+    {
+        let creatures = $currentScene.creatures.filter(cc => cc.id !== e.detail.id);
+        const update = { ...$currentScene, creatures };
+        await scenes.save(update);
+        await currentCampaign.reload();
     }
 </script>
 
@@ -37,9 +38,8 @@
 
             <div class="box">
                 <h1>Charaktere</h1>
-
                 {#each $currentScene.creatures.filter(cc => cc.type === "pc") as c}
-                <DashPcInfo creature={c} />
+                <DashPcInfo creature={c} on:removeCreature={removeSelectedCreature} />
                 {/each}
             </div>
         </div>
@@ -54,14 +54,14 @@
                 </div>
 
                 {#each $currentScene.creatures.filter(cc => cc.type === "npc") as c}
-                <DashCreatureInfo creature={c} />
+                <DashCreatureInfo creature={c} on:removeCreature={removeSelectedCreature} />
                 {/each}
             </div>
 
             <div class="box lg:col-start-2">
                 <h1>Monster</h1>
                 {#each $currentScene.creatures.filter(cc => cc.type === "monster") as c}
-                <DashCreatureInfo creature={c} />
+                <DashCreatureInfo creature={c} on:removeCreature={removeSelectedCreature} />
                 {/each}
             </div>
         </div>
