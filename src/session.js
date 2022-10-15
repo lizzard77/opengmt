@@ -42,6 +42,8 @@ export async function updateState(p)
 
 export function getState(id)
 {    
+    if (!id)
+        return;
     const defaultValues = 
     {
         "creatureId": id,
@@ -56,11 +58,15 @@ export function getState(id)
     
     const scene = get(currentScene);
     const creature = get(creatures).find(c => c.id === id);
-    const marker = get(markers).find(c => c.creatureId === id) || defaultValues;
-    marker.color = creature.color;
-    marker.size = creature.size;
-    marker.reach = creature.reach;
-    marker.sceneId = scene.id;
-    marker.mapId = scene.map.id;
-    return marker;
+    if (creature)
+    {
+        const marker = get(markers).find(c => c.creatureId === id) || defaultValues;
+        marker.color = creature.color;
+        marker.size = creature.size;
+        marker.reach = creature.reach;
+        marker.sceneId = scene.id;
+        marker.mapId = scene.map?.id;
+        return marker;
+    }
+    return null;
 }

@@ -1,19 +1,17 @@
 <script>
-    import { postObject } from "./api";
-    import { userName } from "./stores";
+    import { userName, campaigns } from "./stores";
 
     let name;
 
     async function setup()
     {
-        const campaign = await postObject("/api/campaigns", 
+        await campaigns.create(
             { 
                 name: name + "'s Campaign", 
                 players : [ { name } ], 
                 currentScene: { name : "Intro Scene" }
             });
         $userName = name;
-        console.log(campaign)
     }
 </script>
 

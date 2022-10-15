@@ -1,6 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import { writable, derived, get as getStoreValue } from "svelte/store";
-import { get, putObject } from "./api";
+import { get, postObject, putObject } from "./api";
 
 const storedUserName = localStorage.getItem("userName");
 export const userName = writable(storedUserName);
@@ -20,13 +20,15 @@ function createApiStore(endpoint)
         update,
         loadAll: async () => set(await get("/api/" + endpoint, (e) => console.log("error loading " + endpoint, e))),
         load: async (id) => await get("/api/" + id, (e) => console.log("error loading " + endpoint, e)),
-        save: async (data) => await putObject("/api/" + endpoint, data, (e) => console.log("error loading " + endpoint, e))
+        save: async (data) => await putObject("/api/" + endpoint, data, (e) => console.log("error saving " + endpoint, e)),
+        create: async (data) => await postObject("/api/" + endpoint, data, (e) => console.log("error creating " + endpoint, e))
     }
 };
 
 export const creatures = createApiStore("creatures");
 export const maps = createApiStore("maps");
 export const scenes = createApiStore("scenes");
+export const campaigns = createApiStore("campaigns");
 
 function createCampaignStore() 
 {

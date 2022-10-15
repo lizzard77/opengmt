@@ -22,7 +22,7 @@
     }
 </script>
 
-<button class="navButton flex-1 p-2 bg-transparent border-0 text-gray-500 flex flex-col items-center md:p-1 md:flex-row {$activeSection === sectionName ? 'activeSection' : ''}" on:click={go}>
+<button class="navButton flex-1 p-2 bg-transparent border-0 text-gray-500 flex flex-row items-center {$activeSection === sectionName ? 'activeSection' : ''}" on:click={go}>
     {#if icon}
     <Icon path={icon} class="h-8 w-8 md:h-4 md:w-4" />
     {/if}

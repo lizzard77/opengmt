@@ -2,8 +2,7 @@
 import { navigate } from 'svelte-routing';
 import { mdiArrowLeft, mdiCog, mdiDiceD20Outline, mdiMenu } from '@mdi/js';
 import { isMaster } from '../stores'; 
-import { fade, fly, slide } from 'svelte/transition';
-import { quintOut, backInOut } from 'svelte/easing';
+import { fly } from 'svelte/transition';
 
 import Icon from "./Icon.svelte";
 import Menu from "./Menu.svelte";
@@ -69,7 +68,7 @@ let showMenu = false;
 </div>
 
 {#if chooseScene}
-<Modal>
+<Modal bind:isOpen={chooseScene}>
     <Scenes bind:isOpen={chooseScene} />
 </Modal>
 {/if}

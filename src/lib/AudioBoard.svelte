@@ -6,16 +6,6 @@
     function play(sound)
     { 
         soundPlayers.add(sound);
-        /*
-        const audioFile = new Audio(sound.uri);
-        audioFile.loop = sound.loops;
-        audioFile.play();
-        audioFile.addEventListener("ended", () => stop(sound));
-
-        sound.audioFile = audioFile;
-        sound.isPlaying = true;
-        sound.playTime = "00:00";
-        */        
     }
 
     function toggleLooping(o)
@@ -48,13 +38,17 @@
         $sounds = $sounds;
     }
 
-    //setInterval(() => $soundPlayers = $soundPlayers, 1000);
+    setInterval(() => $soundPlayers = $soundPlayers, 500);
 </script>
 
 <ul class="">
     {#each $soundPlayers as player}
     <div class="flex mb-2">
-        <button class="p-2 rounded-lg bg-slate-200" on:click={() => player.toggle()}><Icon path={player.isPlaying() ? mdiPause : mdiPlay} size={16} /></button>
+        {#if player.isPlaying()}
+        <button class="p-2 rounded-lg bg-slate-200" on:click={() => player.toggle()}><Icon path={mdiPause} size={16} /></button>
+        {:else}
+        <button class="p-2 rounded-lg bg-slate-200" on:click={() => player.toggle()}><Icon path={mdiPlay} size={16} /></button>
+        {/if}
         {player.name}
         {player.playTime}
     </div>

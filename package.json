@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@editorjs/image": "^2.6.2",
+    "@editorjs/list": "^1.7.0",
+    "@editorjs/raw": "^2.3.1",
     "@sveltejs/vite-plugin-svelte": "^1.0.5",
     "autoprefixer": "^10.4.11",
     "postcss": "^8.4.16",
@@ -19,6 +22,8 @@
     "vite": "^3.1.8"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.25.0",
+    "@editorjs/header": "^2.6.2",
     "@mdi/js": "^7.0.96",
     "@microsoft/signalr": "^6.0.10",
     "svelte-routing": "^1.6.0"

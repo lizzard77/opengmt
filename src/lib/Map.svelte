@@ -83,17 +83,19 @@
         const { creatureId, x, y } = $currentMarker;
 
         const current = getState(creatureId);
-        current.x = x;
-        current.y = y;
-        console.log("send updated state", current);
-        await updateState(current);
-        $currentMarker = $currentMarker;
+        if (current)
+        {
+            current.x = x;
+            current.y = y;
+            console.log("send updated state", current);
+            await updateState(current);
+            $currentMarker = $currentMarker;
+        }
     }
 </script>
 
 {#if map}
-<svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {map.widthInSquares} {map.heightInSquares}" 
-    tabindex="-1"
+<svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {map.widthInSquares} {map.heightInSquares}" tabindex="-1"
     on:click={click} on:keydown={handleKey} 
     style="width: {imageWidth}px; height: {imageHeight}px;">
 

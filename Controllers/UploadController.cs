@@ -62,8 +62,15 @@ namespace OpenGMT.Controllers
                     }
 
                     context.SaveChanges();
+
+                    var response = new {
+                        success = 1,
+                        file = new { url = assetInfo.Uri }
+                    };
+                    return Json(response);
                 }
             }
+
             return Ok(); 
         }
     }

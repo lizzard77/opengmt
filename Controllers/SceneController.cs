@@ -106,6 +106,7 @@ namespace OpenGMT.Controllers
             if (info == null || !ModelState.IsValid)
                 return BadRequest();
 
+            context.AttachRange(info.Creatures);
             context.Scenes.Add(info);
             context.SaveChanges();
             return Created("/api/scenes/" + info.Id, info);
