@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "start dotnet watch && vite --force --host",
     "build": "vite build && dotnet build",
-    "preview": "start dotnet run && vite preview"
+    "preview": "vite build && start dotnet run"
   },
   "devDependencies": {
     "@editorjs/image": "^2.6.2",

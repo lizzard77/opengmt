@@ -64,6 +64,10 @@ namespace OpenGMT.Controllers
             context.Attach(info.CurrentScene);            
             context.Campaigns.Add(info);
             context.SaveChanges();
+
+            info.DMPlayerId = info.Players[0].Id;
+            context.SaveChanges();
+
             return Created("/api/campaigns/" + info.Id, info);
         }
     }

@@ -11,6 +11,7 @@
     import Login from "./Login.svelte";
     
     let needInit = false;
+    let campaignId = parseInt(localStorage.getItem("campaignId") || "0");
     
     let baseData = Promise.all([
         creatures.loadAll(),
@@ -22,7 +23,8 @@
         await baseData;
         await get("/api/players", (e) => needInit = true);
         await get("/api/campaigns", (e) => needInit = true);
-        console.log(needInit)
+        if (!needInit && $userName && campaignId)
+            await currentCampaign.load(campaignId);
     })();
 </script>
 

@@ -1,17 +1,19 @@
 <script>
-    import { userName, campaigns } from "./stores";
+    import { userName, campaigns, currentCampaign } from "./stores";
 
     let name;
 
     async function setup()
     {
-        await campaigns.create(
+        var campaign = await campaigns.create(
             { 
                 name: name + "'s Campaign", 
                 players : [ { name } ], 
                 currentScene: { name : "Intro Scene" }
             });
         $userName = name;
+        await currentCampaign.load(campaign.id);
+        window.location.reload();
     }
 </script>
 

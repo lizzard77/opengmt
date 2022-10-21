@@ -25,7 +25,7 @@ let showMenu = false;
                 {#if backlink}
                 <button on:click={() => navigate(backlink)}><Icon path={mdiArrowLeft} /></button>
                 {:else}
-                <button on:click={() => showMenu = !showMenu}><Icon path={mdiMenu} color="#777" /></button>
+                <button on:click={() => showMenu = true}><Icon path={mdiMenu} color="#777" /></button>
                 {/if}
             </slot>
             
