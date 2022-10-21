@@ -5,7 +5,8 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
     plugins: [svelte()],
     build: {
-        outDir: "wwwroot"
+        outDir: "wwwroot",
+        target: "esnext"
     },
     server: {
         port: 3000,
