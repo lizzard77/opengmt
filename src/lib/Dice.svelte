@@ -55,23 +55,23 @@
                 <Icon path={dicePaths[d.name]} size={24} />
             </div>
             {/each}
-            <button class="p-1 mt-1 rounded-lg text-center bg-slate-200" on:click={roll}>Roll</button>
+            <button class="p-1 mt-1 rounded-md text-center bg-slate-200" on:click={roll}>Roll</button>
         </div>
         {#if selectedDice.length > 0}
         <div class="border-2 rounded-xl p-2 m-2 flex bg-slate-200">
             {#each selectedDice as d}
-                <div class="border-2 rounded-lg w-16 h-16 grid place-items-center">
+                <div class="border-2 rounded-md w-16 h-16 grid place-items-center">
                     <span class="flex">{d.number} <Icon path={dicePaths[d.name]} size={24} /></span>
                     <input type="number" bind:value={d.modifier} class="w-10 bg-slate-100 text-center" on:focus={(e) => e.target.select()} />
                 </div>
             {/each}
-            <button class="border-2 rounded-lg w-16 h-16 text-center bg-slate-200" on:click={roll}>Roll</button>
+            <button class="border-2 rounded-md w-16 h-16 text-center bg-slate-200" on:click={roll}>Roll</button>
         </div>
     {/if}
     {:else}
         <div class="border-0 rounded-xl p-4 m-4 flex bg-black portrait:flex-col">
             {#each selectedDice as d}
-                <div class="m-1 border-2 rounded-lg h-16 flex justify-center items-center text-white pl-2 pr-2">
+                <div class="m-1 border-2 rounded-md h-16 flex justify-center items-center text-white pl-2 pr-2">
                     <div class="pr-2">{d.values.length}<Icon path={dicePaths[d.name]} size={24} color="#ffffff" /></div>
                     <div class="text-2xl">
                         <span>

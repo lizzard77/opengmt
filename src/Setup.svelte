@@ -25,6 +25,6 @@
     <input type="text" bind:value={name} class="border-2 rounded-md w-full p-1" />
     </div>
     <div class="mt-2">
-    <button on:click={setup} class="bg-green-500 p-2 rounded-lg text-white">Set up</button>
+    <button on:click={setup} class="bg-green-500 p-2 rounded-md text-white">Set up</button>
     </div>
 </div>

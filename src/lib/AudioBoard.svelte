@@ -45,9 +45,9 @@
     {#each $soundPlayers as player}
     <div class="flex mb-2">
         {#if player.isPlaying()}
-        <button class="p-2 rounded-lg bg-slate-200" on:click={() => player.toggle()}><Icon path={mdiPause} size={16} /></button>
+        <button class="p-2 rounded-md bg-slate-200" on:click={() => player.toggle()}><Icon path={mdiPause} size={16} /></button>
         {:else}
-        <button class="p-2 rounded-lg bg-slate-200" on:click={() => player.toggle()}><Icon path={mdiPlay} size={16} /></button>
+        <button class="p-2 rounded-md bg-slate-200" on:click={() => player.toggle()}><Icon path={mdiPlay} size={16} /></button>
         {/if}
         {player.name}
         {player.playTime}
@@ -58,12 +58,12 @@
         <button on:click={() => toggleLooping(sound)}><Icon path={mdiRepeat} color={sound.loops ? "green" : "silver"} size={16} /></button> 
         {#if sound.audioFile}
             {#if sound.isPlaying}
-            <button class="p-2 rounded-lg bg-slate-200" on:click={() => pause(sound)}><Icon path={mdiPause} size={16} /></button>
+            <button class="p-2 rounded-md bg-slate-200" on:click={() => pause(sound)}><Icon path={mdiPause} size={16} /></button>
             {:else}
             <button on:click={() => resume(sound)}><Icon path={mdiPlay} size={16} /></button>     
             {/if}
 
-            <button class="p-2 rounded-lg bg-slate-200" on:click={() => stop(sound)}><Icon path={mdiStop} size={16} /></button>
+            <button class="p-2 rounded-md bg-slate-200" on:click={() => stop(sound)}><Icon path={mdiStop} size={16} /></button>
             {sound.playTime}
         {:else}
         <button on:click={() => play(sound)}><Icon path={mdiPlay} size={16} /></button> 

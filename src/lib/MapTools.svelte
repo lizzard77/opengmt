@@ -68,10 +68,10 @@
 </script>
 
 <div class="absolute p-2 top-0 right-0 z-50 flex">
-    <button on:click={toggleZoom} class="p-2 rounded-lg bg-slate-200 border-4 ml-2">{zoom*100}%</button>
-    <button on:click={toggleFullScreen} class="p-2 rounded-lg bg-slate-200 border-4 flex ml-2"><Icon path={mdiFullscreen} size=24 /></button>
+    <button on:click={toggleZoom} class="p-2 rounded-md bg-slate-200 border-4 ml-2">{zoom*100}%</button>
+    <button on:click={toggleFullScreen} class="p-2 rounded-md bg-slate-200 border-4 flex ml-2"><Icon path={mdiFullscreen} size=24 /></button>
     {#if window.name !== "OpenGMTStage" && $isMaster}
-        <button on:click={popout} class="p-2 rounded-lg bg-slate-200 border-4 ml-2"><Icon path={mdiOpenInNew} size=24 /></button>
-        <button on:click={toggleFog} class="p-2 rounded-lg bg-slate-200 border-4 ml-2"><Icon path={fog ? mdiCloud : mdiCloudOutline } size=24 /></button>
+        <button on:click={popout} class="p-2 rounded-md bg-slate-200 border-4 ml-2"><Icon path={mdiOpenInNew} size=24 /></button>
+        <button on:click={toggleFog} class="p-2 rounded-md bg-slate-200 border-4 ml-2"><Icon path={fog ? mdiCloud : mdiCloudOutline } size=24 /></button>
     {/if}
 </div>

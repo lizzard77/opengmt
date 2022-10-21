@@ -18,5 +18,5 @@
 </Modal>
 
 <div class="fixed bottom-2 left-2 flex items-center">
-    <button on:click={() => isOpen = true} class="mr-2 p-2 rounded-lg bg-slate-200 border-4"><Icon path={mdiCog} size={24} /></button>
+    <button on:click={() => isOpen = true} class="mr-2 p-2 rounded-md bg-slate-200 border-4"><Icon path={mdiCog} size={24} /></button>
 </div>

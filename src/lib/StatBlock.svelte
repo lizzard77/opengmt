@@ -46,10 +46,10 @@
 <div class="flex flex-col flex-wrap p-8" style="background-image: url('/assets/paper.jpg');">
     <div class="absolute right-2 top-2 flex">
     {#if !$statsEditing}
-    <button class=" bg-slate-200 p-2 rounded-lg" on:click={() => $statsEditing = !$statsEditing}><Icon path={mdiPencil} /></button>
+    <button class=" bg-slate-200 p-2 rounded-md" on:click={() => $statsEditing = !$statsEditing}><Icon path={mdiPencil} /></button>
 
     {/if}
-        <button on:click={() => isOpen = false} class="rounded-lg bg-slate-200 p-2 ml-2"><Icon path={mdiClose} /></button>
+        <button on:click={() => isOpen = false} class="rounded-md bg-slate-200 p-2 ml-2"><Icon path={mdiClose} /></button>
     </div>
 
     <div>
@@ -102,7 +102,7 @@
 </div>
 
 <div class="mt-4 text-right">
-    <button on:click={save} class="rounded-lg bg-slate-200 p-2" disabled={!$statsEditing}>Speichern</button>
+    <button on:click={save} class="rounded-md bg-slate-200 p-2" disabled={!$statsEditing}>Speichern</button>
 </div>
 
 

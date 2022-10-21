@@ -60,14 +60,14 @@
         <button class="m-2 pl-1" style="border-left: 8px solid {color}">{name}</button>
     </div>
     <div class="pl-5 block pb-2" class:hidden={id !== $currentMarker?.creatureId}>
-        <button on:click={toggleVisible} class="p-2 rounded-lg bg-slate-200 ">
+        <button on:click={toggleVisible} class="p-2 rounded-md bg-slate-200 ">
             <Icon size={16} path={visible ? mdiEye :mdiEyeOff} />
         </button>
-        <button on:click={toggleLight} class="p-2 rounded-lg bg-slate-200 ">
+        <button on:click={toggleLight} class="p-2 rounded-md bg-slate-200 ">
             <Icon size={16} path={light ? mdiLamp : mdiLampOutline } />
         </button>
         
-        <button on:click={centerPlayer} class="p-2 rounded-lg bg-slate-200 ">
+        <button on:click={centerPlayer} class="p-2 rounded-md bg-slate-200 ">
             <Icon size={16} path={mdiTarget} />
         </button>
     </div>

@@ -69,7 +69,7 @@
         <CreatureInfo creature={p} on:centerMapToPlayer/>
         {/each}
 
-        <button on:click={startCombat} class="p-2 rounded-lg bg-slate-200 mt-8 mb-1">
+        <button on:click={startCombat} class="p-2 rounded-md bg-slate-200 mt-8 mb-1">
             Kampf {$combat ? "beenden" : "starten"}
         </button>
 

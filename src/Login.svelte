@@ -65,10 +65,10 @@
 
     <div class="mt-2">
     {#if !campaignId}
-    <button on:click={login} class="bg-orange-500 p-2 rounded-lg text-white disabled:bg-slate-200" disabled={!name}>Next</button>
+    <button on:click={login} class="bg-orange-500 p-2 rounded-md text-white disabled:bg-slate-200" disabled={!name}>Next</button>
     {:else}
-    <button on:click={() => { campaignsToJoin = null; name = ""; campaignId = 0; }} class="bg-orange-500 p-2 rounded-lg text-white">Back</button>
-    <button on:click={login} class="bg-green-500 p-2 rounded-lg text-white">Join</button>
+    <button on:click={() => { campaignsToJoin = null; name = ""; campaignId = 0; }} class="bg-orange-500 p-2 rounded-md text-white">Back</button>
+    <button on:click={login} class="bg-green-500 p-2 rounded-md text-white">Join</button>
     {/if}
     </div>
 </div>

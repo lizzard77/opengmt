@@ -13,7 +13,7 @@ import Dice from '../lib/Dice.svelte';
 export let backlink = "";
 export let title = "OpenGMT";
 
-let chooseScene = false;
+let editScene = false;
 let showDice = false;
 let showMenu = false;
 </script>
@@ -30,7 +30,7 @@ let showMenu = false;
             </slot>
             
             <slot name="center">
-                <h1 class="flex-1 text-center text-2xl" on:click={() => chooseScene = true}><slot name="title">{title}</slot></h1>
+                <h1 class="flex-1 text-center text-2xl" on:click={() => editScene = true}><slot name="title">{title}</slot></h1>
             </slot>
             
             <slot name="right">
@@ -67,9 +67,9 @@ let showMenu = false;
     {/if}
 </div>
 
-{#if chooseScene}
-<Modal bind:isOpen={chooseScene}>
-    <Scenes bind:isOpen={chooseScene} />
+{#if editScene}
+<Modal bind:isOpen={editScene}>
+    <Scenes bind:isOpen={editScene} />
 </Modal>
 {/if}
 
