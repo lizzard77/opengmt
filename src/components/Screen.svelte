@@ -2,7 +2,9 @@
 import { navigate } from 'svelte-routing';
 import { mdiArrowLeft, mdiCog, mdiDiceD20Outline, mdiMenu } from '@mdi/js';
 import { isMaster } from '../stores'; 
-import { fly } from 'svelte/transition';
+import { fly, fade } from 'svelte/transition';
+
+
 
 import Icon from "./Icon.svelte";
 import Menu from "./Menu.svelte";
@@ -46,8 +48,8 @@ let showMenu = false;
 
     <div class="md:flex flex-1 overflow-auto md:flex-row">
         {#if $isMaster && showMenu}
-            <div class="absolute left-0 top-0 bg-black opacity-50 z-30 h-screen w-screen" on:click={() => showMenu = false}></div>
-            <div id="leftMenu" class="fixed left-0 top-0 p-2 z-50 h-screen bg-white drop-shadow-xl" transition:fly="{{ x: -200, duration: 200 }}">
+            <div class="absolute left-0 top-0 bg-black opacity-70 z-30 h-screen w-screen" on:click={() => showMenu = false} in:fade="{{ duration: 200 }}" out:fade="{{ duration: 200 }}"></div>
+            <div id="leftMenu" class="fixed left-0 top-0 p-2 z-50 h-screen bg-white drop-shadow-xl" in:fly="{{ x: -200, duration: 200 }}" out:fly="{{ x: -200, duration: 200 }}">
                 <div class="p-1"><button on:click={() => showMenu = !showMenu}><Icon path={mdiArrowLeft} color="#777" /></button></div>
                 <div class="p-2 mr-8">
                 <Menu />
