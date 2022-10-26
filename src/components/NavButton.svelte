@@ -33,11 +33,9 @@
     :global(.navButton:hover) {
         background-color: #eee;
     }
-/*
+
     :global(.activeSection) {
         @apply border-slate-400 border-t-2 md:border-l-2 md:border-t-0 font-bold;
     }
-
-*/
 </style>
 
