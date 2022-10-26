@@ -5,7 +5,6 @@
     import Upload from "./components/Upload.svelte";
     import AudioBoard from "./lib/AudioBoard.svelte";
     import Screen from "./components/Screen.svelte";
-    import Draggable from "./lib/Draggable.svelte";
     import DashAssetInfo from "./lib/DashAssetInfo.svelte";
     import MapSelect from "./lib/MapSelect.svelte";
     import EditableBlock from "./components/EditableBlock.svelte";
@@ -14,6 +13,7 @@
     import CreatureSelect from "./lib/CreatureSelect.svelte";
     import Icon from "./components/Icon.svelte";
     import { mdiGlasses } from "@mdi/js";
+    import Map from "./lib/Map.svelte";
     
     $activeSection = "scene";
 
@@ -70,7 +70,7 @@
                 <div class="box flex-grow basis-[400px]" >
                     <h1>Map</h1>
                     <div class="flex-1 relative w-full h-96 overflow-hidden">
-                        <Draggable fog={false} zoom={0.5} />
+                        <Map fog={false} zoom={0.5} fit={true} />
                     </div>
                 </div>
 
@@ -156,16 +156,16 @@
 
 <style>
     button {
-        @apply mr-2 p-1 rounded-md text-sm bg-slate-200 border-0 flex
+        @apply mr-2 p-1 rounded-md text-sm bg-slate-200 border-0 flex;
     }
 
     h1 {
-        @apply text-lg font-bold mt-0 border-b-2 border-red-800 mb-2
+        @apply text-lg font-bold mt-0 border-b-2 border-red-800 mb-2;
     }
 
-    [contenteditable] { @apply p-2 border-slate-200 border-2 }
+    [contenteditable] { @apply p-2 border-slate-200 border-2; }
     
-    :focus { @apply bg-white }
+    :focus { @apply bg-white; }
 
     .box {
         @apply w-full pr-2 mb-6;

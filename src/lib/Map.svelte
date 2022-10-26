@@ -2,11 +2,18 @@
     import { currentScene, currentMarker, isMaster, squareSizeInPx, markers } from "../stores";
     import { getState, updateState } from "../session";
     import { hubConnection } from "../hub";
+    import { draggable } from "../draggable";
 
-    export let showReach = true;
+    import MapTools from "./MapTools.svelte";
+
+    export let showTools = false;
     export let zoom = 1.0;
-    export let fog = false;
-
+    export let fog = true;
+    export let showReach = true;    
+    export let centerX = -1;
+    export let centerY = -1;
+    export let fit = false;
+    
     let svg;
     let map = $currentScene.map;
     let imageWidth = 2048;
@@ -95,57 +102,64 @@
 </script>
 
 {#if map}
-<svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {map.widthInSquares} {map.heightInSquares}" tabindex="-1"
-    on:click={click} on:keydown={handleKey} 
-    style="width: {imageWidth}px; height: {imageHeight}px;">
+<div class="w-full" use:draggable={{ centerX, centerY, scale : $squareSizeInPx }}>
+    <svg xmlns="http://www.w3.org/2000/svg" bind:this={svg} viewBox="0 0 {map.widthInSquares} {map.heightInSquares}" tabindex="-1"
+        on:click={click} on:keydown={handleKey} 
+        class:w-full={fit}
+        style="width: {fit ? "100%" : imageWidth + "px" }; {fit ? "" : "height: " + imageHeight+ "px;"}">
 
-    <image href="{$isMaster && map.imageUrlDM ? map.imageUrlDM : map.imageUrl}" x="0" y="0" width={map.widthInSquares} height={map.heightInSquares} />
+        <image href="{$isMaster && map.imageUrlDM ? map.imageUrlDM : map.imageUrl}" x="0" y="0" width={map.widthInSquares} height={map.heightInSquares} />
 
-    {#each Array(map.widthInSquares) as _, i}
-    <line x1="{i}" y1="0" x2="{i}" y2="{map.heightInSquares}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: {map.gridOpacity||1};" />
-    {/each}
-    {#each Array(map.heightInSquares) as _, i}
-    <line x1="0" y1="{i}" x2="{map.widthInSquares}" y2="{i}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: {map.gridOpacity||1};" />
-    {/each}
+        {#each Array(map.widthInSquares) as _, i}
+        <line x1="{i}" y1="0" x2="{i}" y2="{map.heightInSquares}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: {map.gridOpacity||1};" />
+        {/each}
+        {#each Array(map.heightInSquares) as _, i}
+        <line x1="0" y1="{i}" x2="{map.widthInSquares}" y2="{i}" style="stroke:rgb(255,255,255);stroke-width:0.01;opacity: {map.gridOpacity||1};" />
+        {/each}
 
-    {#if $currentMarker && $currentMarker.visible}
-        {#if showReach}
-        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * ($currentMarker.size + 30)}" style="fill:transparent;stroke:rgb(255,0,0);opacity:1;stroke-width:0.01" />
-        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * ($currentMarker.size + 5) / 2}" style="fill:white;stroke:rgb(0,255,255);opacity:0.6;stroke-width:0.01" />
+        {#if $currentMarker && $currentMarker.visible}
+            {#if showReach}
+            <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * ($currentMarker.size + 30)}" style="fill:transparent;stroke:rgb(255,0,0);opacity:1;stroke-width:0.01" />
+            <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * ($currentMarker.size + 5) / 2}" style="fill:white;stroke:rgb(0,255,255);opacity:0.6;stroke-width:0.01" />
 
+            {/if}
+            <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.size/2}" style="fill:transparent;stroke:rgb(0,0,255);opacity:1;stroke-width:0.05" />
         {/if}
-        <circle cx="{$currentMarker.x}" cy="{$currentMarker.y}" r="{oneFoot * $currentMarker.size/2}" style="fill:transparent;stroke:rgb(0,0,255);opacity:1;stroke-width:0.05" />
-    {/if}
 
-    {#each $markers.filter(c => $isMaster || c.visible) as p}
-    <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size/2}" style="fill:{p.color}" />
-    {/each}
+        {#each $markers.filter(c => $isMaster || c.visible) as p}
+        <circle cx="{p.x}" cy="{p.y}" r="{oneFoot*p.size/2}" style="fill:{p.color}" />
+        {/each}
 
-    <defs>
-        <mask id="hole">
-            {#if $isMaster}
-            <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="#777"/>
-            {:else}
-            <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="white"/>
-            {/if}
+        <defs>
+            <mask id="hole">
+                {#if $isMaster}
+                <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="#777"/>
+                {:else}
+                <rect width="{map.widthInSquares}" height="{map.widthInSquares}" fill="white"/>
+                {/if}
 
-            {#each $markers.filter(c => c.light) as p}
-                <circle r="{oneFoot * 60}" cx="{p.x}" cy="{p.y}" fill="black"/>
-            {/each}
-
-            {#if !$isMaster}
                 {#each $markers.filter(c => c.light) as p}
-                    <circle r="{oneFoot * 60}" cx="{p.x}" cy="{p.y}" fill="#444"/>
+                    <circle r="{oneFoot * 60}" cx="{p.x}" cy="{p.y}" fill="black"/>
                 {/each}
-                {#each $markers.filter(c => c.light) as p}
-                    <circle r="{oneFoot * 30}" cx="{p.x}" cy="{p.y}" fill="black"/>
-                {/each}
-            {/if}
-        </mask>
-    </defs>
 
-    {#if fog}
-    <rect x="0" y="0" width="{map.widthInSquares}" height="{map.widthInSquares}" style="fill: #100510;" mask="url(#hole)" />
-    {/if}
-</svg>
+                {#if !$isMaster}
+                    {#each $markers.filter(c => c.light) as p}
+                        <circle r="{oneFoot * 60}" cx="{p.x}" cy="{p.y}" fill="#444"/>
+                    {/each}
+                    {#each $markers.filter(c => c.light) as p}
+                        <circle r="{oneFoot * 30}" cx="{p.x}" cy="{p.y}" fill="black"/>
+                    {/each}
+                {/if}
+            </mask>
+        </defs>
+
+        {#if fog}
+        <rect x="0" y="0" width="{map.widthInSquares}" height="{map.widthInSquares}" style="fill: #100510;" mask="url(#hole)" />
+        {/if}
+    </svg>
+</div>
+{/if}
+
+{#if showTools}
+<MapTools bind:fog bind:zoom />
 {/if}

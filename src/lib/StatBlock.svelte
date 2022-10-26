@@ -107,14 +107,14 @@
 
 
 <style>
-    dl { @apply text-red-800 }
-    dt { @apply font-bold inline-block }
-    dd { @apply ml-2 inline-block }
-    hr { @apply bg-red-800 h-1 mt-4 mb-4 }
-    td { @apply text-center }
+    dl { @apply text-red-800; }
+    dt { @apply font-bold inline-block; }
+    dd { @apply ml-2 inline-block; }
+    hr { @apply bg-red-800 h-1 mt-4 mb-4; }
+    td { @apply text-center; }
 
-    [contenteditable]:focus { @apply p-1 }
-    :focus { @apply bg-white }
+    [contenteditable]:focus { @apply p-1; }
+    :focus { @apply bg-white; }
 
-    b { @apply text-red-800 }
+    b { @apply text-red-800; }
 </style>

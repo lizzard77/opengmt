@@ -76,16 +76,16 @@
 
 <style>
     button {
-        @apply mr-2 p-1 rounded-md text-sm bg-slate-200 border-0 flex
+        @apply mr-2 p-1 rounded-md text-sm bg-slate-200 border-0 flex;
     }
 
     h1 {
-        @apply text-lg font-bold mt-4 border-b-2 border-red-800 mb-2
+        @apply text-lg font-bold mt-4 border-b-2 border-red-800 mb-2;
     }
 
-    [contenteditable] { @apply p-2 border-slate-200 border-2 }
+    [contenteditable] { @apply p-2 border-slate-200 border-2; }
     
-    :focus { @apply bg-white }
+    :focus { @apply bg-white; }
 
     .box {
         @apply w-full pr-2;

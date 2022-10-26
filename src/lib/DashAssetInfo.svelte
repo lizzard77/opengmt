@@ -26,6 +26,6 @@
 
 <style>
     button {
-        @apply ml-1 p-1 rounded-md text-sm bg-slate-200 border-0 flex
+        @apply ml-1 p-1 rounded-md text-sm bg-slate-200 border-0 flex;
     }
 </style>

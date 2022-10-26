@@ -26,9 +26,9 @@
 
 
 <style>
-    dl { @apply text-red-800 }
-    dt { @apply font-bold inline-block }
-    dd { @apply ml-2 inline-block }
-    [contenteditable] { @apply p-1 }
-    :focus { @apply bg-white }
+    dl { @apply text-red-800; }
+    dt { @apply font-bold inline-block; }
+    dd { @apply ml-2 inline-block; }
+    [contenteditable] { @apply p-1; }
+    :focus { @apply bg-white; }
 </style>
